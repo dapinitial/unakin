@@ -42,7 +42,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&display=swap"
       rel="stylesheet"
     />
 
@@ -57,24 +57,46 @@
 
     <!-- 3. Foreground content (scrolls over everything) -->
     <main>
-      <section class="banner">
-        <p class="kicker">unakin™ is soon coming</p>
-        <h1>
-          <scramble-text
-            phrases="unakin™|atypical|not akin to|unrelated|not comparable"
-            delay="4000"
-            >unakin™</scramble-text
-          >
-        </h1>
-        <p class="definition">
-          (ˌʌnəˈkɪn): not akin : unrelated. Usually used in the phrase not
-          unakin to… “They would be spectacular achievements in scientific
-          research, not unakin to [not unlike] the discovery of the Higgs
-          Boson…” Dana Smith.
-        </p>
-        <wait-list endpoint="/unakin3/v1/signup"></wait-list>
+      <section class="banner" data-state="prompt">
+        <!-- default: invitation to join -->
+        <div class="scene scene-prompt">
+          <p class="kicker">unakin™ is soon coming</p>
+          <h1 class="headline">
+            <scramble-text
+              phrases="unakin™|atypical|not akin to|unrelated|not comparable"
+              delay="4000"
+              >unakin™</scramble-text
+            >
+          </h1>
+          <wait-list endpoint="/unakin3/v1/signup"></wait-list>
+        </div>
+
+        <!-- after a successful signup -->
+        <div class="scene scene-done">
+          <p class="kicker">you're in</p>
+          <h1 class="headline headline-done">You're on the list</h1>
+          <p class="subtext">
+            We'll be in touch soon — from <strong>hello@unakin.com</strong>.
+          </p>
+          <button class="ghost-btn" type="button" data-action="go-back">
+            <span aria-hidden="true">←</span>&nbsp;go back
+          </button>
+        </div>
       </section>
-      <div class="scroll-space" aria-hidden="true"></div>
+
+      <!-- definition: revealed on scroll -->
+      <section class="lore" aria-label="What unakin means">
+        <p class="definition">
+          <span class="ipa">ˌʌnəˈkɪn</span>
+          <span class="gloss"><em>adjective</em> — not akin : unrelated.</span>
+          <span class="usage">
+            Usually used in the phrase <em>not unakin to…</em> “They would be
+            spectacular achievements in scientific research, not unakin to [not
+            unlike] the discovery of the Higgs Boson…”
+          </span>
+          <span class="cite">— Dana Smith</span>
+        </p>
+      </section>
     </main>
 
     <script type="module" src="/src/main.ts"></script>

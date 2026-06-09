@@ -115,10 +115,17 @@ export class WaitList extends HTMLElement {
           });
 
           if (res.ok) {
-            // Success state replaces the form — no lingering input
-            form.innerHTML = /* html */ `
-              <p class="waitlist-done">${PROTON_ICON}<span>You're on the list. We'll be in touch from <strong>hello@unakin.com</strong>.</span></p>
-            `;
+            // Hand off to the page, which swaps the hero to the "you're in"
+            // scene. Keep the form intact so go-back can restore it.
+            input.value = '';
+            setStatus('', '');
+            this.dispatchEvent(
+              new CustomEvent('waitlist:success', {
+                bubbles: true,
+                composed: true,
+                detail: { email },
+              })
+            );
             return;
           }
           if (res.status === 429) {
@@ -131,6 +138,19 @@ export class WaitList extends HTMLElement {
         } finally {
           button.disabled = false;
         }
+      },
+      { signal: this.#abort.signal }
+    );
+
+    // The page fires this when the visitor taps "go back" from the
+    // confirmation scene — return the form to a clean state.
+    this.addEventListener(
+      'waitlist:reset',
+      () => {
+        input.value = '';
+        honeypot.value = '';
+        button.disabled = false;
+        setStatus('', '');
       },
       { signal: this.#abort.signal }
     );

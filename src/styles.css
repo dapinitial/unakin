@@ -51,31 +51,140 @@ main {
 .kicker {
   color: var(--color-accent);
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 0.9rem;
+  letter-spacing: 0.3em;
+  font-size: 0.72rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.15rem;
+  opacity: 0.85;
+  /* optical centering against the wide tracking */
+  text-indent: 0.3em;
 }
 
-h1 {
+/* ===== SCENES (prompt ↔ done) ===== */
+
+.scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.banner[data-state='prompt'] .scene-done {
+  display: none;
+}
+.banner[data-state='done'] .scene-prompt {
+  display: none;
+}
+
+.headline {
   font-family: 'Fraunces', serif;
-  font-size: clamp(3rem, 10vw, 7rem);
+  font-size: clamp(3rem, 11vw, 7.5rem);
   font-weight: 600;
   font-optical-sizing: auto;
-  line-height: 1.05;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.headline-done {
+  background: linear-gradient(
+    162deg,
+    #ffffff 0%,
+    var(--color-accent) 64%,
+    #6d4aff 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.subtext {
+  margin: 1.5rem auto 0;
+  max-width: 34ch;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  opacity: 0.85;
+}
+
+.subtext strong {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.ghost-btn {
+  margin-top: 2.25rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  padding: 0.6rem 1.4rem;
+  color: #fff;
+  font: inherit;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+}
+
+.ghost-btn:hover {
+  border-color: var(--color-accent);
+  background: rgba(188, 192, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+/* ===== LORE / DEFINITION (scroll-revealed) ===== */
+
+.lore {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
 }
 
 .definition {
-  max-width: 52ch;
-  margin: 1.5rem auto 0;
-  font-size: 0.95rem;
+  max-width: 42ch;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  text-align: left;
+  font-size: 1rem;
   line-height: 1.6;
-  opacity: 0.9;
 }
 
-/* extra room so the scroll-driven heart breakup has somewhere to go */
-.scroll-space {
-  height: 100vh;
+.definition .ipa {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  color: var(--color-accent);
+  letter-spacing: 0.01em;
+}
+
+.definition .gloss {
+  font-size: 1.1rem;
+}
+
+.definition .gloss em {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.definition .usage {
+  opacity: 0.8;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.definition .usage em {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+}
+
+.definition .cite {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  opacity: 0.6;
+  font-size: 0.92rem;
 }
 
 /* ===== GRADIENT BACKGROUND ===== */
