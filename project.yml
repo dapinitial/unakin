@@ -5,7 +5,7 @@
 # NOTE: do not write a dollar-brace token in comments — DO's template engine
 # scans the whole file (comments included) and treats it as a variable.
 packages:
-  - name: api
+  - name: v1
     functions:
       - name: signup
         runtime: 'nodejs:22'
