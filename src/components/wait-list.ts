@@ -12,10 +12,19 @@
  * Proton-encrypted inbox, we store only your email, and nothing on this page
  * talks to a third party.
  */
-const LOCK_ICON = /* html */ `
-  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-    <rect x="5" y="11" width="14" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/>
-    <path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.6"/>
+// Proton Mail mark — purple-gradient envelope (their brand colour), so the
+// "Encrypted comms" chip visibly anchors to Proton.
+const PROTON_ICON = /* html */ `
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" class="proton-mark">
+    <defs>
+      <linearGradient id="wl-proton" x1="3" y1="4" x2="21" y2="20" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#C7B8FF"/>
+        <stop offset="1" stop-color="#6D4AFF"/>
+      </linearGradient>
+    </defs>
+    <rect x="3" y="5" width="18" height="14" rx="2.5" fill="url(#wl-proton)"/>
+    <path d="m4.5 7.5 7.5 6 7.5-6" fill="none" stroke="#fff" stroke-width="1.5"
+      stroke-linecap="round" stroke-linejoin="round" opacity=".95"/>
   </svg>`;
 
 const MAIL_ICON = /* html */ `
@@ -64,7 +73,7 @@ export class WaitList extends HTMLElement {
         </div>
         <p class="waitlist-status" role="status" aria-live="polite"></p>
         <p class="waitlist-trust">
-          <span class="chip">${LOCK_ICON}<a href="https://proton.me" target="_blank" rel="noopener noreferrer">Encrypted comms</a></span>
+          <span class="chip">${PROTON_ICON}<a href="https://proton.me" target="_blank" rel="noopener noreferrer">Encrypted comms</a></span>
           <span class="chip">${MAIL_ICON}Email only</span>
           <span class="chip">${NOTRACK_ICON}No tracking</span>
         </p>
@@ -108,7 +117,7 @@ export class WaitList extends HTMLElement {
           if (res.ok) {
             // Success state replaces the form — no lingering input
             form.innerHTML = /* html */ `
-              <p class="waitlist-done">${LOCK_ICON}<span>You're on the list. We'll be in touch from <strong>hello@unakin.com</strong>.</span></p>
+              <p class="waitlist-done">${PROTON_ICON}<span>You're on the list. We'll be in touch from <strong>hello@unakin.com</strong>.</span></p>
             `;
             return;
           }

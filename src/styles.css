@@ -304,6 +304,7 @@ wait-list {
 
 .waitlist-row:focus-within {
   border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(188, 192, 255, 0.2);
 }
 
 .waitlist-row input[type='email'] {
@@ -312,6 +313,8 @@ wait-list {
   background: transparent;
   border: none;
   outline: none;
+  appearance: none;
+  -webkit-appearance: none;
   color: #fff;
   font-size: 1rem;
   font-family: inherit;
@@ -319,6 +322,17 @@ wait-list {
 
 .waitlist-row input[type='email']::placeholder {
   color: rgba(255, 255, 255, 0.45);
+}
+
+/* Browser autofill repaints the field white/blue inside the pill — keep it
+   transparent. The long transition defers the UA background indefinitely;
+   text-fill-color keeps the typed value legible. */
+.waitlist-row input:-webkit-autofill,
+.waitlist-row input:-webkit-autofill:hover,
+.waitlist-row input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fff;
+  caret-color: #fff;
+  transition: background-color 600000s 0s, color 600000s 0s;
 }
 
 .waitlist-row button {
