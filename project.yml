@@ -1,13 +1,14 @@
 # DigitalOcean Functions config for the /api/signup waitlist endpoint.
-# RESEND_API_KEY is set as an encrypted env var on the App Platform Function
-# component (Settings → Environment Variables) and App Platform injects it
-# into the function runtime — no project.yml binding needed (and a ${...}
-# binding here fails the build if it can't resolve at build time).
+# RESEND_API_KEY must be declared here (so the function receives it) AND set
+# as an encrypted env var on the component — the ${...} binds the component
+# value into the function runtime. They must match, with no extra/blank vars.
 packages:
   - name: api
     functions:
       - name: signup
         runtime: 'nodejs:18'
         web: true
+        environment:
+          RESEND_API_KEY: ${RESEND_API_KEY}
         limits:
           timeout: 10000
