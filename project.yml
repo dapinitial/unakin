@@ -12,5 +12,9 @@ packages:
         web: true
         environment:
           RESEND_API_KEY: "${RESEND_API_KEY}"
+          # Audience ID is an identifier, not a secret (the API key gates
+          # access) — a literal here lets the function skip the per-cold-start
+          # GET /audiences lookup and add the contact in one call.
+          RESEND_AUDIENCE_ID: "7dbf0c1c-c4f8-4cae-9720-97eec26ba374"
         limits:
           timeout: 25000
