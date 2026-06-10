@@ -12,8 +12,9 @@
  * Proton-encrypted inbox, we store only your email, and nothing on this page
  * talks to a third party.
  */
-// Proton Mail tile — a stylised purple-gradient app mark (not their exact
-// trademarked logo) so the "Encrypted comms" chip visibly anchors to Proton.
+// Proton mark — a stylised purple-gradient "P" tile (not their exact
+// trademarked logo), so the chip unmistakably calls out Proton and doesn't
+// echo the "Email only" envelope.
 const PROTON_ICON = /* html */ `
   <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" class="proton-mark">
     <defs>
@@ -23,10 +24,9 @@ const PROTON_ICON = /* html */ `
       </linearGradient>
     </defs>
     <rect x="2" y="2" width="20" height="20" rx="5.5" fill="url(#wl-proton)"/>
-    <g fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="6" y="8" width="12" height="8" rx="1.6"/>
-      <path d="M6.6 9l5.4 4 5.4-4"/>
-    </g>
+    <path d="M9.4 18 V6.5 H12.9 a3.25 3.25 0 0 1 0 6.5 H9.4"
+      fill="none" stroke="#fff" stroke-width="1.9"
+      stroke-linecap="round" stroke-linejoin="round"/>
   </svg>`;
 
 const MAIL_ICON = /* html */ `
@@ -76,7 +76,7 @@ export class WaitList extends HTMLElement {
         <p class="waitlist-status" role="status" aria-live="polite"></p>
         <p class="waitlist-trust">
           <span class="chip chip-proton" tabindex="0">
-            ${PROTON_ICON}<a href="https://proton.me" target="_blank" rel="noopener noreferrer">Encrypted comms</a>
+            ${PROTON_ICON}<a href="https://proton.me" target="_blank" rel="noopener noreferrer">Encrypted via Proton</a>
             <span class="tip" role="tooltip">Secured by Proton Mail — replies reach our encrypted inbox</span>
           </span>
           <span class="chip">${MAIL_ICON}Email only</span>
