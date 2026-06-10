@@ -12,21 +12,19 @@
  * Proton-encrypted inbox, we store only your email, and nothing on this page
  * talks to a third party.
  */
-// Proton mark — a stylised purple-gradient "P" tile (not their exact
-// trademarked logo), so the chip unmistakably calls out Proton and doesn't
-// echo the "Email only" envelope.
+// Official Proton "P" mark — extracted from Proton's brand SVG (wordmark
+// dropped, viewBox cropped to the glyph). Inlined so there's no third-party
+// request.
 const PROTON_ICON = /* html */ `
-  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" class="proton-mark">
+  <svg class="proton-mark" viewBox="0 0 20 25" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <path d="M.299 18.12v6.38h4.478v-6.103a2.24 2.24 0 0 1 2.24-2.24h4.591a8.08 8.08 0 0 0 8.077-8.078A8.079 8.079 0 0 0 11.607 0H.3v7.975h4.478v-3.76h6.528a3.823 3.823 0 0 1 3.823 3.822 3.823 3.823 0 0 1-3.823 3.822H6.56A6.258 6.258 0 0 0 .3 18.12Z" fill="#6D4AFF"/>
+    <path d="M7.015 16.158A6.717 6.717 0 0 0 .3 22.874v1.627h4.478v-6.104a2.24 2.24 0 0 1 2.238-2.24Z" fill="url(#proton-mark-grad)"/>
     <defs>
-      <linearGradient id="wl-proton" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#8a6eff"/>
-        <stop offset="1" stop-color="#6d4aff"/>
+      <linearGradient gradientUnits="userSpaceOnUse" id="proton-mark-grad" x1="3.657" x2="3.657" y1="23.294" y2="13.919">
+        <stop stop-color="#6D4BFD"/>
+        <stop offset="1" stop-color="#1C0554"/>
       </linearGradient>
     </defs>
-    <rect x="2" y="2" width="20" height="20" rx="5.5" fill="url(#wl-proton)"/>
-    <path d="M9.4 18 V6.5 H12.9 a3.25 3.25 0 0 1 0 6.5 H9.4"
-      fill="none" stroke="#fff" stroke-width="1.9"
-      stroke-linecap="round" stroke-linejoin="round"/>
   </svg>`;
 
 const MAIL_ICON = /* html */ `

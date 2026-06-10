@@ -319,8 +319,8 @@ wait-list {
 }
 
 .chip-proton .proton-mark {
-  width: 1.05rem;
-  height: 1.05rem;
+  width: auto;
+  height: 1.05rem; /* keep the P's native proportions */
 }
 
 .chip-proton .tip {
