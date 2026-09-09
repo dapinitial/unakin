@@ -1,20 +1,23 @@
 {
   "name": "unakin.com",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "start": "node dist/server/entry.mjs"
   },
   "dependencies": {
+    "@astrojs/node": "^9.0.0",
+    "@supabase/supabase-js": "^2.49.1",
+    "astro": "^5.0.0",
     "gsap": "^3.13.0",
     "three": "^0.184.0"
   },
   "devDependencies": {
     "@types/three": "^0.184.1",
-    "typescript": "^5.2.2",
-    "vite": "^7.2.2"
+    "typescript": "^5.2.2"
   }
 }

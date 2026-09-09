@@ -1,0 +1,195 @@
+---
+import Base from '../layouts/Base.astro';
+
+const services = [
+  { k: 'Product design', d: 'Interfaces and product thinking — from first principle to pixel. Systems people actually want to use.' },
+  { k: 'Software engineering', d: 'Full-stack builds on a lean, modern house stack. Shipped, hardened, and yours to own.' },
+  { k: 'Immersive 3D · WebGL', d: 'Real-time 3D, generative visuals, and spatial experiences that run buttery in the browser.' },
+  { k: 'Design systems & brand', d: 'The identity, the tokens, the components — one coherent system across everything you make.' },
+];
+
+const work = [
+  { name: 'Sedulous', tag: 'Product · platform', d: 'A readiness platform for tactical athletes — training, recovery, and performance in one system.' },
+  { name: 'Immersive Trail & Terrain Maps', tag: '3D · WebGL', d: 'Branded, per-trip 3D fly-throughs with guide tools — routes, sun, water, camps, points of interest.' },
+  { name: 'd-tours', tag: 'Product · mobile', d: 'A location-aware experience layer — turning where you are into something worth exploring.' },
+];
+---
+<Base heart={true} path="/">
+  <main>
+    <!-- HERO -->
+    <section class="hero container">
+      <p class="eyebrow" data-reveal>Design &amp; engineering studio</p>
+      <h1 class="hero-title" data-reveal>
+        Not akin to<br /><span class="grad-text">anything else.</span>
+      </h1>
+      <p class="hero-sub" data-reveal>
+        Unakin is an avant-garde design &amp; engineering studio. We design and ship
+        products — interfaces, systems, and immersive 3D — with the craft of a team that
+        spent two decades at <strong>Apple</strong> and <strong>Microsoft</strong>.
+      </p>
+      <div class="hero-cta" data-reveal>
+        <a class="btn" href="#start">Start a project</a>
+        <a class="ghost-btn" href="#work">See the work</a>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="block container" id="studio">
+      <p class="eyebrow" data-reveal>What we do</p>
+      <h2 class="block-h" data-reveal>A studio that designs it <em>and</em> builds it.</h2>
+      <div class="grid">
+        {services.map((s) => (
+          <article class="card" data-reveal>
+            <h3>{s.k}</h3>
+            <p class="muted">{s.d}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- WORK -->
+    <section class="block container" id="work">
+      <p class="eyebrow" data-reveal>Selected work</p>
+      <h2 class="block-h" data-reveal>Things we've made unakin.</h2>
+      <div class="worklist">
+        {work.map((w) => (
+          <article class="workrow" data-reveal>
+            <div class="workmeta"><span class="mono tag">{w.tag}</span></div>
+            <div class="workbody">
+              <h3>{w.name}</h3>
+              <p class="muted">{w.d}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- INTAKE -->
+    <section class="block container narrow" id="start">
+      <p class="eyebrow" data-reveal>Start a project</p>
+      <h2 class="block-h" data-reveal>Tell us what you're building.</h2>
+      <p class="muted intro" data-reveal>
+        A sentence or a spec — either works. We'll read it, sketch an approach, and come
+        back with a plan. Corporations pay the rack rate; makers, nonprofits, and fellow
+        rope-teams get a fairer one. We'll figure out where you land together.
+      </p>
+
+      <form class="intake" id="intake" data-reveal>
+        <div class="two">
+          <label>Your name<input name="name" required placeholder="Jane Maker" /></label>
+          <label>Email<input name="email" type="email" required placeholder="jane@company.com" /></label>
+        </div>
+        <label>Company <span class="muted">(optional)</span><input name="company" placeholder="Company or project" /></label>
+        <label>What are you building?<textarea name="project" required rows="5" placeholder="The idea, the problem, the dream. As much or as little as you've got."></textarea></label>
+        <div class="two">
+          <label>Budget
+            <select name="budget">
+              <option value="">Prefer to discuss</option>
+              <option>Just exploring</option>
+              <option>Under $10k</option>
+              <option>$10k–$30k</option>
+              <option>$30k+</option>
+              <option>Barter / trade</option>
+            </select>
+          </label>
+          <label>Timeline <span class="muted">(optional)</span><input name="timeline" placeholder="e.g. this quarter" /></label>
+        </div>
+        <!-- honeypot: bots fill it, humans never see it -->
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <div class="intake-actions">
+          <button class="btn" type="submit">Send it →</button>
+          <span class="intake-msg" role="status"></span>
+        </div>
+      </form>
+
+      <div class="intake-done" hidden>
+        <h3 class="grad-text">Got it. 🤝</h3>
+        <p class="muted">We'll be in touch soon — from <strong>hello@unakin.com</strong>. Talk shortly.</p>
+      </div>
+    </section>
+  </main>
+
+  <style>
+    .hero { padding: clamp(4rem, 12vh, 9rem) 0 clamp(3rem, 8vh, 6rem); min-height: 78vh; display: flex; flex-direction: column; justify-content: center; }
+    .hero-title { font-size: clamp(3rem, 11vw, 7.5rem); font-weight: 600; margin: 1rem 0 0; }
+    .hero-sub { max-width: 46ch; margin-top: 1.6rem; font-size: clamp(1.05rem, 2.2vw, 1.3rem); color: var(--muted); }
+    .hero-sub strong { color: var(--text); font-weight: 600; }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 2.2rem; }
+
+    .block { padding: clamp(3rem, 8vh, 5.5rem) 0; }
+    .block-h { font-size: clamp(1.9rem, 5vw, 3rem); font-weight: 600; margin: 0.8rem 0 2rem; }
+    .block-h em { font-family: 'Fraunces', serif; font-style: italic; color: var(--accent); }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 1.1rem; }
+    .card { background: rgba(13, 18, 32, 0.55); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(8px); transition: border-color 0.2s ease, transform 0.2s ease; }
+    .card:hover { border-color: rgba(188, 192, 255, 0.35); transform: translateY(-2px); }
+    .card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+
+    .worklist { display: grid; gap: 0.9rem; }
+    .workrow { display: grid; grid-template-columns: 12rem 1fr; gap: 1.5rem; align-items: start; background: rgba(13, 18, 32, 0.45); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(8px); transition: border-color 0.2s ease; }
+    .workrow:hover { border-color: rgba(188, 192, 255, 0.35); }
+    .workrow h3 { font-size: 1.4rem; margin-bottom: 0.4rem; }
+    .mono { font-family: var(--mono); }
+    .tag { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); }
+    @media (max-width: 640px) { .workrow { grid-template-columns: 1fr; gap: 0.5rem; } }
+
+    .intro { max-width: 52ch; margin-bottom: 2rem; }
+    .intake { display: grid; gap: 1rem; }
+    .intake .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
+    @media (max-width: 560px) { .intake .two { grid-template-columns: minmax(0, 1fr); } }
+    .intake label { display: grid; gap: 0.35rem; font-size: 0.85rem; color: var(--muted); }
+    .intake input, .intake select, .intake textarea {
+      width: 100%; min-width: 0; background: var(--panel-2); border: 1px solid var(--border); border-radius: 12px;
+      color: var(--text); padding: 0.75rem 0.9rem; font: inherit; font-size: 0.98rem;
+    }
+    .intake textarea { resize: vertical; line-height: 1.6; }
+    .intake input:focus-visible, .intake select:focus-visible, .intake textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+    .intake-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 0.4rem; }
+    .intake-msg { font-size: 0.85rem; }
+    .intake-msg.err { color: #ffb4b4; }
+    .intake-done { text-align: center; padding: 2rem 0; }
+    .intake-done h3 { font-size: 2rem; margin-bottom: 0.6rem; }
+
+    [data-reveal] { opacity: 1; }
+    .reveal-ready [data-reveal] { opacity: 0; transform: translateY(24px); }
+  </style>
+
+  <script>
+    import gsap from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduced) {
+      // Only hide-then-reveal when JS + GSAP are live (no-JS keeps content visible).
+      document.documentElement.classList.add('reveal-ready');
+      gsap.registerPlugin(ScrollTrigger);
+      document.querySelectorAll('[data-reveal]').forEach((el) => {
+        gsap.to(el, {
+          opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 88%' },
+        });
+      });
+    }
+
+    // Intake form → /api/intake
+    const form = document.getElementById('intake') as HTMLFormElement | null;
+    const msg = form?.querySelector('.intake-msg') as HTMLElement | null;
+    const done = document.querySelector('.intake-done') as HTMLElement | null;
+    const say = (t: string, err = false) => { if (msg) { msg.textContent = t; msg.className = 'intake-msg' + (err ? ' err' : ''); } };
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const payload = Object.fromEntries(fd.entries());
+      const btn = form.querySelector('button[type=submit]') as HTMLButtonElement;
+      btn.disabled = true; say('Sending…');
+      try {
+        const res = await fetch('/api/intake', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const data = await res.json();
+        if (!res.ok || !data.ok) { btn.disabled = false; return say(data.error || 'Something went wrong — email hello@unakin.com.', true); }
+        form.hidden = true; if (done) done.hidden = false;
+        done?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+      } catch { btn.disabled = false; say('Network error — try again, or email hello@unakin.com.', true); }
+    });
+  </script>
+</Base>

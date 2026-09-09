@@ -1,0 +1,167 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+  path?: string;
+  heart?: boolean; // mount the 3D heart island (hero only)
+}
+const {
+  title = 'Unakin™ — avant-garde design & engineering studio',
+  description = 'Unakin is an avant-garde design & engineering studio. We design and ship products — interfaces, systems, and immersive 3D — with the craft of a team that spent 20 years at Apple and Microsoft.',
+  path = '/',
+  heart = false,
+} = Astro.props;
+const canonical = new URL(path, 'https://www.unakin.com').href;
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'Unakin, LLC',
+  url: 'https://www.unakin.com',
+  email: 'hello@unakin.com',
+  description,
+  areaServed: 'Worldwide',
+  knowsAbout: ['Product design', 'Software engineering', '3D / WebGL', 'Design systems', 'Brand & identity'],
+  address: { '@type': 'PostalAddress', addressLocality: 'Seattle', addressRegion: 'WA', addressCountry: 'US' },
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#080a0f" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Unakin™" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </head>
+  <body>
+    <gradient-blob></gradient-blob>
+    {heart && <heart-model src="/models/heart/"></heart-model>}
+
+    <header class="nav">
+      <a class="brand" href="/">unakin<span class="tm">™</span></a>
+      <nav class="navlinks">
+        <a href="/#work">Work</a>
+        <a href="/#studio">Studio</a>
+        <a class="cta" href="/#start">Start a project</a>
+      </nav>
+    </header>
+
+    <slot />
+
+    <footer class="foot">
+      <div class="foot-in">
+        <span class="brand sm">unakin<span class="tm">™</span></span>
+        <span class="muted">Avant-garde design &amp; engineering · Seattle</span>
+        <a class="muted" href="mailto:hello@unakin.com">hello@unakin.com</a>
+      </div>
+    </footer>
+
+    <script>
+      import '../components/gradient-blob';
+      // three.js is heavy — load the heart only if the page mounts one.
+      if (document.querySelector('heart-model')) import('../components/heart-model');
+    </script>
+
+    <style is:global>
+      :root {
+        --bg-1: rgb(8, 10, 15);
+        --bg-2: rgb(0, 17, 32);
+        --panel: #0d1220;
+        --panel-2: #121a2c;
+        --border: rgba(188, 192, 255, 0.14);
+        --text: #f4f5fb;
+        --muted: #9a9fc4;
+        --accent: #bcc0ff;
+        --violet: #6d4aff;
+        --mint: #8bf0cf;
+        --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        color-scheme: dark;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { overflow-x: clip; scroll-behavior: smooth; }
+      body {
+        min-height: 100vh;
+        background: linear-gradient(40deg, var(--bg-1), var(--bg-2));
+        color: var(--text);
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: inherit; text-decoration: none; }
+      img { max-width: 100%; }
+      [hidden] { display: none !important; }
+
+      h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; font-optical-sizing: auto; line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
+      .eyebrow { font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.28em; font-size: 0.68rem; color: var(--accent); opacity: 0.9; }
+      .grad-text {
+        background: linear-gradient(162deg, #fff 0%, var(--accent) 62%, var(--violet) 100%);
+        -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+      }
+      .container { width: min(100% - 2.5rem, 1120px); margin-inline: auto; }
+      .container.narrow { width: min(100% - 2.5rem, 720px); }
+      .muted { color: var(--muted); }
+
+      .btn {
+        display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; white-space: nowrap;
+        background: linear-gradient(180deg, var(--accent), #9aa0ff); color: #0b0d16; font: inherit; font-weight: 600;
+        border: 0; border-radius: 999px; padding: 0.8rem 1.5rem; transition: transform 0.15s ease, box-shadow 0.2s ease;
+      }
+      .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(109, 74, 255, 0.32); }
+      .ghost-btn {
+        display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer; white-space: nowrap;
+        background: transparent; border: 1px solid var(--border); border-radius: 999px; padding: 0.7rem 1.3rem;
+        color: var(--text); font: inherit; transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+      }
+      .ghost-btn:hover { border-color: var(--accent); background: rgba(188, 192, 255, 0.08); transform: translateY(-1px); }
+
+      /* Background islands */
+      gradient-blob {
+        display: block; position: fixed; inset: 0; overflow: hidden; z-index: 0;
+        background: linear-gradient(40deg, var(--bg-1), var(--bg-2));
+      }
+      gradient-blob canvas { display: block; width: 100%; height: 100%; }
+      heart-model { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+      heart-model canvas { display: block; width: 100%; height: 100%; }
+
+      /* Nav + footer */
+      .nav {
+        position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between;
+        gap: 1rem; padding: 1rem clamp(1.25rem, 4vw, 2.5rem);
+        background: rgba(8, 10, 15, 0.55); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+      }
+      .brand { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.25rem; letter-spacing: -0.01em; }
+      .brand .tm { color: var(--violet); font-size: 0.7em; vertical-align: super; }
+      .brand.sm { font-size: 1rem; }
+      .navlinks { display: flex; align-items: center; gap: 1.4rem; font-size: 0.9rem; }
+      .navlinks a:not(.cta):hover { color: var(--accent); }
+      .navlinks .cta { border: 1px solid var(--border); border-radius: 999px; padding: 0.5rem 1rem; transition: border-color 0.2s, background 0.2s; }
+      .navlinks .cta:hover { border-color: var(--accent); background: rgba(188, 192, 255, 0.08); }
+      @media (max-width: 560px) { .navlinks a:not(.cta) { display: none; } }
+
+      main { position: relative; z-index: 3; }
+
+      .foot { position: relative; z-index: 3; border-top: 1px solid var(--border); margin-top: 6rem; padding: 2.5rem 0; background: rgba(8, 10, 15, 0.5); }
+      .foot-in { width: min(100% - 2.5rem, 1120px); margin-inline: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.4rem; font-size: 0.85rem; }
+      .foot .muted:hover { color: var(--accent); }
+
+      @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    </style>
+  </body>
+</html>

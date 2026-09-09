@@ -1,0 +1,50 @@
+{
+  "_comment": "SINGLE SOURCE OF TRUTH for the Unakin business toolkit. Edit values here, then run `node business/build.mjs` to regenerate filled docs into business/dist/. Tokens like {{studio.legalName}} in any template get replaced. Anything in [BRACKETS] inside a doc is intentionally bespoke — edit it by hand per engagement.",
+  "studio": {
+    "legalName": "Unakin, LLC",
+    "dba": "Unakin",
+    "tagline": "An avant-garde design & engineering studio",
+    "email": "hello@unakin.com",
+    "website": "https://www.unakin.com",
+    "state": "Washington",
+    "entityType": "limited liability company",
+    "address": "Seattle, Washington",
+    "presence": "Seattle · Austin",
+    "einNote": "EIN on file — provided on W-9",
+    "_signatoryComment": "Client-facing docs read as 'Unakin' (entity-first). A contract still needs a human to sign in their legal capacity — that's the ONLY place a personal name appears.",
+    "signatory": "David Puerto",
+    "signatoryTitle": "Managing Member",
+    "pedigree": "Led by a senior design & engineering team with 20 years at Apple and Microsoft"
+  },
+  "rates": {
+    "currency": "USD",
+    "rackHourly": 225,
+    "specializedHourly": 275,
+    "playerHourly": 150,
+    "specializedNote": "3D / immersive / creative-direction / DevOps architecture work",
+    "retainerRackMonthly": 1200,
+    "paymentTermsDays": 15,
+    "depositPct": 40,
+    "lateFeeMonthlyPct": 1.5,
+    "estimateValidityDays": 30
+  },
+  "classes": {
+    "commercial": "Full rack rate. Corporations and funded businesses. No standing discount.",
+    "smb": "Rack rate; a capped, time-boxed courtesy may be extended at the studio's discretion.",
+    "player": "Sliding-scale courtesy off rack for friends and the rope team (fellow climbers/creators). Invite-only. Rack value is always shown; the courtesy is itemized as a gift.",
+    "nonprofit": "Reduced rate or pro-bono allocation for registered nonprofits and mission work.",
+    "barter": "Value-for-value trade (guided expeditions, gear, cross-promotion). Fair market value documented both directions. NOTE: barter is taxable income at FMV — CPA review required."
+  },
+  "clients": {
+    "kaf": {
+      "legalName": "kaf adventures [LEGAL ENTITY NAME]",
+      "shortName": "kaf",
+      "contact": "Mick [LAST NAME]",
+      "contactTitle": "[TITLE]",
+      "email": "[MICK EMAIL]",
+      "website": "https://kafadventures.com",
+      "class": "player",
+      "project": "Immersive 3D Trail Fly-By Web App + White-Label Embed CMS"
+    }
+  }
+}
