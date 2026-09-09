@@ -151,25 +151,26 @@ const work = [
     .intake-done { text-align: center; padding: 2rem 0; }
     .intake-done h3 { font-size: 2rem; margin-bottom: 0.6rem; }
 
-    [data-reveal] { opacity: 1; }
-    .reveal-ready [data-reveal] { opacity: 0; transform: translateY(24px); }
+    /* Reveal-on-scroll: hidden start state applies ONLY once JS opts in (.reveal-js on
+       <html>), so with no JS every section is visible. IntersectionObserver adds .in. */
+    .reveal-js [data-reveal] { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    [data-reveal].in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) { .reveal-js [data-reveal] { opacity: 1; transform: none; transition: none; } }
   </style>
 
   <script>
-    import gsap from 'gsap';
-    import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
+    // Bulletproof reveal via IntersectionObserver (reliable where ScrollTrigger measurement
+    // is fragile). Content is visible by default; JS opts into the animated version.
+    const els = Array.from(document.querySelectorAll('[data-reveal]'));
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reduced) {
-      // Only hide-then-reveal when JS + GSAP are live (no-JS keeps content visible).
-      document.documentElement.classList.add('reveal-ready');
-      gsap.registerPlugin(ScrollTrigger);
-      document.querySelectorAll('[data-reveal]').forEach((el) => {
-        gsap.to(el, {
-          opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
-          scrollTrigger: { trigger: el, start: 'top 88%' },
-        });
-      });
+    if (!reduced && 'IntersectionObserver' in window) {
+      document.documentElement.classList.add('reveal-js');
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+      // failsafe: never leave anything hidden
+      setTimeout(() => els.forEach((el) => el.classList.add('in')), 2500);
     }
 
     // Intake form → /api/intake
