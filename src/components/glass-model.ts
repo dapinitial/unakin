@@ -54,13 +54,18 @@ export class GlassModel extends HTMLElement {
 
   connectedCallback() {
     const shadow = this.attachShadow({ mode: 'open' });
-    shadow.innerHTML = `<style>:host{display:block;position:relative;}canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;}</style><canvas></canvas>`;
+    // Light-DOM children (the SVG line-art loading state) render in the slot, above the canvas;
+    // the page fades them out when the host gets data-loaded.
+    shadow.innerHTML = `<style>:host{display:block;position:relative;}canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;}slot{display:block;position:absolute;inset:0;pointer-events:none;}</style><canvas></canvas><slot></slot>`;
     const canvas = shadow.querySelector('canvas')!;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const url = this.getAttribute('model') ?? '/models/heart.glb';
     const mode = this.getAttribute('mode') === 'assemble' ? 'assemble' : 'shatter';
     const revealOn = this.getAttribute('reveal') === 'load' ? 'load' : 'view';
     const SPREAD = parseFloat(this.getAttribute('spread') ?? '2.6');
+    // Minimum ms between "in view" and the glass flash-in — lets the outline finish drawing.
+    const HOLD = reduced ? 0 : parseInt(this.getAttribute('hold') ?? '0', 10);
+    const seenAt = { t: revealOn === 'load' ? performance.now() : 0 };
     const W = () => Math.max(1, this.clientWidth), H = () => Math.max(1, this.clientHeight);
 
     const scene = new THREE.Scene();
@@ -157,13 +162,17 @@ export class GlassModel extends HTMLElement {
         end: mode === 'assemble' ? 'center 45%' : 'bottom top',
         onUpdate: (self) => { progress = mode === 'assemble' ? 1 - self.progress : self.progress; apply(); },
       });
-      if (revealOn === 'load' || this.#visible) this.#reveal(meshMats, edgeMats, core, reduced);
-    }, undefined, (e) => console.error('glass-model load error:', url, e));
+      if (revealOn === 'load' || this.#visible) this.#scheduleReveal(seenAt.t, HOLD, meshMats, edgeMats, core, reduced);
+    }, undefined, (e) => { console.error('glass-model load error:', url, e); this.setAttribute('data-error', ''); });
 
     // Only render (and only reveal) while on screen.
     const io = new IntersectionObserver((entries) => {
       this.#visible = entries.some((e) => e.isIntersecting);
-      if (this.#visible && meshMats.length && !this.#revealed) this.#reveal(meshMats, edgeMats, core, reduced);
+      if (this.#visible) {
+        if (!seenAt.t) seenAt.t = performance.now();
+        this.setAttribute('data-view', ''); // page CSS starts the outline draw-on
+        if (meshMats.length && !this.#revealed) this.#scheduleReveal(seenAt.t, HOLD, meshMats, edgeMats, core, reduced);
+      }
     }, { threshold: 0.2 });
     io.observe(this);
     this.#abort.signal.addEventListener('abort', () => io.disconnect());
@@ -186,10 +195,19 @@ export class GlassModel extends HTMLElement {
     this.#abort.signal.addEventListener('abort', () => ro.disconnect());
   }
 
+  // Waits out the remaining hold (outline draw-on) before the flash; idempotent.
+  #scheduleReveal(seenAt: number, hold: number, meshMats: THREE.MeshPhysicalMaterial[], edgeMats: THREE.LineBasicMaterial[], core: THREE.PointLight, reduced: boolean) {
+    if (this.#revealed) return;
+    this.#revealed = true;
+    const wait = Math.max(0, seenAt + hold - performance.now());
+    const t = setTimeout(() => this.#reveal(meshMats, edgeMats, core, reduced), wait);
+    this.#abort.signal.addEventListener('abort', () => clearTimeout(t));
+  }
+
   // Reveal: the glass is never hidden — the "flash-in" is the outline drawing on, a bright
   // emissive pulse through the glass, and an internal light burst that settles to a glow.
   #reveal(meshMats: THREE.MeshPhysicalMaterial[], edgeMats: THREE.LineBasicMaterial[], core: THREE.PointLight, reduced: boolean) {
-    this.#revealed = true;
+    this.setAttribute('data-loaded', ''); // page CSS dissolves the SVG outline
     if (reduced) { edgeMats.forEach((m) => (m.opacity = 0.14)); return; }
     const tl = gsap.timeline();
     tl.fromTo(edgeMats, { opacity: 0 }, { opacity: 0.95, duration: 0.5, ease: 'power2.out' }, 0);

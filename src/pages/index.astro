@@ -1,5 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
+import heartSvg from '../svg/heart.svg?raw';
+import brainSvg from '../svg/brain.svg?raw';
+
+// Line-art loading state for each glass model (tools/outline-svg.mjs). Each stroke gets an
+// animated gradient (violet → accent → mint) sliding along it; defs live inside the SVG so the
+// url(#id) reference is local and Safari-safe.
+const outline = (svg: string, id: string) => svg.replace(
+  '>',
+  `><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="600" y2="600" spreadMethod="repeat">
+    <stop offset="0" stop-color="#6d4aff"/><stop offset=".45" stop-color="#bcc0ff"/><stop offset=".7" stop-color="#8bf0cf"/><stop offset="1" stop-color="#6d4aff"/>
+    <animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="600 600" dur="2.6s" repeatCount="indefinite"/>
+  </linearGradient></defs>`,
+).replace('<svg ', `<svg style="--grad:url(#${id})" `);
 
 const services = [
   { k: 'Product design', d: 'Interfaces and product thinking — from first principle to pixel. Systems people actually want to use.' },
@@ -35,7 +48,12 @@ const work = [
       </div>
       <div class="hero-art" aria-hidden="true">
         <span class="ghost-word">HEART</span>
-        <glass-model class="hero-model" model="/models/heart.glb" mode="shatter" reveal="load"></glass-model>
+        <glass-model class="hero-model" model="/models/heart.glb" mode="shatter" reveal="load" hold="2400">
+          <div class="outline" set:html={outline(heartSvg, 'g-heart')} />
+        </glass-model>
+        <div class="stat stat-h1" data-reveal><b>Award</b><span>winning product design</span></div>
+        <div class="stat stat-h2" data-reveal><b>1 team</b><span>design &amp; build, same hands</span></div>
+        <div class="stat stat-h3" data-reveal><b>Senior</b><span>only — you talk to the makers</span></div>
       </div>
     </section>
 
@@ -57,7 +75,9 @@ const work = [
     <section class="block container thesis" id="thesis">
       <div class="thesis-art" aria-hidden="true">
         <span class="ghost-word">BRAIN</span>
-        <glass-model class="thesis-model" model="/models/brain.glb" mode="assemble" spread="3.2"></glass-model>
+        <glass-model class="thesis-model" model="/models/brain.glb" mode="assemble" spread="3.2" hold="2400">
+          <div class="outline" set:html={outline(brainSvg, 'g-brain')} />
+        </glass-model>
         <div class="stat stat-a" data-reveal><b>20 yrs</b><span>Apple · Microsoft</span></div>
         <div class="stat stat-b" data-reveal><b>0</b><span>handoffs — one team designs &amp; ships</span></div>
         <div class="stat stat-c" data-reveal><b>60 fps</b><span>real-time 3D in the browser</span></div>
@@ -164,6 +184,29 @@ const work = [
       .hero-model { inset: 0; }
       .ghost-word { font-size: clamp(3.5rem, 22vw, 7rem); }
     }
+
+    /* SVG line-art loading state: strokes draw on (gradient sliding through them) once the
+       model is in view, then dissolve when the glass flashes in. Sized to sit exactly where
+       the 3D model renders (the canvas host is inset -22% / -24%). */
+    .outline { position: absolute; inset: 12.5%; opacity: 1; transition: opacity 1.2s ease 0.15s; --step: 7ms; }
+    .thesis-model .outline { --step: 4.5ms; }
+    /* The SVG is injected via set:html, so its nodes have no Astro scope attribute → :global. */
+    .outline :global(svg) { width: 100%; height: 100%; display: block; overflow: visible; }
+    .outline :global(path) {
+      stroke: var(--grad); stroke-width: 1.5; vector-effect: non-scaling-stroke;
+      stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0.9;
+    }
+    glass-model[data-view] .outline :global(path) { animation: draw 1.3s cubic-bezier(0.3, 0.8, 0.3, 1) forwards; animation-delay: calc(var(--i) * var(--step)); }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    glass-model[data-loaded] .outline { opacity: 0; }
+    glass-model[data-error] .outline { opacity: 0.9; } /* no WebGL / load failed → the drawing IS the art */
+    @media (prefers-reduced-motion: reduce) { .outline :global(path) { stroke-dashoffset: 0; animation: none !important; } }
+
+    /* Heart stat cards (the .stat base styles live with the thesis block below). */
+    .stat-h1 { right: -4%; top: 12%; }
+    .stat-h2 { left: -7%; top: 50%; max-width: 12rem; }
+    .stat-h3 { right: -2%; bottom: 9%; max-width: 13rem; }
+    @media (max-width: 860px) { .stat-h1 { right: 0; } .stat-h2 { left: 0; } .stat-h3 { right: 0; bottom: 4%; } }
 
     /* Thesis: brain left, copy right, floating stat cards over the model. */
     .thesis { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; align-items: center; }
