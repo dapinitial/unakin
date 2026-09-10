@@ -3,14 +3,20 @@ import Base from '../layouts/Base.astro';
 import heartSvg from '../svg/heart.svg?raw';
 import brainSvg from '../svg/brain.svg?raw';
 
-// Line-art loading state for each glass model (tools/outline-svg.mjs). Each stroke gets an
-// animated gradient (violet → accent → mint) sliding along it; defs live inside the SVG so the
-// url(#id) reference is local and Safari-safe.
+// Line-art loading state for each glass model (tools/outline-svg.mjs). The strokes act as a
+// mask over moving light: a bright white→mint band sweeps diagonally through otherwise dim
+// violet lines (userSpaceOnUse gradient, translated across the 1000-box by SMIL). Defs live
+// inside the SVG so the url(#id) reference is local and Safari-safe.
 const outline = (svg: string, id: string) => svg.replace(
   '>',
-  `><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="600" y2="600" spreadMethod="repeat">
-    <stop offset="0" stop-color="#6d4aff"/><stop offset=".45" stop-color="#bcc0ff"/><stop offset=".7" stop-color="#8bf0cf"/><stop offset="1" stop-color="#6d4aff"/>
-    <animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="600 600" dur="2.6s" repeatCount="indefinite"/>
+  `><defs><linearGradient id="${id}" data-sweep gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1000" y2="1000" spreadMethod="pad">
+    <stop offset="0" stop-color="#6d4aff" stop-opacity=".55"/>
+    <stop offset=".40" stop-color="#6d4aff" stop-opacity=".55"/>
+    <stop offset=".48" stop-color="#bcc0ff"/>
+    <stop offset=".52" stop-color="#ffffff"/>
+    <stop offset=".58" stop-color="#8bf0cf"/>
+    <stop offset=".68" stop-color="#6d4aff" stop-opacity=".55"/>
+    <stop offset="1" stop-color="#6d4aff" stop-opacity=".55"/>
   </linearGradient></defs>`,
 ).replace('<svg ', `<svg style="--grad:url(#${id})" `);
 
@@ -48,7 +54,7 @@ const work = [
       </div>
       <div class="hero-art" aria-hidden="true">
         <span class="ghost-word">HEART</span>
-        <glass-model class="hero-model" model="/models/heart.glb" mode="shatter" reveal="load" hold="2400">
+        <glass-model class="hero-model" model="/models/heart.glb" mode="shatter" reveal="load" hold="1500">
           <div class="outline" set:html={outline(heartSvg, 'g-heart')} />
         </glass-model>
         <div class="stat stat-h1" data-reveal><b>Award</b><span>winning product design</span></div>
@@ -75,7 +81,7 @@ const work = [
     <section class="block container thesis" id="thesis">
       <div class="thesis-art" aria-hidden="true">
         <span class="ghost-word">BRAIN</span>
-        <glass-model class="thesis-model" model="/models/brain.glb" mode="assemble" spread="3.2" hold="2400">
+        <glass-model class="thesis-model" model="/models/brain.glb" mode="assemble" spread="3.2" hold="1500">
           <div class="outline" set:html={outline(brainSvg, 'g-brain')} />
         </glass-model>
         <div class="stat stat-a" data-reveal><b>20 yrs</b><span>Apple · Microsoft</span></div>
@@ -125,7 +131,34 @@ const work = [
         rope-teams get a fairer one. We'll figure out where you land together.
       </p>
 
-      <form class="intake" id="intake" data-reveal>
+      <!-- Electric-border card (David's CodePen, via /spacelab-styles): the border layers sit
+           behind the form; the turbulence filter only warps the empty border layer. -->
+      <svg class="eb-defs" aria-hidden="true" width="0" height="0">
+        <defs>
+          <filter id="turbulent-displace" color-interpolation-filters="sRGB" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise1" seed="1" />
+            <feOffset in="noise1" dx="0" dy="0" result="offsetNoise1"><animate attributeName="dy" values="700; 0" dur="6s" repeatCount="indefinite" calcMode="linear" /></feOffset>
+            <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise2" seed="1" />
+            <feOffset in="noise2" dx="0" dy="0" result="offsetNoise2"><animate attributeName="dy" values="0; -700" dur="6s" repeatCount="indefinite" calcMode="linear" /></feOffset>
+            <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise1" seed="2" />
+            <feOffset in="noise1" dx="0" dy="0" result="offsetNoise3"><animate attributeName="dx" values="490; 0" dur="6s" repeatCount="indefinite" calcMode="linear" /></feOffset>
+            <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise2" seed="2" />
+            <feOffset in="noise2" dx="0" dy="0" result="offsetNoise4"><animate attributeName="dx" values="0; -490" dur="6s" repeatCount="indefinite" calcMode="linear" /></feOffset>
+            <feComposite in="offsetNoise1" in2="offsetNoise2" result="part1" />
+            <feComposite in="offsetNoise3" in2="offsetNoise4" result="part2" />
+            <feBlend in="part1" in2="part2" mode="color-dodge" result="combinedNoise" />
+            <feDisplacementMap in="SourceGraphic" in2="combinedNoise" scale="30" xChannelSelector="R" yChannelSelector="B" />
+          </filter>
+        </defs>
+      </svg>
+      <div class="ebox" data-reveal>
+        <div class="eb-layers" aria-hidden="true">
+          <div class="eb-outer"><div class="eb-main"></div></div>
+          <div class="eb-glow1"></div><div class="eb-glow2"></div>
+          <div class="eb-overlay1"></div><div class="eb-overlay2"></div>
+          <div class="eb-bgglow"></div>
+        </div>
+      <form class="intake" id="intake">
         <div class="two">
           <label>Your name<input name="name" required placeholder="Jane Maker" /></label>
           <label>Email<input name="email" type="email" required placeholder="jane@company.com" /></label>
@@ -148,7 +181,11 @@ const work = [
         <!-- honeypot: bots fill it, humans never see it -->
         <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <div class="intake-actions">
-          <button class="btn" type="submit">Send it →</button>
+          <!-- Glass button (David's CodePen, via /spacelab-styles) tuned for the dark ground -->
+          <div class="gbtn-wrap">
+            <button class="gbtn" type="submit"><span>Send it →</span></button>
+            <div class="gbtn-shadow"></div>
+          </div>
           <span class="intake-msg" role="status"></span>
         </div>
       </form>
@@ -156,6 +193,7 @@ const work = [
       <div class="intake-done" hidden>
         <h3 class="grad-text">Got it. 🤝</h3>
         <p class="muted">We'll be in touch soon — from <strong>hello@unakin.com</strong>. Talk shortly.</p>
+      </div>
       </div>
     </section>
   </main>
@@ -188,15 +226,16 @@ const work = [
     /* SVG line-art loading state: strokes draw on (gradient sliding through them) once the
        model is in view, then dissolve when the glass flashes in. Sized to sit exactly where
        the 3D model renders (the canvas host is inset -22% / -24%). */
-    .outline { position: absolute; inset: 12.5%; opacity: 1; transition: opacity 1.2s ease 0.15s; --step: 7ms; }
-    .thesis-model .outline { --step: 4.5ms; }
+    .outline { position: absolute; inset: 12.5%; opacity: 1; transition: opacity 0.6s ease; --step: 5ms; }
+    .thesis-model .outline { --step: 3ms; }
     /* The SVG is injected via set:html, so its nodes have no Astro scope attribute → :global. */
-    .outline :global(svg) { width: 100%; height: 100%; display: block; overflow: visible; }
+    /* one glow filter on the whole drawing (not per path): bloom for the light sweep */
+    .outline :global(svg) { width: 100%; height: 100%; display: block; overflow: visible; filter: drop-shadow(0 0 5px rgba(188, 192, 255, 0.55)); }
     .outline :global(path) {
-      stroke: var(--grad); stroke-width: 1.5; vector-effect: non-scaling-stroke;
-      stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0.9;
+      stroke: var(--grad); stroke-width: 1.6; vector-effect: non-scaling-stroke;
+      stroke-dasharray: 1; stroke-dashoffset: 1;
     }
-    glass-model[data-view] .outline :global(path) { animation: draw 1.3s cubic-bezier(0.3, 0.8, 0.3, 1) forwards; animation-delay: calc(var(--i) * var(--step)); }
+    glass-model[data-view] .outline :global(path) { animation: draw 1s cubic-bezier(0.3, 0.8, 0.3, 1) forwards; animation-delay: calc(var(--i) * var(--step)); }
     @keyframes draw { to { stroke-dashoffset: 0; } }
     glass-model[data-loaded] .outline { opacity: 0; }
     glass-model[data-error] .outline { opacity: 0.9; } /* no WebGL / load failed → the drawing IS the art */
@@ -248,22 +287,83 @@ const work = [
     @media (max-width: 640px) { .workrow { grid-template-columns: 1fr; gap: 0.5rem; } }
 
     .intro { max-width: 52ch; margin-bottom: 2rem; }
-    .intake { display: grid; gap: 1rem; }
-    .intake .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
-    @media (max-width: 560px) { .intake .two { grid-template-columns: minmax(0, 1fr); } }
-    .intake label { display: grid; gap: 0.35rem; font-size: 0.85rem; color: var(--muted); }
-    .intake input, .intake select, .intake textarea {
-      width: 100%; min-width: 0; background: var(--panel-2); border: 1px solid var(--border); border-radius: 12px;
-      color: var(--text); padding: 0.75rem 0.9rem; font: inherit; font-size: 0.98rem;
+    /* ── Electric-border card around the form (spacelab-styles / David's CodePen) ──
+       Content is in normal flow; the border + glow layers are absolute behind it, and only
+       the empty .eb-main border layer gets the turbulence filter (so the inputs never warp). */
+    .ebox {
+      --eb: #9d8cff;
+      --eb-light: oklch(from var(--eb) l c h);
+      --eb-grad: oklch(from var(--eb) 0.3 calc(c / 2) h / 0.4);
+      position: relative; border-radius: 24px; padding: 2px;
+      background: linear-gradient(-30deg, var(--eb-grad), transparent, var(--eb-grad)), linear-gradient(#0d1220, #0d1220);
     }
+    .eb-layers { position: absolute; inset: 2px; border-radius: 24px; pointer-events: none; }
+    .eb-layers > * { position: absolute; inset: 0; border-radius: 24px; }
+    .eb-outer { border: 2px solid color-mix(in oklch, var(--eb) 50%, transparent); padding: 0 4px 4px 0; }
+    .eb-main { position: absolute; inset: -4px 0 0 -4px; width: 100%; height: 100%; border-radius: 24px; border: 2px solid var(--eb); filter: url(#turbulent-displace); }
+    .eb-glow1 { border: 2px solid color-mix(in oklch, var(--eb) 60%, transparent); filter: blur(1px); }
+    .eb-glow2 { border: 2px solid var(--eb-light); filter: blur(4px); }
+    .eb-overlay1, .eb-overlay2 { mix-blend-mode: overlay; transform: scale(1.1); filter: blur(16px); background: linear-gradient(-30deg, white, transparent 30%, transparent 70%, white); }
+    .eb-overlay1 { opacity: 0.55; }
+    .eb-overlay2 { opacity: 0.3; }
+    .eb-bgglow { filter: blur(32px); transform: scale(1.1); opacity: 0.28; z-index: -1; background: linear-gradient(-30deg, var(--eb-light), transparent, var(--eb)); }
+    @media (prefers-reduced-motion: reduce) { .eb-main { filter: none; } }
+
+    .intake { position: relative; z-index: 2; display: grid; gap: 1.1rem; padding: clamp(1.4rem, 4vw, 2.4rem); background: rgba(13, 18, 32, 0.72); border-radius: 22px; backdrop-filter: blur(14px); }
+    .intake .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.1rem; }
+    @media (max-width: 560px) { .intake .two { grid-template-columns: minmax(0, 1fr); } }
+    .intake label { display: grid; gap: 0.45rem; font-family: var(--mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--muted); }
+    .intake label .muted { text-transform: none; letter-spacing: 0; opacity: 0.8; }
+    .intake input, .intake select, .intake textarea {
+      width: 100%; min-width: 0; font: inherit; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 1rem; letter-spacing: 0; text-transform: none;
+      color: var(--text); padding: 0.85rem 1rem; border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+      border: 1px solid rgba(188, 192, 255, 0.16);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+      transition: border-color 0.2s ease, box-shadow 0.25s ease, background 0.2s ease;
+    }
+    .intake input::placeholder, .intake textarea::placeholder { color: rgba(154, 159, 196, 0.55); }
     .intake textarea { resize: vertical; line-height: 1.6; }
-    .intake input:focus-visible, .intake select:focus-visible, .intake textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .intake input:focus-visible, .intake select:focus-visible, .intake textarea:focus-visible {
+      outline: none; border-color: rgba(188, 192, 255, 0.7); background: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 0 0 3px rgba(109, 74, 255, 0.28), 0 0 24px rgba(139, 240, 207, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .intake select { appearance: none; -webkit-appearance: none; padding-right: 2.4rem; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23bcc0ff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"), linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); background-repeat: no-repeat; background-position: right 1rem center, 0 0; background-size: 10px, auto; }
     .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
-    .intake-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 0.4rem; }
-    .intake-msg { font-size: 0.85rem; }
+    .intake-actions { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; margin-top: 0.4rem; }
+    .intake-msg { font-size: 0.85rem; color: var(--muted); }
     .intake-msg.err { color: #ffb4b4; }
-    .intake-done { text-align: center; padding: 2rem 0; }
+    .intake-done { position: relative; z-index: 2; text-align: center; padding: 3rem 1.5rem; }
     .intake-done h3 { font-size: 2rem; margin-bottom: 0.6rem; }
+
+    /* ── Glass button (spacelab-styles / David's CodePen), dark-ground tuning ── */
+    @property --angle-1 { syntax: '<angle>'; inherits: false; initial-value: -75deg; }
+    @property --angle-2 { syntax: '<angle>'; inherits: false; initial-value: -45deg; }
+    .gbtn-wrap { --t: 400ms; --e: cubic-bezier(0.25, 1, 0.5, 1); position: relative; z-index: 2; border-radius: 999vw; font-size: 1rem; }
+    .gbtn-shadow { --cut: 2em; position: absolute; width: calc(100% + var(--cut)); height: calc(100% + var(--cut)); top: calc(0% - var(--cut) / 2); left: calc(0% - var(--cut) / 2); filter: blur(6px); pointer-events: none; }
+    .gbtn-shadow::after { content: ''; position: absolute; inset: 0; border-radius: 999vw; background: linear-gradient(180deg, rgba(109, 74, 255, 0.55), rgba(139, 240, 207, 0.25)); width: calc(100% - var(--cut)); height: calc(100% - var(--cut)); top: calc(var(--cut) / 2 + 0.35em); left: calc(var(--cut) / 2); transition: all var(--t) var(--e); opacity: 0.8; }
+    .gbtn {
+      --bw: 1px; all: unset; cursor: pointer; position: relative; z-index: 3; border-radius: 999vw;
+      background: linear-gradient(-75deg, rgba(188, 192, 255, 0.12), rgba(255, 255, 255, 0.28), rgba(188, 192, 255, 0.12));
+      box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.15), inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.35), 0 0.25em 0.125em -0.125em rgba(0, 0, 0, 0.4), 0 0 0.1em 0.25em inset rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(4px); transition: all var(--t) var(--e);
+    }
+    .gbtn:hover { transform: scale(0.975); box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.15), inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.45), 0 0.15em 0.05em -0.1em rgba(0, 0, 0, 0.45), 0 0 0.05em 0.1em inset rgba(255, 255, 255, 0.3); }
+    .gbtn span { position: relative; display: block; user-select: none; font-weight: 600; letter-spacing: -0.01em; color: #fff; text-shadow: 0 0.1em 0.2em rgba(0, 0, 0, 0.35); padding: 0.85em 1.6em; transition: all var(--t) var(--e); }
+    .gbtn span::after { content: ''; position: absolute; z-index: 3; inset: calc(var(--bw) / 2); border-radius: 999vw; overflow: clip; pointer-events: none; mix-blend-mode: screen;
+      background: linear-gradient(var(--angle-2), rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.55) 40% 50%, rgba(255, 255, 255, 0) 55%);
+      background-size: 200% 200%; background-position: 0% 50%; background-repeat: no-repeat;
+      transition: background-position calc(var(--t) * 1.25) var(--e), --angle-2 calc(var(--t) * 1.25) var(--e); }
+    .gbtn:hover span::after { background-position: 25% 50%; }
+    .gbtn:active span::after { background-position: 50% 15%; --angle-2: -15deg; }
+    .gbtn::after { content: ''; position: absolute; z-index: 1; inset: calc(var(--bw) * -0.5); border-radius: 999vw; padding: var(--bw); box-sizing: border-box; pointer-events: none;
+      background: conic-gradient(from var(--angle-1) at 50% 50%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 5% 40%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0) 60% 95%, rgba(255, 255, 255, 0.9)), linear-gradient(180deg, rgba(188, 192, 255, 0.5), rgba(188, 192, 255, 0.5));
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; -webkit-mask-composite: xor;
+      transition: all var(--t) var(--e), --angle-1 500ms ease; }
+    .gbtn:hover::after { --angle-1: -125deg; }
+    .gbtn:active::after { --angle-1: -75deg; }
+    .gbtn-wrap:has(.gbtn:active) { transform: rotate3d(1, 0, 0, 25deg); }
+    .gbtn:disabled { opacity: 0.6; cursor: progress; }
 
     /* Reveal-on-scroll: hidden start state applies ONLY once JS opts in (.reveal-js on
        <html>), so with no JS every section is visible. IntersectionObserver adds .in. */
@@ -285,6 +385,22 @@ const work = [
       els.forEach((el) => io.observe(el));
       // failsafe: never leave anything hidden
       setTimeout(() => els.forEach((el) => el.classList.add('in')), 2500);
+    }
+
+    // Light sweep through the outline strokes: slide each stroke gradient diagonally across the
+    // drawing (JS-driven — SMIL on gradientTransform proved unreliable in Chrome). Runs while
+    // any outline is still showing; stops once every model has dissolved it.
+    const sweeps = Array.from(document.querySelectorAll<SVGLinearGradientElement>('linearGradient[data-sweep]'));
+    if (sweeps.length && !reduced) {
+      const hosts = Array.from(document.querySelectorAll('glass-model'));
+      const t0 = performance.now();
+      const tick = (now: number) => {
+        const v = -1100 + 2200 * (((now - t0) / 2200) % 1);
+        for (const g of sweeps) g.setAttribute('gradientTransform', `translate(${v.toFixed(1)} ${v.toFixed(1)})`);
+        const showing = hosts.some((h) => !h.hasAttribute('data-loaded') || h.hasAttribute('data-error'));
+        if (showing || now - t0 < 4000) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
     }
 
     // Intake form → /api/intake
