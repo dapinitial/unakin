@@ -80,6 +80,12 @@ const ld = {
     </script>
 
     <style is:global>
+      /* Neotrax — techno display face (Befonts, commercial-use license on file). */
+      @font-face {
+        font-family: 'Neotrax';
+        src: url('/fonts/neotrax-regular.otf') format('opentype');
+        font-weight: 400; font-style: normal; font-display: swap;
+      }
       :root {
         --bg-1: rgb(8, 10, 15);
         --bg-2: rgb(0, 17, 32);
@@ -92,6 +98,7 @@ const ld = {
         --violet: #6d4aff;
         --mint: #8bf0cf;
         --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        --display: 'Neotrax', 'Fraunces', system-ui, sans-serif;
         color-scheme: dark;
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
