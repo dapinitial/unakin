@@ -14,22 +14,28 @@ const work = [
   { name: 'd-tours', tag: 'Product · mobile', d: 'A location-aware experience layer — turning where you are into something worth exploring.' },
 ];
 ---
-<Base heart={true} path="/">
+<Base path="/">
   <main>
-    <!-- HERO -->
+    <!-- HERO — glass anatomical heart; intact at rest, shatters as you scroll -->
     <section class="hero container">
-      <p class="eyebrow" data-reveal>Design &amp; engineering studio</p>
-      <h1 class="hero-title" data-reveal>
-        Not akin to<br /><span class="grad-text">anything else.</span>
-      </h1>
-      <p class="hero-sub" data-reveal>
-        Unakin is an avant-garde design &amp; engineering studio. We design and ship
-        products — interfaces, systems, and immersive 3D — with the craft of a team that
-        spent two decades at <strong>Apple</strong> and <strong>Microsoft</strong>.
-      </p>
-      <div class="hero-cta" data-reveal>
-        <a class="btn" href="#start">Start a project</a>
-        <a class="ghost-btn" href="#work">See the work</a>
+      <div class="hero-copy">
+        <p class="eyebrow" data-reveal>Design &amp; engineering studio</p>
+        <h1 class="hero-title" data-reveal>
+          Not akin to<br /><span class="grad-text">anything else.</span>
+        </h1>
+        <p class="hero-sub" data-reveal>
+          Unakin is an avant-garde design &amp; engineering studio. We design and ship
+          products — interfaces, systems, and immersive 3D — with the craft of a team that
+          spent two decades at <strong>Apple</strong> and <strong>Microsoft</strong>.
+        </p>
+        <div class="hero-cta" data-reveal>
+          <a class="btn" href="#start">Start a project</a>
+          <a class="ghost-btn" href="#work">See the work</a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <span class="ghost-word">HEART</span>
+        <glass-model class="hero-model" model="/models/heart.glb" mode="shatter" reveal="load"></glass-model>
       </div>
     </section>
 
@@ -44,6 +50,31 @@ const work = [
             <p class="muted">{s.d}</p>
           </article>
         ))}
+      </div>
+    </section>
+
+    <!-- THESIS — glass brain assembles from shards as it scrolls into view -->
+    <section class="block container thesis" id="thesis">
+      <div class="thesis-art" aria-hidden="true">
+        <span class="ghost-word">BRAIN</span>
+        <glass-model class="thesis-model" model="/models/brain.glb" mode="assemble" spread="3.2"></glass-model>
+        <div class="stat stat-a" data-reveal><b>20 yrs</b><span>Apple · Microsoft</span></div>
+        <div class="stat stat-b" data-reveal><b>0</b><span>handoffs — one team designs &amp; ships</span></div>
+        <div class="stat stat-c" data-reveal><b>60 fps</b><span>real-time 3D in the browser</span></div>
+      </div>
+      <div class="thesis-copy">
+        <p class="eyebrow" data-reveal>The studio thesis</p>
+        <h2 class="block-h" data-reveal>Heart for the craft.<br /><em>Brain</em> for the build.</h2>
+        <p class="muted" data-reveal>
+          Most studios split feeling from function — a design agency hands a deck to a dev shop
+          and the soul leaks out in between. We're one team, so the thing you fall for in the
+          mockup is the thing that ships: same hands, same taste, same obsession with the
+          last 2%.
+        </p>
+        <p class="muted" data-reveal>
+          Senior only. No account managers, no juniors learning on your dime. You talk to the
+          people doing the work.
+        </p>
       </div>
     </section>
 
@@ -79,7 +110,7 @@ const work = [
           <label>Your name<input name="name" required placeholder="Jane Maker" /></label>
           <label>Email<input name="email" type="email" required placeholder="jane@company.com" /></label>
         </div>
-        <label>Company <span class="muted">(optional)</span><input name="company" placeholder="Company or project" /></label>
+        <label><span>Company <span class="muted">(optional)</span></span><input name="company" placeholder="Company or project" /></label>
         <label>What are you building?<textarea name="project" required rows="5" placeholder="The idea, the problem, the dream. As much or as little as you've got."></textarea></label>
         <div class="two">
           <label>Budget
@@ -92,7 +123,7 @@ const work = [
               <option>Barter / trade</option>
             </select>
           </label>
-          <label>Timeline <span class="muted">(optional)</span><input name="timeline" placeholder="e.g. this quarter" /></label>
+          <label><span>Timeline <span class="muted">(optional)</span></span><input name="timeline" placeholder="e.g. this quarter" /></label>
         </div>
         <!-- honeypot: bots fill it, humans never see it -->
         <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
@@ -110,11 +141,51 @@ const work = [
   </main>
 
   <style>
-    .hero { padding: clamp(4rem, 12vh, 9rem) 0 clamp(3rem, 8vh, 6rem); min-height: 78vh; display: flex; flex-direction: column; justify-content: center; }
-    .hero-title { font-family: var(--display); text-transform: uppercase; font-weight: 400; font-size: clamp(2.4rem, 8.6vw, 6.3rem); line-height: 0.82; letter-spacing: 0.07em; margin: 1.2rem 0 0; }
-    .hero-sub { max-width: 46ch; margin-top: 1.6rem; font-size: clamp(1.05rem, 2.2vw, 1.3rem); color: var(--muted); }
+    .hero {
+      position: relative; padding: clamp(3rem, 9vh, 6rem) 0 clamp(3rem, 8vh, 6rem); min-height: calc(100vh - 4.5rem);
+      display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); align-items: center; gap: 2rem;
+    }
+    .hero-copy { position: relative; z-index: 2; }
+    .hero-title { font-family: var(--display); text-transform: uppercase; font-weight: 400; font-size: clamp(2.4rem, 6.4vw, 5.6rem); line-height: 0.82; letter-spacing: 0.07em; margin: 1.2rem 0 0; }
+    .hero-sub { max-width: 44ch; margin-top: 1.6rem; font-size: clamp(1.05rem, 2vw, 1.25rem); color: var(--muted); }
     .hero-sub strong { color: var(--text); font-weight: 600; }
     .hero-cta { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 2.2rem; }
+    .hero-art { position: relative; aspect-ratio: 1; max-height: 78vh; display: grid; place-items: center; }
+    .hero-model { position: absolute; inset: -22%; }
+    /* Ghosted background word (editorial/techno, from the Arkkhe refs). */
+    .ghost-word {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      font-family: var(--display); text-transform: uppercase; font-size: clamp(5rem, 15vw, 15rem); letter-spacing: 0.08em;
+      color: transparent; -webkit-text-stroke: 1px rgba(188, 192, 255, 0.16); user-select: none; pointer-events: none; white-space: nowrap;
+    }
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; min-height: 0; padding-top: 2rem; }
+      .hero-art { order: -1; aspect-ratio: auto; height: 46vh; max-height: 22rem; margin-inline: -1.25rem; }
+      .hero-model { inset: 0; }
+      .ghost-word { font-size: clamp(3.5rem, 22vw, 7rem); }
+    }
+
+    /* Thesis: brain left, copy right, floating stat cards over the model. */
+    .thesis { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; align-items: center; }
+    .thesis-art { position: relative; aspect-ratio: 1; max-height: 72vh; }
+    .thesis-model { position: absolute; inset: -24%; }
+    .thesis-copy .block-h { margin-bottom: 1.4rem; }
+    .thesis-copy p.muted { max-width: 44ch; margin-bottom: 1rem; font-size: 1.02rem; }
+    .stat {
+      position: absolute; z-index: 2; display: grid; gap: 0.1rem; padding: 0.8rem 1rem; border-radius: 14px;
+      background: rgba(13, 18, 32, 0.62); border: 1px solid var(--border); backdrop-filter: blur(10px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+    .stat b { font-family: var(--display); font-weight: 400; font-size: 1.6rem; letter-spacing: 0.05em; color: var(--accent); line-height: 1; }
+    .stat span { font-family: var(--mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+    .stat-a { left: -4%; top: 12%; }
+    .stat-b { right: -6%; top: 46%; max-width: 13rem; }
+    .stat-c { left: 6%; bottom: 8%; }
+    @media (max-width: 860px) {
+      .thesis { grid-template-columns: 1fr; gap: 1rem; }
+      .thesis-art { max-height: 60vh; }
+      .stat-a { left: 0; } .stat-b { right: 0; } .stat-c { left: 2%; }
+    }
 
     .block { padding: clamp(3rem, 8vh, 5.5rem) 0; }
     .block-h { font-size: clamp(1.9rem, 5vw, 3rem); font-weight: 600; margin: 0.8rem 0 2rem; }

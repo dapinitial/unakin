@@ -3,13 +3,11 @@ export interface Props {
   title?: string;
   description?: string;
   path?: string;
-  heart?: boolean; // mount the 3D heart island (hero only)
 }
 const {
   title = 'Unakin™ — avant-garde design & engineering studio',
   description = 'Unakin is an avant-garde design & engineering studio. We design and ship products — interfaces, systems, and immersive 3D — with the craft of a team that spent 20 years at Apple and Microsoft.',
   path = '/',
-  heart = false,
 } = Astro.props;
 const canonical = new URL(path, 'https://www.unakin.com').href;
 const ld = {
@@ -52,7 +50,6 @@ const ld = {
   </head>
   <body>
     <gradient-blob></gradient-blob>
-    {heart && <heart-model src="/models/heart/"></heart-model>}
 
     <header class="nav">
       <a class="brand" href="/">unakin<span class="tm">™</span></a>
@@ -67,16 +64,27 @@ const ld = {
 
     <footer class="foot">
       <div class="foot-in">
-        <span class="brand sm">unakin<span class="tm">™</span></span>
-        <span class="muted">Avant-garde design &amp; engineering · Seattle</span>
-        <a class="muted" href="mailto:hello@unakin.com">hello@unakin.com</a>
+        <div class="foot-brand">
+          <span class="brand sm">unakin<span class="tm">™</span></span>
+          <p class="muted">Avant-garde design &amp; engineering.<br />Seattle, WA — working worldwide.</p>
+        </div>
+        <nav class="foot-links" aria-label="Footer">
+          <a href="/#work">Work</a>
+          <a href="/#studio">Studio</a>
+          <a href="/#start">Start a project</a>
+          <a href="https://portal.unakin.com">Client portal</a>
+        </nav>
+        <div class="foot-contact">
+          <a class="foot-mail" href="mailto:hello@unakin.com">hello@unakin.com</a>
+          <span class="muted mono-sm">© {new Date().getFullYear()} Unakin, LLC</span>
+        </div>
       </div>
     </footer>
 
     <script>
       import '../components/gradient-blob';
-      // three.js is heavy — load the heart only if the page mounts one.
-      if (document.querySelector('heart-model')) import('../components/heart-model');
+      // three.js is heavy — load it only if the page mounts a glass model.
+      if (document.querySelector('glass-model')) import('../components/glass-model');
     </script>
 
     <style is:global>
@@ -144,8 +152,13 @@ const ld = {
         background: linear-gradient(40deg, var(--bg-1), var(--bg-2));
       }
       gradient-blob canvas { display: block; width: 100%; height: 100%; }
-      heart-model { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
-      heart-model canvas { display: block; width: 100%; height: 100%; }
+      /* Glass models fill whatever box the page gives them (canvas lives in the shadow root). */
+      glass-model {
+        display: block; position: relative;
+        /* feather the canvas so bloom halos / flying shards never meet a hard edge */
+        -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 58%, transparent 100%);
+        mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 58%, transparent 100%);
+      }
 
       /* Nav + footer */
       .nav {
@@ -164,9 +177,21 @@ const ld = {
 
       main { position: relative; z-index: 3; }
 
-      .foot { position: relative; z-index: 3; border-top: 1px solid var(--border); margin-top: 6rem; padding: 2.5rem 0; background: rgba(8, 10, 15, 0.5); }
-      .foot-in { width: min(100% - 2.5rem, 1120px); margin-inline: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.4rem; font-size: 0.85rem; }
-      .foot .muted:hover { color: var(--accent); }
+      .foot { position: relative; z-index: 3; border-top: 1px solid var(--border); margin-top: 4rem; padding: 3rem 0 2.5rem; background: rgba(8, 10, 15, 0.6); backdrop-filter: blur(10px); }
+      .foot-in {
+        width: min(100% - 2.5rem, 1120px); margin-inline: auto;
+        display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 2rem; align-items: start; font-size: 0.9rem;
+      }
+      .foot-brand p { margin-top: 0.6rem; font-size: 0.85rem; line-height: 1.5; }
+      .foot-links { display: grid; gap: 0.5rem; align-content: start; }
+      .foot-links a { color: var(--muted); transition: color 0.2s; width: fit-content; }
+      .foot-links a:hover { color: var(--accent); }
+      .foot-contact { display: grid; gap: 0.5rem; justify-items: start; }
+      @media (min-width: 720px) { .foot-contact { justify-items: end; text-align: right; } }
+      .foot-mail { font-family: var(--mono); font-size: 0.85rem; color: var(--accent); border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+      .foot-mail:hover { border-color: var(--accent); }
+      .mono-sm { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; }
+      @media (max-width: 720px) { .foot-in { grid-template-columns: 1fr; gap: 1.6rem; } }
 
       @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
     </style>
