@@ -1,0 +1,588 @@
+---
+// Private case study: FujiFilm SonoSite iViz (2013). Password-gated (lib/gate.ts), noindex.
+// Same substance as the davidpuerto.com study, re-skinned in the Unakin system: dark glass,
+// Neotrax display headings, whiteboard sketches inked in light on dark, mint for the thumb.
+import Base from '../../layouts/Base.astro';
+import { isUnlocked, gateConfigured } from '../../lib/gate';
+export const prerender = false;
+
+const unlocked = isUnlocked(Astro.cookies);
+const wrong = Astro.url.searchParams.get('e') === '1';
+const configured = gateConfigured();
+const here = Astro.url.pathname;
+---
+<Base title="SonoSite iViz — a case study · Unakin" description="Private case study." path={here} noindex={true}>
+  {!unlocked ? (
+    <main class="lock">
+      <section class="lock-card">
+        <p class="eyebrow">Private case study</p>
+        <h1 class="display-h lock-h"><span class="glint">SonoSite</span><br /><span class="grad-text glint">iViz.</span></h1>
+        <p class="muted lock-sub">Hardware-device UX · one-thumb radial navigation · prototyped in code, 2013. Shared with a password for portfolio review.</p>
+        <form method="POST" action="/api/unlock" class="lock-form">
+          <input type="hidden" name="next" value={here} />
+          <label>Password<input name="password" type="password" required autocomplete="current-password" autofocus placeholder="••••••••" /></label>
+          <button class="btn" type="submit">Open the study →</button>
+        </form>
+        {wrong && <p class="lock-err">That's not it — check the note that came with the link.</p>}
+        {!configured && <p class="lock-err">The gate isn't configured on this server yet.</p>}
+        <p class="muted lock-foot">Need the password? <a href="mailto:hello@unakin.com?subject=SonoSite%20case%20study">hello@unakin.com</a></p>
+      </section>
+    </main>
+  ) : (
+    <main class="cs">
+      <!-- ============ HERO ============ -->
+      <section class="cs-hero container">
+        <p class="eyebrow" data-reveal>Case study · FujiFilm SonoSite · 2013 → shipped 2015</p>
+        <h1 class="display-h cs-title" data-reveal>
+          <span class="glint">iViz — think</span><br />
+          <span class="grad-text glint">Tricorder.</span>
+        </h1>
+        <ul class="keypoints" data-reveal>
+          <li>Hardware-device UX</li>
+          <li>One-thumb radial navigation</li>
+          <li>Prototyped in code, on the device's footprint</li>
+        </ul>
+        <div class="hero-img" data-reveal>
+          <img src="/images/case-studies/sonosite/sonosite2.jpg" alt="The iViz prototype UI: the radial wheel in the thumb corner driving depth while the scan fills the screen" loading="eager" />
+        </div>
+      </section>
+
+      <!-- ============ HOW I GOT HERE (the candid lead-in) ============ -->
+      <section class="block container narrow leadin">
+        <p class="eyebrow" data-reveal>How I got here</p>
+        <div class="lines">
+          <h3 data-reveal><em>Twenty years ago I was building software in Flash.</em><span>Real applications — and every year the ceiling on what I could do in JavaScript got higher. I kept leveling up toward it.</span></h3>
+          <h3 data-reveal><em>Thirteen years ago I moved to Seattle to take the craft further.</em><span>And found myself on an industrial design team, making a physical product for human hands for the first time in my life.</span></h3>
+          <h3 data-reveal><em>I didn't know if I could do it.</em><span>I thought I could. I wanted to take a stab at it. The Experience Team of industrial designers let me drive — and that was the opportunity of a lifetime.</span></h3>
+          <h3 data-reveal><em>One hand on the probe. One thumb on the device.</em><span>That's the whole brief.</span></h3>
+        </div>
+      </section>
+
+      <!-- ============ ROLE ============ -->
+      <section class="block container">
+        <div class="breakdown">
+          <div data-reveal>
+            <h6>Project</h6>
+            <p>FujiFilm SonoSite <strong>iViz</strong> — a handheld, pocket-class ultrasound for military and medical professionals. Star Trek Tricorder, for real.</p>
+            <h6>Team</h6>
+            <p>The "Experience Team" inside the Brand Studio: industrial design, interaction design, human factors, mechanical engineering, one software engineer. The industrial designers shaped the <em>object</em>; they didn't code. I was brought in to make the gesture real — the bridge between the shell and the boards.</p>
+          </div>
+          <div data-reveal>
+            <h6>My role</h6>
+            <ul>
+              <li>UX + UI prototyping (HTML5 / CSS3 / JS)</li>
+              <li>Interaction &amp; gesture design</li>
+              <li>The design-engineering bridge between ID and engineering</li>
+              <li>User research: A/B, surveys, direct observation</li>
+            </ul>
+            <h6>Tools</h6>
+            <ul>
+              <li>HTML5 / CSS3 / JavaScript</li>
+              <li>iPad Mini — the target device's footprint, so every test was true-to-hand</li>
+              <li>Whiteboard first, then code</li>
+            </ul>
+          </div>
+          <div data-reveal>
+            <h6>Timeline</h6>
+            <ul class="timeline">
+              <li>2013 — exploration + touch prototypes</li>
+              <li>2013 — two-phase validation</li>
+              <li>2015 — iViz ships</li>
+            </ul>
+            <h6>The brief</h6>
+            <p>A diagnostic imaging device you carry like a phone, operated by people whose other hand is always full. Intuitive, one-handed, safe under pressure.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ USERS ============ -->
+      <section class="block container narrow">
+        <h2 class="display-h glint sec-h" data-reveal>Their other hand is on the patient.</h2>
+        <p class="lede" data-reveal>This wasn't a consumer app. The people holding this device were shedding pack weight and carrying diagnostic imaging into places where you don't get to set it down, look away, or regrip. Every persona shares one fact: <strong>one hand is on the transducer, so the whole interface belongs to a thumb.</strong></p>
+        <div class="personas">
+          {[
+            ['Hospital nurse', 'the bedside triage', ['Bedside, standing, often gloved, moving between patients.', 'Probe on the patient; device in the other hand.', "Can't afford a second hand to reach a menu, or a slip that discards a capture."]],
+            ['Sonographer', 'lives in depth and gain', ['Adjusts depth and gain constantly while watching the image, not the controls.', 'Probe angled precisely; device thumb-driven without looking.', "Can't afford overshooting a tissue layer, or hunting for a slider."]],
+            ['18D', 'Special Forces medical sergeant', ['Austere, unpredictable, weight-critical. Every gram and every second counts.', 'Probe on a casualty; device gripped one-handed, maybe in the dark.', "Can't afford two hands, fine motor precision, or nested menus."]],
+            ['68W', 'Army combat medic', ['Point-of-injury care under stress; gloved; equipment must just work.', 'Probe steady; the thumb does everything else.', "Can't afford a control that needs a grip change, or a gesture that isn't forgiving."]],
+          ].map(([name, tag, facts]) => (
+            <article class="persona" data-reveal>
+              <h4>{name} <span class="muted">— {tag}</span></h4>
+              <ul>{(facts as string[]).map((f) => <li>{f}</li>)}</ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <!-- ============ SKETCH 1 ============ -->
+      <section class="block container narrow">
+        <h2 class="display-h glint sec-h" data-reveal>One hand is always full.</h2>
+        <p class="lede" data-reveal>In ordinary mobile design, the hand holding the phone has a free partner. In point-of-care ultrasound it doesn't: the dominant hand is holding the transducer against the patient. That leaves exactly one hand to hold the device, stabilize it, navigate, change depth, adjust gain, freeze and save. One-handed use wasn't a nice-to-have — it was the physics of the task, and it decided everything downstream.</p>
+        <figure class="sketch" data-reveal>
+          <svg viewBox="0 0 900 420" role="img" aria-label="Hand sketch: a medic with the transducer on the patient in one hand and the device in the other, the thumb's arc drawn on the device.">
+            <defs>
+              <filter id="sketch" x="-5%" y="-5%" width="110%" height="110%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" result="n"/>
+                <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G"/>
+              </filter>
+            </defs>
+            <g filter="url(#sketch)">
+              <path class="ink" d="M40 300 C 120 250, 260 250, 360 300 S 560 350, 640 300"/>
+              <path class="ink-thin" d="M60 330 C 160 290, 300 290, 380 330"/>
+              <text class="hand small" x="70" y="365">patient</text>
+              <path class="ink" d="M250 200 l -10 60 l 20 25 l 30 -8 l 12 -50"/>
+              <path class="ink-thin" d="M262 198 l -6 52 M276 200 l 2 50 M290 203 l 6 47"/>
+              <rect class="ink" x="262" y="268" width="46" height="26" rx="6" transform="rotate(-8 285 281)"/>
+              <text class="hand" x="180" y="185">transducer / probe</text>
+              <path class="ink-thin" d="M275 190 q 25 -20 40 -5"/>
+              <rect class="ink" x="560" y="120" width="150" height="230" rx="18"/>
+              <rect class="ink-thin" x="574" y="140" width="122" height="130" rx="6"/>
+              <path class="ink" d="M700 300 c 40 10, 60 40, 40 80 c -30 30, -90 20, -110 -20"/>
+              <path class="ink-thin" d="M715 310 l 20 -10 M725 335 l 24 -6"/>
+              <path class="accent" d="M690 330 A 70 70 0 0 0 620 275"/>
+              <path class="accent" d="M690 330 A 92 92 0 0 0 600 250" stroke-dasharray="6 8"/>
+              <circle class="fill-accent" cx="650" cy="318" r="40"/>
+              <text class="hand accent-txt" x="560" y="395">thumb sweeps a RADIUS</text>
+              <text class="hand small" x="590" y="112">device, held one-handed</text>
+              <text class="hand big" x="330" y="70">one hand is ALWAYS full</text>
+              <path class="ink-thin" d="M330 80 q 60 10 120 0"/>
+              <text class="hand small" x="330" y="105">→ the whole UI belongs to one thumb</text>
+            </g>
+          </svg>
+          <figcaption>From my 2013 whiteboard: the constraint that decided everything. Probe hand on the patient, device hand does it all — and a thumb moves on an arc, not a grid.</figcaption>
+        </figure>
+      </section>
+
+      <!-- ============ SKETCH 2: RESEARCH ============ -->
+      <section class="block container narrow">
+        <h2 class="display-h glint sec-h" data-reveal>Where a thumb actually lives.</h2>
+        <p class="lede" data-reveal>We weren't guessing. In February 2013 Steven Hoober published a field observation of <strong>1,333</strong> people using their phones in the wild: <strong>75%</strong> drove the interaction with a thumb, and grips split roughly <strong>49% one-handed, 36% cradled, 15% two-handed</strong>. That study is where the "thumb zone" comes from — the sweep radius of a thumb mapped onto the screen: a <em>natural</em> zone at the bottom, a <em>stretch</em> zone in the middle, and an <em>ow</em> zone at the top that needs a regrip or a second hand.</p>
+        <p class="lede" data-reveal>Josh Clark's <em>Designing for Touch</em> had laid down the era's gesture rules, and the platforms had published their target sizes — iOS 44&nbsp;pt, Android 48&nbsp;dp, Windows Phone 34&nbsp;px, Nokia a flat 1&nbsp;cm — because a thumb pad is roughly 16–20&nbsp;mm and it doesn't care about your pixel grid. For our users, "regrip" means "hand off the patient." So the top of the screen wasn't merely awkward. It was off limits.</p>
+        <div class="cite" data-reveal>
+          <p>Hoober, S. (2013, Feb). <em>How Do Users Really Hold Mobile Devices?</em> UXmatters — 1,333-user field study; 75% thumb; 49/36/15 grip split.</p>
+          <p>Clark, J. (2010). <em>Designing for Touch.</em> Thumb-zone ergonomics; gestures need visible affordance.</p>
+          <p>Platform touch targets, 2010–12: iOS 44×44 pt · Android 48×48 dp · Windows Phone 34×34 px (26 min) · Nokia 1 cm / 28 px. Finger-pad research (2012): index ≈ 10–14 mm, thumb ≈ 16–20 mm.</p>
+        </div>
+        <figure class="sketch" data-reveal>
+          <svg viewBox="0 0 900 460" role="img" aria-label="Hand sketch: device outline with easy, stretch and ache thumb zones, plus three tiny grip sketches labeled 49, 36 and 15 percent.">
+            <g filter="url(#sketch)">
+              <rect class="ink" x="90" y="40" width="230" height="380" rx="20"/>
+              <path class="fill-ache" d="M104 54 h 202 v 76 h -202 z"/>
+              <path class="fill-stretch" d="M104 130 h 202 v 150 h -202 z"/>
+              <path class="fill-easy" d="M104 280 h 202 v 126 h -202 z"/>
+              <text class="hand small" x="120" y="100">OW / ache — top ~20%</text>
+              <text class="hand small" x="120" y="210">STRETCH — middle ~40%</text>
+              <text class="hand" x="120" y="350">EASY — bottom ~40%</text>
+              <text class="hand small" x="120" y="372">the natural sweep</text>
+              <path class="accent" d="M300 405 A 150 150 0 0 0 150 280"/>
+              <path class="accent" d="M300 405 A 190 190 0 0 0 120 240" stroke-dasharray="6 8"/>
+              <text class="hand accent-txt" x="330" y="300">thumb radius</text>
+              <text class="hand accent-txt small" x="330" y="322">(~16–20mm pad)</text>
+              <text class="hand big" x="470" y="70">how people hold it</text>
+              <text class="hand small" x="470" y="92">Hoober, Feb 2013 · n = 1,333</text>
+              <rect class="ink-thin" x="480" y="120" width="60" height="100" rx="8"/>
+              <path class="ink-thin" d="M540 200 c 20 5, 30 25, 20 45 c -15 20, -55 10, -65 -10"/>
+              <text class="hand" x="560" y="150">49%</text><text class="hand small" x="560" y="170">one-handed, thumb</text>
+              <rect class="ink-thin" x="480" y="250" width="60" height="100" rx="8"/>
+              <path class="ink-thin" d="M470 330 c -10 10, -8 30, 10 40 M550 260 l 20 -20 l 10 10"/>
+              <text class="hand" x="560" y="285">36%</text><text class="hand small" x="560" y="305">cradled, other finger</text>
+              <rect class="ink-thin" x="480" y="378" width="100" height="62" rx="8"/>
+              <path class="ink-thin" d="M470 425 c -8 8, -6 20, 8 26 M590 425 c 8 8, 6 20, -8 26"/>
+              <text class="hand" x="600" y="405">15%</text><text class="hand small" x="600" y="425">two thumbs</text>
+              <text class="hand" x="640" y="160">75% = THUMB</text>
+              <path class="ink-thin" d="M640 168 q 40 8 90 0"/>
+              <text class="hand small" x="640" y="200">for our users "regrip"</text>
+              <text class="hand small" x="640" y="220">= hand OFF the patient</text>
+              <text class="hand accent-txt small" x="640" y="248">→ top of screen: OFF LIMITS</text>
+            </g>
+          </svg>
+          <figcaption>The thumb zone, drawn the way we talked about it at the whiteboard — and why "stretch" was never acceptable for someone whose other hand is holding a probe.</figcaption>
+        </figure>
+      </section>
+
+      <!-- ============ SKETCH 3: A/B ============ -->
+      <section class="block container narrow">
+        <h2 class="display-h glint sec-h" data-reveal>The exploration that failed — and the one that didn't.</h2>
+        <p class="lede" data-reveal>We started where everyone starts: random-access patterns. Flyout menus. Dropdowns. Accordions. They're fine when you have two hands. On the iPad Mini, watching people actually use them, the hotzones lit up immediately — every one of those patterns eventually asked the thumb to reach somewhere it couldn't, and the body answered with a regrip. Regrip means the probe hand moves. That's not a usability ding; in this context it's a failure.</p>
+        <p class="lede" data-reveal>So the radial thumb motion stopped being an idea we were exploring because it was novel. It became the only geometry that fit: <strong>put the controls on the arc the thumb already travels, and the grip never changes.</strong></p>
+        <figure class="sketch" data-reveal>
+          <svg viewBox="0 0 900 440" role="img" aria-label="Hand sketch A/B: left, flyout, dropdown and accordion menus with the thumb reaching and regripping, crossed out; right, a radial wheel in the thumb zone with the grip holding.">
+            <g filter="url(#sketch)">
+              <text class="hand big" x="60" y="50">A · random access</text>
+              <rect class="ink" x="60" y="70" width="200" height="330" rx="16"/>
+              <rect class="ink-thin" x="72" y="82" width="176" height="26" rx="4"/>
+              <text class="hand small" x="80" y="100">☰ menu · settings · ▾</text>
+              <rect class="ink-thin" x="150" y="110" width="98" height="70" rx="4"/>
+              <text class="hand small" x="158" y="130">flyout</text><text class="hand small" x="158" y="150">dropdown</text><text class="hand small" x="158" y="170">accordion</text>
+              <path class="accent" d="M240 395 C 200 340, 150 200, 170 115"/>
+              <path class="ink-thin" d="M165 122 l 8 -14 l 10 12"/>
+              <text class="hand accent-txt small" x="72" y="230">thumb reaches…</text>
+              <text class="hand accent-txt small" x="72" y="250">…grip changes…</text>
+              <text class="hand accent-txt small" x="72" y="270">…probe hand moves</text>
+              <path class="strike" d="M80 90 L 250 390"/><path class="strike" d="M250 90 L 80 390"/>
+              <text class="hand" x="60" y="428">✗ fails the one-hand rule</text>
+              <path class="ink-thin" d="M420 60 l 0 360" stroke-dasharray="5 9"/>
+              <text class="hand small" x="428" y="240">vs</text>
+              <text class="hand big" x="480" y="50">B · radial thumb-wheel</text>
+              <rect class="ink" x="480" y="70" width="200" height="330" rx="16"/>
+              <rect class="ink-thin" x="492" y="82" width="176" height="200" rx="6"/>
+              <text class="hand small" x="500" y="100">live scan</text>
+              <circle class="ink" cx="665" cy="385" r="78"/><circle class="ink-thin" cx="665" cy="385" r="52"/>
+              <circle class="fill-accent" cx="665" cy="385" r="78"/>
+              <path class="ink-thin" d="M665 307 l 0 12 M743 385 l -12 0 M610 330 l 8 8 M720 330 l -8 8"/>
+              <text class="hand small" x="590" y="330">depth · gain</text><text class="hand small" x="596" y="350">freeze · save</text>
+              <path class="accent" d="M700 470 A 60 60 0 0 1 615 420"/>
+              <path class="ink-thin" d="M622 425 l -12 -6 l 4 -13"/>
+              <text class="hand accent-txt" x="700" y="300">thumb PIVOTS</text><text class="hand accent-txt small" x="700" y="320">grip holds</text>
+              <text class="hand" x="480" y="428">✓ nothing leaves the arc</text>
+            </g>
+          </svg>
+          <figcaption>The A/B, as I sketched it before we built it. Left: every random-access pattern eventually asks for a reach. Right: the wheel lives where the thumb already is.</figcaption>
+        </figure>
+      </section>
+
+      <!-- ============ SKETCH 4: WHEEL ANATOMY ============ -->
+      <section class="block container narrow">
+        <h2 class="display-h glint sec-h" data-reveal>The radial thumb-wheel.</h2>
+        <p class="lede" data-reveal>The wheel sits in the lower corner — inside the natural zone — right where the holding thumb comes to rest. You spin it, or slide it out with a small sweep, to change depth or gain without breaking concentration or shifting your grip. High-frequency actions live on the arc. Deliberate actions get a deliberate gesture: press-and-hold, so a slip in slick gloves never discards patient data. And a large, fixed Home stays anchored in thumb reach — a panic button that resets you to the live scan when the field gets loud.</p>
+        <figure class="sketch" data-reveal>
+          <svg viewBox="0 0 900 460" role="img" aria-label="Hand sketch of the wheel anatomy: a radial wheel in the lower thumb zone with callouts for spin to adjust depth and gain, press-and-hold for mode, a fixed home button, and an oversized invisible hitbox for a gloved thumb.">
+            <g filter="url(#sketch)">
+              <rect class="ink" x="330" y="40" width="240" height="380" rx="20"/>
+              <rect class="ink-thin" x="344" y="56" width="212" height="220" rx="6"/>
+              <text class="hand small" x="354" y="76">live scan · 2D</text>
+              <path class="ink-thin" d="M360 250 q 90 -60 180 0" />
+              <circle class="ink" cx="555" cy="410" r="92"/><circle class="ink-thin" cx="555" cy="410" r="60"/>
+              <circle class="fill-accent" cx="555" cy="410" r="92"/>
+              <circle class="accent" cx="555" cy="410" r="122" stroke-dasharray="7 9"/>
+              <path class="ink-thin" d="M555 318 l 0 14 M470 380 l 12 5 M500 340 l 8 9"/>
+              <circle class="ink" cx="372" cy="392" r="20"/><text class="hand small" x="364" y="398">⌂</text>
+              <text class="hand big" x="60" y="80">wheel anatomy</text>
+              <text class="hand" x="60" y="140">spin → depth / gain</text>
+              <path class="ink-thin" d="M245 134 q 90 40 250 230"/>
+              <text class="hand" x="60" y="200">press + HOLD → mode</text>
+              <text class="hand small" x="60" y="222">(2D ⇢ M-mode, save ⇢ clip)</text>
+              <text class="hand small" x="60" y="244">a slip can't discard data</text>
+              <text class="hand" x="60" y="300">fixed HOME = panic anchor</text>
+              <path class="ink-thin" d="M290 296 q 40 40 62 84"/>
+              <text class="hand small" x="60" y="322">always in thumb reach</text>
+              <text class="hand accent-txt" x="620" y="290">hitbox &gt; graphic</text>
+              <text class="hand accent-txt small" x="620" y="312">invisible, oversized —</text>
+              <text class="hand accent-txt small" x="620" y="332">a gloved thumb never</text>
+              <text class="hand accent-txt small" x="620" y="352">loses contact</text>
+              <path class="ink-thin" d="M640 360 q -20 30 -30 40"/>
+            </g>
+          </svg>
+          <figcaption>Everything a thumb needs, on the arc it already travels. The dashed ring is the part you never see: the hitbox is bigger than the wheel, on purpose.</figcaption>
+        </figure>
+      </section>
+
+      <!-- ============ THE LIVE WHEEL ============ -->
+      <section class="block container">
+        <div class="wheel-wrap">
+          <div class="device" data-reveal>
+            <div class="scan"><div class="sector"></div></div>
+            <div class="readout">DEPTH<b>12.4 cm</b></div>
+            <div class="home" aria-hidden="true">⌂</div>
+            <div class="wheel" role="slider" tabindex="0" aria-label="Depth control wheel" aria-valuemin="2" aria-valuemax="30" aria-valuenow="12.4">
+              <svg viewBox="0 0 200 200" aria-hidden="true">
+                <circle class="hit" cx="100" cy="100" r="140"/>
+                <g class="rotor" style="transform-origin:100px 100px">
+                  <circle class="ring" cx="100" cy="100" r="86"/>
+                  <circle class="ring" cx="100" cy="100" r="54"/>
+                  <g class="ticks"></g>
+                </g>
+                <circle class="thumb-hint" cx="100" cy="100" r="118"/>
+              </svg>
+            </div>
+          </div>
+          <div class="wheel-copy">
+            <h2 class="display-h glint sec-h" data-reveal>Remade in 2026 componentry. Spin it.</h2>
+            <p class="lede" data-reveal>The 2013 prototype lived on an iPad Mini and a laptop. This one lives on this page — the same idea, rebuilt with today's components: momentum and friction under the pad, an oversized invisible hitbox, keyboard-nudgeable, honest about reduced motion. Drag around the wheel with a pointer or your thumb.</p>
+            <p class="lede" data-reveal>The wheel is where the thumb rests; the readout is where the eye is. You never look at the control — you feel it turn and watch the image change, exactly like the sonographer does.</p>
+            <p class="hint mono" data-reveal>→ drag around the ring · arrow keys nudge · shift + arrow for a full step</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ VALIDATION ============ -->
+      <section class="block container narrow">
+        <h2 class="display-h glint sec-h" data-reveal>Prove the pattern on familiar ground first.</h2>
+        <p class="lede" data-reveal>A novel interaction and an unfamiliar domain, tested together, tell you nothing — you can't separate "the wheel is confusing" from "ultrasound is confusing." So we split them.</p>
+        <div class="phases">
+          <article class="card" data-reveal>
+            <h6>Phase 1 · de-risk the paradigm</h6>
+            <h4>The same wheel, driving a digital camera.</h4>
+            <p>We built the radial wheel to navigate a camera's settings — features people already understood — and A/B'd it against flyout, dropdown, and accordion menus on the same familiar tasks. Monitoring, surveys, direct observation. Testing on the familiar isolates the <em>interaction</em> from the domain: we were judging the paradigm, not the product.</p>
+            <p class="result">✓ The wheel won. Unanimously.</p>
+          </article>
+          <article class="card" data-reveal>
+            <h6>Phase 2 · transfer to the real stakes</h6>
+            <h4>Then the iViz, with real users — and non-users.</h4>
+            <p>We put the wheel into the ultrasound context and sat it in front of existing SonoSite users <em>and</em> people who'd never touched one. If the pattern only worked for experts, we'd have learned that here.</p>
+            <p class="result">✓ Both groups breezed through.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============ TUNING ============ -->
+      <section class="block container narrow">
+        <h2 class="display-h glint sec-h" data-reveal>Tuning the physics. Why it had to be code.</h2>
+        <p class="lede" data-reveal>This is the part a static wireframe can't do. A wheel that turns too fast shoots past the tissue layer you're measuring; too slow, and the thumb fatigues. Friction and inertia under the pad have to be <em>felt</em> to be tuned. The hitbox has to be larger than the graphic so a gloved thumb that drifts doesn't lose the control. Press-and-hold needs a real threshold — long enough that a slip never triggers it, short enough that it never feels stuck.</p>
+        <p class="lede" data-reveal>None of that is decidable in a drawing. That's why the industrial designers needed someone who could build the gesture, hand it to a nurse on an iPad Mini, and watch what her thumb did.</p>
+      </section>
+
+      <!-- ============ THE MESSY MIDDLE ============ -->
+      <section class="block container">
+        <p class="eyebrow" data-reveal>The messy middle · 2013</p>
+        <h2 class="display-h glint sec-h" data-reveal>What it actually looked like.</h2>
+        <div class="strip">
+          {[
+            ['sonoSiteexploration.jpg', 'Phase 1: the wheel driving a camera\'s settings — Scene, HDR, flash, timer, Home — with the ultrasound vocabulary (Marker · Optimize · Save Clip · End Exam) already drafted alongside.'],
+            ['testingBothInitial.jpg', 'The A/B rig on the iPad Mini: radial wheel in the corner vs. a random-access toolbar (Share · Delete · Crop · Effects…) on the same tasks.'],
+            ['testingBothWheelSelect.jpg', 'Same task, two geometries: a side list of filters makes the thumb reach; the wheel stays where the thumb already is.'],
+            ['testingBoth.jpg', 'Both patterns live, one-handed, true to the device\'s footprint.'],
+            ['familiarity.jpg', 'Familiar ground on purpose — camera controls people already knew, so we judged the interaction, not the domain.'],
+            ['iviz.png', 'The prototype on the rig: an iPad Mini, because it matched the target device\'s footprint — every test true-to-hand and true-to-scale.'],
+          ].map(([f, cap]) => (
+            <figure class="shot" data-reveal>
+              <img src={`/images/case-studies/sonosite/${f}`} alt={cap} loading="lazy" />
+              <figcaption class="muted">{cap}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
+      <!-- ============ VIDEO ============ -->
+      <section class="block container">
+        <h2 class="display-h glint sec-h" data-reveal>The original prototype, and iViz in the field.</h2>
+        <p class="lede" data-reveal>The 2013 touch prototype (HTML5 / CSS3 / JS), then the shipped iViz doing the job it was built for.</p>
+        <div class="video-main card" data-reveal>
+          <video controls playsinline preload="metadata" poster="/images/case-studies/sonosite/sonosite.jpg"
+            src="https://www.dropbox.com/scl/fi/bkdfjafp4w0l11f38ad0m/iViz.mov?rlkey=at2havmojxknhhcs4zl7bu3dr&raw=1"></video>
+          <p class="muted mono cap">FujiFilm SonoSite iViz — 2013 touch prototype</p>
+        </div>
+        <div class="yt" data-reveal>
+          {['qPcUkbd7izs', 'emJUu9OrdJc', 'XHgTSYLgOVI'].map((id) => (
+            <iframe src={`https://www.youtube-nocookie.com/embed/${id}`} title="iViz in the field" loading="lazy"
+              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          ))}
+        </div>
+      </section>
+
+      <!-- ============ ACCESSIBILITY, AS A CONSEQUENCE ============ -->
+      <section class="block container narrow">
+        <h2 class="display-h glint sec-h" data-reveal>Accessibility always enters the picture.</h2>
+        <p class="lede" data-reveal>It was never the headline on iViz — the headline was a medic with one hand free. But design the input to fit how the body actually moves, and accessibility arrives as a consequence: a gloved thumb, a gesture that forgives a slip, a control you can operate without looking. That's the discipline, and it's followed me everywhere since.</p>
+        <p class="lede" data-reveal>At Microsoft it meant S360 bug bashes — often — and re-designing when the bar said so. I'd prototype, put it in front of the accessibility leads in C+AI, and if I was missing the mark they'd tell me; the dialogue with the people who live these barriers is what sharpened the work. Eventually I was moonlighting for Azure, opening pull requests to fix accessibility bugs myself. Standards are the rigor underneath. The thesis is who can now do what.</p>
+      </section>
+
+      <!-- ============ THE CLOSE ============ -->
+      <section class="block container narrow">
+        <h2 class="display-h glint sec-h" data-reveal>The wheel became the cursor.</h2>
+        <p class="lede" data-reveal>Thirteen years later I'm building an interface you drive with your gaze, your voice, and your hands — no mouse — and the cursor at the center of it is a <strong>radial HUD</strong>. That isn't a coincidence. It's the same insight: <em>put the control on a radius matched to a motion the body already makes.</em> In 2013 the motion was a thumb pivoting while the other hand held a probe. In 2026 it's an eye settling on a target. Design for the hand you have free — or the body you actually have — and the paradigm takes care of the rest.</p>
+        <figure class="sketch" data-reveal>
+          <svg viewBox="0 0 900 300" role="img" aria-label="Hand sketch timeline: 2013 radial thumb-wheel on a handheld device, an arrow, then the 2026 radial HUD cursor driven by gaze.">
+            <g filter="url(#sketch)">
+              <text class="hand big" x="70" y="60">2013</text>
+              <rect class="ink" x="70" y="80" width="120" height="180" rx="14"/>
+              <circle class="ink" cx="175" cy="245" r="42"/><circle class="fill-accent" cx="175" cy="245" r="42"/>
+              <path class="accent" d="M200 285 A 40 40 0 0 1 140 258"/>
+              <text class="hand small" x="70" y="285">thumb-wheel</text><text class="hand small" x="70" y="30">one hand free</text>
+              <path class="ink" d="M240 170 C 330 120, 420 220, 520 170" /><path class="ink" d="M505 160 l 18 10 l -16 12"/>
+              <text class="hand accent-txt" x="300" y="120">same insight —</text>
+              <text class="hand accent-txt small" x="300" y="142">control on a radius,</text>
+              <text class="hand accent-txt small" x="300" y="160">matched to a motion</text>
+              <text class="hand big" x="580" y="60">2026</text>
+              <path class="ink" d="M580 140 q 50 -50 100 0 q -50 50 -100 0 z"/>
+              <circle class="ink" cx="630" cy="140" r="12"/><circle class="ink" cx="630" cy="140" r="4"/>
+              <path class="ink-thin" d="M690 140 l 60 0" stroke-dasharray="4 6"/>
+              <circle class="ink" cx="800" cy="140" r="46"/><circle class="accent" cx="800" cy="140" r="34"/><circle class="ink-thin" cx="800" cy="140" r="4"/>
+              <path class="accent" d="M800 94 A 46 46 0 0 1 846 140" stroke-width="5"/>
+              <text class="hand small" x="740" y="215">radial HUD cursor</text>
+              <text class="hand small" x="580" y="30">gaze · voice · hand</text>
+              <text class="hand small" x="580" y="215">no hands free at all</text>
+            </g>
+          </svg>
+          <figcaption>Thumb to gaze. The device changed, the body changed, the idea didn't.</figcaption>
+        </figure>
+      </section>
+
+      <section class="block container narrow closing" data-reveal>
+        <h2 class="display-h glint sec-h">Thanks for listening.</h2>
+        <p class="lede muted">Happy to go deeper on any of it — the research, the physics, or the code.</p>
+      </section>
+    </main>
+  )}
+
+  <style>
+    /* ---------- lock screen ---------- */
+    .lock { position: relative; z-index: 3; min-height: calc(100vh - 4.5rem); display: grid; place-items: center; padding: 2rem 1.25rem; }
+    .lock-card { width: min(100%, 30rem); background: rgba(13, 18, 32, 0.66); border: 1px solid var(--border); border-radius: 22px; padding: clamp(1.6rem, 4vw, 2.6rem); backdrop-filter: blur(14px); box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+    .lock-h { font-size: clamp(2.4rem, 7vw, 4rem); margin: 0.8rem 0 0.9rem; line-height: 0.84; }
+    .lock-sub { font-size: 0.95rem; line-height: 1.55; }
+    .lock-form { display: grid; gap: 0.8rem; margin-top: 1.4rem; }
+    .lock-form label { display: grid; gap: 0.4rem; font-family: var(--mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--muted); }
+    .lock-form input { font: inherit; font-family: system-ui, sans-serif; font-size: 1.05rem; letter-spacing: 0.1em; color: var(--text); padding: 0.85rem 1rem; border-radius: 14px; background: rgba(255,255,255,.05); border: 1px solid rgba(188,192,255,.18); }
+    .lock-form input:focus-visible { outline: none; border-color: rgba(188,192,255,.7); box-shadow: 0 0 0 3px rgba(109,74,255,.28); }
+    .lock-err { margin-top: 0.9rem; color: #ffb4b4; font-size: 0.9rem; }
+    .lock-foot { margin-top: 1.4rem; font-size: 0.82rem; }
+    .lock-foot a { color: var(--accent); }
+
+    /* ---------- case study ---------- */
+    .cs { position: relative; z-index: 3; }
+    .cs-hero { padding: clamp(3rem, 9vh, 6rem) 0 1rem; }
+    .cs-title { font-size: clamp(2.6rem, 7.5vw, 6rem); line-height: 0.84; margin: 1rem 0 1.4rem; text-wrap: initial; }
+    .keypoints { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); }
+    .keypoints li::before { content: '◆ '; color: var(--mint); }
+    .hero-img { margin-top: 2.4rem; border-radius: 22px; overflow: hidden; border: 1px solid var(--border); background: rgba(13,18,32,.5); }
+    .hero-img img { display: block; width: 100%; height: auto; }
+
+    .sec-h { font-size: clamp(1.6rem, 4vw, 2.7rem); margin: 0.6rem 0 1.2rem; max-width: 24ch; }
+    .lede { font-size: clamp(1.02rem, 1.6vw, 1.15rem); line-height: 1.75; color: var(--muted); margin-bottom: 1.1rem; max-width: 66ch; }
+    .lede strong { color: var(--text); font-weight: 600; }
+    .lede em { color: var(--accent); font-style: italic; }
+    h6 { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mint); margin: 1.3rem 0 0.4rem; }
+    h6:first-child { margin-top: 0; }
+
+    .leadin .lines { display: grid; gap: 0; margin-top: 1rem; }
+    .leadin h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: clamp(1.35rem, 2.6vw, 2rem); line-height: 1.3; padding: 1.4rem 0; border-top: 1px solid var(--border); letter-spacing: -0.01em; }
+    .leadin h3:last-child { border-bottom: 1px solid var(--border); }
+    .leadin h3 em { font-style: italic; color: var(--text); }
+    .leadin h3 span { display: block; font-family: system-ui, sans-serif; font-size: 0.62em; color: var(--muted); margin-top: 0.45em; line-height: 1.55; }
+
+    .breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 2rem 3rem; padding: 1.5rem 0; }
+    .breakdown p, .breakdown li { font-size: 0.97rem; line-height: 1.6; color: var(--muted); }
+    .breakdown strong, .breakdown em { color: var(--text); }
+    .breakdown ul { padding-left: 1.1rem; }
+    .timeline { list-style: none; padding: 0 !important; }
+    .timeline li { position: relative; padding-left: 1.2rem; }
+    .timeline li::before { content: ''; position: absolute; left: 0; top: 0.62em; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--mint); }
+
+    .personas { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; margin-top: 1.4rem; }
+    .persona { background: rgba(13,18,32,.55); border: 1px solid var(--border); border-radius: 16px; padding: 1.2rem 1.3rem; backdrop-filter: blur(8px); }
+    .persona h4 { font-family: 'Fraunces', serif; font-size: 1.15rem; margin-bottom: 0.5rem; }
+    .persona h4 .muted { font-family: system-ui, sans-serif; font-weight: 400; font-size: 0.85rem; }
+    .persona ul { padding-left: 1.1rem; color: var(--muted); font-size: 0.92rem; line-height: 1.55; display: grid; gap: 0.25rem; }
+
+    .cite { font-size: 0.82rem; line-height: 1.5; color: var(--muted); border-left: 2px solid var(--mint); padding-left: 0.9rem; margin: 0.6rem 0 1.6rem; max-width: 66ch; }
+    .cite p { margin-bottom: 0.35rem; }
+
+    /* whiteboard sketches, inked on glass */
+    .sketch { --hand: 'Segoe Print', 'Segoe Script', 'Bradley Hand', 'Chalkboard SE', cursive; --ink: #e7eaff; --accent-c: #8bf0cf;
+      margin: 1.2rem 0 0; background: linear-gradient(180deg, rgba(20,26,44,.75), rgba(13,18,32,.75)); border: 1px solid var(--border); border-radius: 18px; padding: clamp(1rem, 3vw, 2rem); backdrop-filter: blur(10px); transform: rotate(-0.35deg); box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+    .sketch:nth-of-type(even) { transform: rotate(0.3deg); }
+    .sketch svg { display: block; width: 100%; height: auto; }
+    .sketch figcaption { font-family: var(--hand); font-size: 1rem; color: var(--muted); margin: 0.9rem 0.3rem 0; }
+    .sketch .ink { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .sketch .ink-thin { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; opacity: 0.85; }
+    .sketch .accent { fill: none; stroke: var(--accent-c); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .sketch .fill-accent { fill: var(--accent-c); opacity: 0.18; }
+    .sketch .fill-easy { fill: #8bf0cf; opacity: 0.22; }
+    .sketch .fill-stretch { fill: #f0d68b; opacity: 0.22; }
+    .sketch .fill-ache { fill: #fb7185; opacity: 0.25; }
+    .sketch .hand { font-family: var(--hand); fill: var(--ink); font-size: 15px; }
+    .sketch .hand.big { font-size: 20px; }
+    .sketch .hand.small { font-size: 12.5px; opacity: 0.8; }
+    .sketch .hand.accent-txt { fill: var(--accent-c); }
+    .sketch .strike { stroke: #fb7185; stroke-width: 3; stroke-linecap: round; }
+    @media (prefers-reduced-motion: reduce) { .sketch, .sketch:nth-of-type(even) { transform: none; } }
+
+    /* the live wheel */
+    .wheel-wrap { display: grid; grid-template-columns: minmax(16rem, 24rem) 1fr; gap: 2.5rem; align-items: center; }
+    @media (max-width: 760px) { .wheel-wrap { grid-template-columns: 1fr; } }
+    .device { position: relative; aspect-ratio: 10 / 16; background: linear-gradient(180deg, #0b0f1a, #070910); border-radius: 26px; box-shadow: 0 30px 70px rgba(0,0,0,.55), inset 0 0 0 2px rgba(188,192,255,.14); overflow: hidden; touch-action: none; user-select: none; }
+    .device .scan { position: absolute; inset: 8% 6% 34%; border-radius: 12px; background: radial-gradient(ellipse at 50% 30%, #1c2440 0%, #0b1020 60%, #05070d 100%); overflow: hidden; }
+    .device .scan::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 2px, transparent 2px 6px); mix-blend-mode: screen; }
+    .device .sector { position: absolute; left: 50%; top: 0; width: 120%; height: 100%; transform: translateX(-50%); background: conic-gradient(from 150deg at 50% 0%, transparent 0deg, rgba(139,240,207,.26) 30deg, rgba(139,240,207,.12) 60deg, transparent 60deg); }
+    .device .readout { position: absolute; left: 8%; top: 10%; font: 600 0.72rem/1.5 var(--mono); color: var(--text); letter-spacing: 0.1em; }
+    .device .readout b { color: var(--mint); font-size: 1.25rem; display: block; letter-spacing: 0.02em; }
+    .device .home { position: absolute; left: 8%; bottom: 7%; width: 12%; aspect-ratio: 1; border-radius: 50%; border: 2px solid rgba(188,192,255,.35); display: grid; place-items: center; color: var(--text); font-size: 0.8rem; }
+    .wheel { position: absolute; right: -14%; bottom: -14%; width: 62%; aspect-ratio: 1; cursor: grab; outline: none; }
+    .wheel:focus-visible { filter: drop-shadow(0 0 0 3px var(--mint)); }
+    .wheel:active { cursor: grabbing; }
+    .wheel svg { width: 100%; height: 100%; display: block; overflow: visible; }
+    .wheel .ring { fill: rgba(188,192,255,.06); stroke: rgba(188,192,255,.25); stroke-width: 1.5; }
+    .wheel .hit { fill: transparent; }
+    .wheel :global(.tick) { stroke: rgba(188,192,255,.55); stroke-width: 2; stroke-linecap: round; }
+    .wheel :global(.tick.major) { stroke: var(--mint); stroke-width: 3; }
+    .wheel .thumb-hint { fill: none; stroke: var(--mint); stroke-width: 2; stroke-dasharray: 4 7; opacity: 0.55; }
+    .hint { color: var(--muted); font-size: 0.72rem; letter-spacing: 0.06em; }
+    .mono { font-family: var(--mono); }
+
+    .phases { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1.2rem; margin-top: 1.2rem; }
+    .card { background: rgba(13,18,32,.55); border: 1px solid var(--border); border-radius: 18px; padding: 1.4rem 1.5rem; backdrop-filter: blur(8px); }
+    .phases h4 { font-family: 'Fraunces', serif; font-size: 1.25rem; margin-bottom: 0.6rem; line-height: 1.3; }
+    .phases p { color: var(--muted); line-height: 1.6; font-size: 0.95rem; margin-bottom: 0.7rem; }
+    .phases em { color: var(--text); }
+    .phases .result { font-family: 'Segoe Print', 'Segoe Script', 'Bradley Hand', 'Chalkboard SE', cursive; color: var(--mint); font-size: 1.1rem; margin-top: 0.8rem; }
+
+    .strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; margin-top: 1.4rem; }
+    .shot { margin: 0; background: rgba(13,18,32,.55); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .shot img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; filter: saturate(0.9); }
+    .shot figcaption { padding: 0.7rem 0.9rem 0.9rem; font-size: 0.82rem; line-height: 1.45; }
+
+    .video-main { padding: 0.6rem; margin-top: 1.2rem; }
+    .video-main video { display: block; width: 100%; border-radius: 12px; background: #000; max-height: 70vh; }
+    .video-main .cap { padding: 0.7rem 0.4rem 0.3rem; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .yt { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; margin-top: 1.2rem; }
+    .yt iframe { width: 100%; aspect-ratio: 16 / 9; height: auto; border: 0; border-radius: 14px; background: #000; }
+
+    .closing { text-align: left; padding-bottom: 4rem; }
+
+    .reveal-js [data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    [data-reveal].in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) { .reveal-js [data-reveal] { opacity: 1; transform: none; transition: none; } }
+  </style>
+
+  <script>
+    // Reveal-on-scroll (same pattern as the home page — content visible by default).
+    const els = Array.from(document.querySelectorAll('[data-reveal]'));
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (els.length && !reduced && 'IntersectionObserver' in window) {
+      document.documentElement.classList.add('reveal-js');
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+      els.forEach((el) => io.observe(el));
+      setTimeout(() => els.forEach((el) => el.classList.add('in')), 2500);
+    }
+    document.querySelectorAll<HTMLElement>('.glint').forEach((el) => { el.dataset.text = el.textContent?.trim() ?? ''; });
+
+    // The live radial thumb-wheel — the 2013 idea in 2026 componentry: drag/spin with pointer
+    // or thumb, momentum + friction under the pad, oversized invisible hitbox, keyboard-nudgeable.
+    const wheel = document.querySelector<HTMLElement>('.wheel');
+    if (wheel) {
+      const rotor = wheel.querySelector<SVGGElement>('.rotor')!;
+      const ticks = wheel.querySelector('.ticks')!;
+      const readout = document.querySelector<HTMLElement>('.readout b');
+      let s = '';
+      for (let i = 0; i < 36; i++) { const a = i * 10 * Math.PI / 180, r1 = i % 9 === 0 ? 62 : 70, r2 = 84;
+        s += `<line class="tick${i % 9 === 0 ? ' major' : ''}" x1="${100 + Math.cos(a) * r1}" y1="${100 + Math.sin(a) * r1}" x2="${100 + Math.cos(a) * r2}" y2="${100 + Math.sin(a) * r2}"/>`; }
+      ticks.innerHTML = s;
+
+      let angle = 0, vel = 0, dragging = false, lastA = 0, lastT = 0, raf = 0;
+      const MIN = 2, MAX = 30, START = 12.4;
+      const center = () => { const r = wheel.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; };
+      const angleAt = (e: PointerEvent) => { const c = center(); return Math.atan2(e.clientY - c.y, e.clientX - c.x) * 180 / Math.PI; };
+      const depth = () => Math.min(MAX, Math.max(MIN, START + angle / 36)); // 36° per cm
+      const paint = () => { rotor.style.transform = `rotate(${angle}deg)`; const d = depth(); if (readout) readout.textContent = d.toFixed(1) + ' cm'; wheel.setAttribute('aria-valuenow', d.toFixed(1)); };
+      const tick = () => { if (dragging || Math.abs(vel) < 0.05) { vel = 0; raf = 0; return; } angle += vel; vel *= 0.94; paint(); raf = requestAnimationFrame(tick); };
+      wheel.addEventListener('pointerdown', (e) => { dragging = true; vel = 0; cancelAnimationFrame(raf); raf = 0; lastA = angleAt(e); lastT = performance.now(); wheel.setPointerCapture(e.pointerId); });
+      wheel.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const a = angleAt(e); let d = a - lastA; if (d > 180) d -= 360; if (d < -180) d += 360;
+        angle += d; lastA = a; const now = performance.now(); vel = d / Math.max(1, now - lastT) * 16; lastT = now; paint();
+      });
+      const release = () => { if (!dragging) return; dragging = false; if (reduced) { vel = 0; return; } if (!raf) raf = requestAnimationFrame(tick); };
+      wheel.addEventListener('pointerup', release); wheel.addEventListener('pointercancel', release);
+      wheel.addEventListener('keydown', (e) => {
+        const step = e.shiftKey ? 36 : 9;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { angle += step; paint(); e.preventDefault(); }
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { angle -= step; paint(); e.preventDefault(); }
+      });
+      paint();
+    }
+  </script>
+</Base>

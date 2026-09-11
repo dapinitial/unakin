@@ -3,11 +3,13 @@ export interface Props {
   title?: string;
   description?: string;
   path?: string;
+  noindex?: boolean; // private pages (gated case studies)
 }
 const {
   title = 'Unakin™ — avant-garde design & engineering studio',
   description = 'Unakin is an avant-garde design & engineering studio. We design and ship products — interfaces, systems, and immersive 3D — with the craft of a team that spent 20 years at Apple and Microsoft.',
   path = '/',
+  noindex = false,
 } = Astro.props;
 const canonical = new URL(path, 'https://www.unakin.com').href;
 const ld = {
@@ -29,6 +31,7 @@ const ld = {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow, noarchive" />}
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="theme-color" content="#080a0f" />
