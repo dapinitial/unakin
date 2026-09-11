@@ -599,67 +599,103 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     .lock-foot { margin-top: 1.4rem; font-size: 0.82rem; }
     .lock-foot a { color: var(--accent); }
 
-    /* ---------- case study ---------- */
-    .cs { position: relative; z-index: 3; }
-    /* Full-bleed hero: the scan UI is the ground, the title sits in the dark left third. */
-    .cs-hero { position: relative; min-height: calc(100vh - 4.5rem); display: flex; align-items: flex-end; overflow: hidden; margin-top: -4.5rem; padding-top: 4.5rem; }
-    .hero-bg { position: absolute; inset: 0; z-index: 0; }
-    .hero-bg img { position: absolute; inset: -6%; width: 112%; height: 112%; object-fit: cover; object-position: 60% 50%; will-change: transform; filter: saturate(0.85); }
+    /* ---------- the beat engine: one beat owns the frame at a time ----------
+       No native scrolling. Every top-level section is absolutely positioned over the viewport;
+       the active one is visible, the rest are parked. Wheel / keys / swipe / dots move between
+       beats; each beat's animations play to completion on enter (never tied to scroll). */
+    :global(html.beats), :global(html.beats body) { height: 100%; overflow: hidden; overscroll-behavior: none; }
+    :global(html.beats .foot) { display: none; }
+    .cs { position: fixed; inset: 0; z-index: 3; overflow: hidden; }
+    .cs > section {
+      position: absolute; inset: 0; padding: clamp(5rem, 12vh, 7rem) clamp(1.25rem, 5vw, 4rem) clamp(2.5rem, 7vh, 4rem);
+      display: grid; grid-template-columns: minmax(0, 1fr); align-content: center; row-gap: 0.9rem;
+      opacity: 0; visibility: hidden; pointer-events: none; will-change: opacity, transform;
+    }
+    .cs > section.active { opacity: 1; visibility: visible; pointer-events: auto; }
+    /* the sections still carry .container/.narrow from the scrolling layout — in beat mode the
+       frame is the viewport; the inner max-width lives on the children instead */
+    .cs > section.container, .cs > section.container.narrow { width: auto; margin: 0; }
+    .cs > section { padding-inline: max(clamp(1.25rem, 5vw, 4rem), calc((100vw - 1240px) / 2)); } /* cap the frame at ~1240px */
+    .cs > section.has-sketch .sec-h { max-width: 22ch; }
+    .cs > section.has-sketch .lede { font-size: 0.98rem; line-height: 1.6; }
+    .cs > section.has-sketch .cite { font-size: 0.7rem; }
+    .cs > section > * { max-width: 1120px; width: 100%; margin-inline: auto; }
+    .cs > section > .ghost-word { max-width: none; width: auto; margin: 0; }
+    .cs .ghost-word { opacity: 0.6; z-index: 0; top: 50%; }
+    .cs > section > *:not(.ghost-word):not(.hero-bg):not(.hero-copy) { position: relative; z-index: 1; }
+    /* small viewports: let a tall beat scroll inside its own frame rather than clip */
+    @media (max-height: 700px), (max-width: 900px) { .cs > section { align-content: start; overflow-y: auto; } }
+
+    /* beat navigation (dots) */
+    .beats-nav { position: fixed; right: 18px; top: 50%; translate: 0 -50%; z-index: 60; display: grid; gap: 9px; }
+    .beats-nav button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%; background: rgba(255,255,255,.22); cursor: pointer; transition: transform .25s ease, background .25s ease; }
+    .beats-nav button:hover { background: rgba(255,255,255,.55); }
+    .beats-nav button.on { background: #fff; transform: scale(1.5); }
+    .beats-nav button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .beat-hint { position: fixed; left: 50%; bottom: 18px; translate: -50% 0; z-index: 60; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); opacity: .8; animation: cue 2.2s ease-in-out infinite; }
+    @keyframes cue { 0%, 100% { transform: translateY(0); opacity: .5; } 50% { transform: translateY(5px); opacity: .95; } }
+    @media (prefers-reduced-motion: reduce) { .beat-hint { animation: none; } }
+
+    /* ---------- hero beat: the scan is the ground ---------- */
+    .cs-hero { padding: 0 !important; display: block !important; }
+    .hero-bg { position: absolute; inset: 0; z-index: 0; max-width: none !important; }
+    .hero-bg img { position: absolute; inset: -6%; width: 112%; max-width: none; height: 112%; object-fit: cover; object-position: 60% 50%; will-change: transform; filter: saturate(0.85); }
     .hero-scrim { position: absolute; inset: 0; background:
       linear-gradient(90deg, rgba(8,10,15,.96) 0%, rgba(8,10,15,.82) 38%, rgba(8,10,15,.25) 70%, rgba(8,10,15,.45) 100%),
       linear-gradient(0deg, rgba(8,10,15,1) 0%, rgba(8,10,15,.35) 30%, transparent 60%); }
-    .hero-copy { position: relative; z-index: 1; padding: 0 0 clamp(3rem, 9vh, 6rem); }
+    .hero-copy { position: absolute; left: 0; right: 0; bottom: clamp(3rem, 10vh, 6rem); z-index: 1; padding: 0 clamp(1.25rem, 5vw, 4rem); max-width: none !important; }
+    .hero-copy > * { max-width: 1120px; margin-inline: auto; }
     .cs-title { font-size: clamp(2.6rem, 7.5vw, 6rem); line-height: 0.84; margin: 1rem 0 1.4rem; text-wrap: initial; }
     .keypoints { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); }
     .keypoints li::before { content: '◆ '; color: var(--mint); }
-    .scroll-cue { margin-top: 2.2rem; font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); animation: cue 2.2s ease-in-out infinite; }
-    @keyframes cue { 0%, 100% { transform: translateY(0); opacity: .6; } 50% { transform: translateY(6px); opacity: 1; } }
-    @media (prefers-reduced-motion: reduce) { .scroll-cue { animation: none; } }
+    .scroll-cue { display: none; }
 
-    /* Rhythm: this page breathes more than the splash — each beat gets its own room. */
-    .cs .block { position: relative; padding: clamp(5rem, 13vh, 10rem) 0; }
-    .cs .container.narrow { width: min(100% - 2.5rem, 880px); }
-    .cs .block > .eyebrow { margin-bottom: 0.4rem; }
-    .cs .ghost-word { opacity: 0.7; top: 18%; z-index: 0; }
-    .cs .block > *:not(.ghost-word) { position: relative; z-index: 1; }
-    .sec-h { font-size: clamp(2.2rem, 5.6vw, 4.4rem); line-height: 0.88; margin: 0.4rem 0 1.6rem; max-width: 18ch; }
-    .lede { font-size: clamp(1.08rem, 1.7vw, 1.28rem); line-height: 1.8; color: var(--muted); margin-bottom: 1.3rem; max-width: 62ch; }
+    /* ---------- type ---------- */
+    .sec-h { font-size: clamp(2rem, 4.6vw, 3.8rem); line-height: 0.88; margin: 0 0 0.4rem; max-width: 18ch; }
+    .lede { font-size: clamp(1rem, 1.35vw, 1.18rem); line-height: 1.7; color: var(--muted); margin: 0 0 0.4rem; max-width: 60ch; }
     .lede strong { color: var(--text); font-weight: 600; }
     .lede em { color: var(--accent); font-style: italic; }
-    h6 { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mint); margin: 1.3rem 0 0.4rem; }
+    h6 { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mint); margin: 1.1rem 0 0.35rem; }
     h6:first-child { margin-top: 0; }
+    .hint { color: var(--muted); font-size: 0.7rem; letter-spacing: 0.06em; }
+    .mono { font-family: var(--mono); }
 
-    .leadin .lines { display: grid; gap: 0; margin-top: 1rem; }
-    .leadin h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: clamp(1.35rem, 2.6vw, 2rem); line-height: 1.3; padding: 1.4rem 0; border-top: 1px solid var(--border); letter-spacing: -0.01em; }
+    .leadin .lines { display: grid; gap: 0; }
+    .leadin h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: clamp(1.2rem, 2.2vw, 1.8rem); line-height: 1.3; padding: 1rem 0; border-top: 1px solid var(--border); letter-spacing: -0.01em; }
     .leadin h3:last-child { border-bottom: 1px solid var(--border); }
     .leadin h3 em { font-style: italic; color: var(--text); }
-    .leadin h3 span { display: block; font-family: system-ui, sans-serif; font-size: 0.62em; color: var(--muted); margin-top: 0.45em; line-height: 1.55; }
+    .leadin h3 span { display: block; font-family: system-ui, sans-serif; font-size: 0.62em; color: var(--muted); margin-top: 0.4em; line-height: 1.5; }
 
-    .breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 2rem 3rem; padding: 1.5rem 0; }
-    .breakdown p, .breakdown li { font-size: 0.97rem; line-height: 1.6; color: var(--muted); }
+    .breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.6rem 3rem; }
+    .breakdown p, .breakdown li { font-size: 0.95rem; line-height: 1.55; color: var(--muted); }
     .breakdown strong, .breakdown em { color: var(--text); }
     .breakdown ul { padding-left: 1.1rem; }
     .timeline { list-style: none; padding: 0 !important; }
     .timeline li { position: relative; padding-left: 1.2rem; }
     .timeline li::before { content: ''; position: absolute; left: 0; top: 0.62em; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--mint); }
 
-    .personas { display: grid; grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); gap: 1.1rem; margin-top: 1.8rem; } /* 5 cards → 3 + 2 */
-    .persona { background: rgba(13,18,32,.55); border: 1px solid var(--border); border-radius: 16px; padding: 1.2rem 1.3rem; backdrop-filter: blur(8px); }
-    .persona h4 { font-family: 'Fraunces', serif; font-size: 1.15rem; margin-bottom: 0.5rem; }
-    .persona h4 .muted { font-family: system-ui, sans-serif; font-weight: 400; font-size: 0.85rem; }
-    .persona ul { padding-left: 1.1rem; color: var(--muted); font-size: 0.92rem; line-height: 1.55; display: grid; gap: 0.25rem; }
+    /* glass panels: soft, borderless-feeling (a 1px hairline only), no boxes stacked on boxes */
+    .personas { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.8rem; margin-top: 0.6rem; } /* five across — no orphan */
+    @media (max-width: 1100px) { .personas { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 700px) { .personas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .persona { background: linear-gradient(180deg, rgba(20,26,44,.6), rgba(13,18,32,.35)); border: 1px solid rgba(188,192,255,.1); border-radius: 18px; padding: 1.1rem 1.2rem; backdrop-filter: blur(8px); }
+    .persona h4 { font-family: 'Fraunces', serif; font-size: 1.08rem; margin-bottom: 0.4rem; }
+    .persona h4 .muted { font-family: system-ui, sans-serif; font-weight: 400; font-size: 0.8rem; }
+    .persona ul { padding-left: 1.05rem; color: var(--muted); font-size: 0.86rem; line-height: 1.5; display: grid; gap: 0.2rem; }
 
-    .cite { font-size: 0.82rem; line-height: 1.5; color: var(--muted); border-left: 2px solid var(--mint); padding-left: 0.9rem; margin: 0.6rem 0 1.6rem; max-width: 66ch; }
-    .cite p { margin-bottom: 0.35rem; }
+    .cite { font-size: 0.76rem; line-height: 1.45; color: var(--muted); border-left: 2px solid var(--mint); padding-left: 0.8rem; max-width: 60ch; }
+    .cite p { margin-bottom: 0.25rem; }
 
-    /* whiteboard sketches, inked on glass */
+    /* sketch beats: copy left, whiteboard right, the board fills the height */
+    .cs > section.has-sketch { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); column-gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; }
+    .cs > section.has-sketch > *:not(.sketch):not(.ghost-word) { grid-column: 1; max-width: 34rem; margin-inline: 0; }
+    .cs > section.has-sketch > .sketch { grid-column: 2; grid-row: 1 / span 6; }
+    @media (max-width: 900px) { .cs > section.has-sketch { grid-template-columns: minmax(0, 1fr); } .cs > section.has-sketch > .sketch { grid-column: 1; grid-row: auto; } }
     .sketch { --hand: 'Segoe Print', 'Segoe Script', 'Bradley Hand', 'Chalkboard SE', cursive; --ink: #e7eaff; --accent-c: #8bf0cf;
-      /* breaks out of the prose column: whiteboards are wide */
-      width: min(100vw - 2.5rem, 1080px); margin: 2.4rem 0 0 50%; translate: -50% 0;
-      background: linear-gradient(180deg, rgba(20,26,44,.75), rgba(13,18,32,.75)); border: 1px solid var(--border); border-radius: 22px; padding: clamp(1.2rem, 3.5vw, 2.6rem); backdrop-filter: blur(10px); transform: rotate(-0.35deg); box-shadow: 0 30px 80px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05); }
-    .sketch:nth-of-type(even) { transform: rotate(0.3deg); }
-    .sketch svg { display: block; width: 100%; height: auto; }
-    .sketch figcaption { font-family: var(--hand); font-size: 1rem; color: var(--muted); margin: 0.9rem 0.3rem 0; }
+      width: 100%; margin: 0; background: linear-gradient(180deg, rgba(20,26,44,.7), rgba(13,18,32,.5)); border: 1px solid rgba(188,192,255,.1); border-radius: 22px; padding: clamp(1rem, 2.5vw, 2rem); backdrop-filter: blur(10px); box-shadow: 0 30px 80px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05); transform: rotate(-0.35deg); }
+    .cs > section:nth-of-type(even) .sketch { transform: rotate(0.3deg); }
+    .sketch svg { display: block; width: 100%; height: auto; max-height: calc(100vh - 16rem); }
+    .sketch figcaption { font-family: var(--hand); font-size: 0.95rem; color: var(--muted); margin: 0.8rem 0.3rem 0; }
     .sketch .ink { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
     .sketch .ink-thin { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; opacity: 0.85; }
     .sketch .accent { fill: none; stroke: var(--accent-c); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
@@ -667,18 +703,18 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     .sketch .fill-easy { fill: #8bf0cf; opacity: 0.6; }
     .sketch .fill-stretch { fill: #f0d68b; opacity: 0.6; }
     .sketch .fill-ache { fill: #fb7185; opacity: 0.6; }
-    .sketch .hand.onfill { fill: #1b1f2e; opacity: 1; font-weight: 600; } /* labels sitting on the zone fills */
     .sketch .hand { font-family: var(--hand); fill: var(--ink); font-size: 15px; }
     .sketch .hand.big { font-size: 20px; }
     .sketch .hand.small { font-size: 12.5px; opacity: 0.8; }
     .sketch .hand.accent-txt { fill: var(--accent-c); }
+    .sketch .hand.onfill { fill: #1b1f2e; opacity: 1; font-weight: 600; }
     .sketch .strike { stroke: #fb7185; stroke-width: 3; stroke-linecap: round; }
-    @media (prefers-reduced-motion: reduce) { .sketch, .sketch:nth-of-type(even) { transform: none; } }
+    @media (prefers-reduced-motion: reduce) { .sketch { transform: none !important; } }
 
-    /* the live wheel */
-    .wheel-wrap { display: grid; grid-template-columns: minmax(16rem, 24rem) 1fr; gap: 2.5rem; align-items: center; }
+    /* the live wheel beat */
+    .wheel-wrap { display: grid; grid-template-columns: minmax(14rem, 22rem) 1fr; gap: 2.5rem; align-items: center; }
     @media (max-width: 760px) { .wheel-wrap { grid-template-columns: 1fr; } }
-    .device { position: relative; aspect-ratio: 10 / 16; background: linear-gradient(180deg, #0b0f1a, #070910); border-radius: 26px; box-shadow: 0 30px 70px rgba(0,0,0,.55), inset 0 0 0 2px rgba(188,192,255,.14); overflow: hidden; touch-action: none; user-select: none; }
+    .device { position: relative; aspect-ratio: 10 / 16; max-height: calc(100vh - 14rem); background: linear-gradient(180deg, #0b0f1a, #070910); border-radius: 26px; box-shadow: 0 30px 70px rgba(0,0,0,.55), inset 0 0 0 2px rgba(188,192,255,.14); overflow: hidden; touch-action: none; user-select: none; }
     .device .scan { position: absolute; inset: 8% 6% 34%; border-radius: 12px; background: radial-gradient(ellipse at 50% 30%, #1c2440 0%, #0b1020 60%, #05070d 100%); overflow: hidden; }
     .device .scan::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 2px, transparent 2px 6px); mix-blend-mode: screen; }
     .device .sector { position: absolute; left: 50%; top: 0; width: 120%; height: 100%; transform: translateX(-50%); background: conic-gradient(from 150deg at 50% 0%, transparent 0deg, rgba(139,240,207,.26) 30deg, rgba(139,240,207,.12) 60deg, transparent 60deg); }
@@ -694,43 +730,37 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     .wheel :global(.tick) { stroke: rgba(188,192,255,.55); stroke-width: 2; stroke-linecap: round; }
     .wheel :global(.tick.major) { stroke: var(--mint); stroke-width: 3; }
     .wheel .thumb-hint { fill: none; stroke: var(--mint); stroke-width: 2; stroke-dasharray: 4 7; opacity: 0.55; }
-    .hint { color: var(--muted); font-size: 0.72rem; letter-spacing: 0.06em; }
-    .mono { font-family: var(--mono); }
 
-    .phases { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1.2rem; margin-top: 1.2rem; }
-    .card { background: rgba(13,18,32,.55); border: 1px solid var(--border); border-radius: 18px; padding: 1.4rem 1.5rem; backdrop-filter: blur(8px); }
-    .phases h4 { font-family: 'Fraunces', serif; font-size: 1.25rem; margin-bottom: 0.6rem; line-height: 1.3; }
-    .phases p { color: var(--muted); line-height: 1.6; font-size: 0.95rem; margin-bottom: 0.7rem; }
+    .phases { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1.1rem; margin-top: 0.5rem; }
+    .card { background: linear-gradient(180deg, rgba(20,26,44,.6), rgba(13,18,32,.35)); border: 1px solid rgba(188,192,255,.1); border-radius: 18px; padding: 1.3rem 1.4rem; backdrop-filter: blur(8px); }
+    .phases h4 { font-family: 'Fraunces', serif; font-size: 1.2rem; margin-bottom: 0.5rem; line-height: 1.3; }
+    .phases p { color: var(--muted); line-height: 1.55; font-size: 0.93rem; margin-bottom: 0.6rem; }
     .phases em { color: var(--text); }
-    .phases .result { font-family: 'Segoe Print', 'Segoe Script', 'Bradley Hand', 'Chalkboard SE', cursive; color: var(--mint); font-size: 1.1rem; margin-top: 0.8rem; }
+    .phases .result { font-family: 'Segoe Print', 'Segoe Script', 'Bradley Hand', 'Chalkboard SE', cursive; color: var(--mint); font-size: 1.05rem; margin-top: 0.6rem; }
 
-    .strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; margin-top: 1.4rem; }
-    .shot { margin: 0; background: rgba(13,18,32,.55); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
-    /* contain, not cover — the wheel lives at the bottom of the portrait shots and it's the point */
-    .shot img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: contain; background: #070910; filter: saturate(0.9); }
-    .shot figcaption { padding: 0.7rem 0.9rem 0.9rem; font-size: 0.82rem; line-height: 1.45; }
+    .strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.9rem; margin-top: 0.4rem; }
+    @media (max-width: 760px) { .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .shot { margin: 0; background: rgba(13,18,32,.5); border: 1px solid rgba(188,192,255,.1); border-radius: 16px; overflow: hidden; }
+    .shot img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: contain; background: #070910; filter: saturate(0.9); }
+    .shot figcaption { padding: 0.6rem 0.8rem 0.75rem; font-size: 0.76rem; line-height: 1.4; }
 
-    .video-main { padding: 0.6rem; margin-top: 1.2rem; }
-    .video-main video { display: block; width: 100%; border-radius: 12px; background: #000; max-height: 70vh; }
-    .video-main .cap { padding: 0.7rem 0.4rem 0.3rem; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; }
-    .yt { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; margin-top: 1.2rem; }
+    .video-main { padding: 0.5rem; }
+    .video-main video { display: block; width: 100%; border-radius: 12px; background: #000; max-height: 48vh; }
+    .video-main .cap { padding: 0.6rem 0.4rem 0.2rem; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .yt { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.9rem; }
     .yt iframe { width: 100%; aspect-ratio: 16 / 9; height: auto; border: 0; border-radius: 14px; background: #000; }
+    @media (max-width: 760px) { .yt { grid-template-columns: 1fr; } }
 
-    .closing { text-align: left; padding-bottom: 4rem; }
-
-    /* ── Deck mode (?deck=1): every section is a fullscreen slide ── */
-    .threads { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.9rem; margin: 1.6rem 0 1.4rem; }
-    .threads .stat { position: relative; display: grid; gap: 0.25rem; padding: 1rem 1.1rem; border-radius: 14px; background: rgba(13,18,32,.62); border: 1px solid var(--border); backdrop-filter: blur(10px); box-shadow: 0 10px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06); }
-    .threads .stat b { font-family: var(--display); font-weight: 400; font-size: 1.5rem; letter-spacing: 0.05em; color: var(--accent); line-height: 1; }
-    .threads .stat span { font-family: var(--mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); line-height: 1.5; }
+    /* deck-only beats + presenter chrome */
+    .threads { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 0.8rem; margin: 0.8rem 0 0.4rem; }
+    .threads .stat { position: relative; display: grid; gap: 0.25rem; padding: 0.95rem 1.05rem; border-radius: 14px; background: linear-gradient(180deg, rgba(20,26,44,.65), rgba(13,18,32,.4)); border: 1px solid rgba(188,192,255,.12); backdrop-filter: blur(10px); box-shadow: 0 10px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06); }
+    .threads .stat b { font-family: var(--display); font-weight: 400; font-size: 1.45rem; letter-spacing: 0.05em; color: var(--accent); line-height: 1; }
+    .threads .stat span { font-family: var(--mono); font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); line-height: 1.5; }
     .deck-only { display: none; }
-    .cs.deck .deck-only { display: block; }
-    .cs.deck > section { min-height: 100vh; scroll-snap-align: start; display: flex; flex-direction: column; justify-content: center; padding-top: clamp(4rem, 10vh, 7rem); padding-bottom: clamp(4rem, 10vh, 7rem); }
-    .cs.deck .cs-hero { margin-top: 0; }
+    .cs.deck .deck-only { display: grid; }
     .cs.deck .slide-title .cs-title { font-size: clamp(3rem, 9vw, 7.5rem); }
-    .cs.deck .slide-title .lede { max-width: 52ch; font-size: clamp(1.15rem, 1.9vw, 1.45rem); }
-    :global(html.deck) { scroll-snap-type: y proximity; }
-    :global(html.deck .nav), :global(html.deck .foot) { display: none; }
+    .cs.deck .slide-title .lede { max-width: 52ch; font-size: clamp(1.1rem, 1.8vw, 1.4rem); }
+    :global(html.deck .nav) { display: none; }
     .deck-bar { position: fixed; left: 0; right: 0; top: 0; height: 3px; z-index: 70; background: rgba(255,255,255,.08); }
     .deck-fill { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--violet), var(--accent), var(--mint)); transition: width .4s ease; }
     .deck-notes { position: fixed; left: 14px; bottom: 14px; z-index: 70; width: min(92vw, 34rem); max-height: 42vh; overflow: auto; padding: 1rem 1.2rem; border-radius: 16px; background: rgba(13,18,32,.9); border: 1px solid var(--border); backdrop-filter: blur(14px); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
@@ -738,121 +768,153 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     .deck-cam { position: fixed; left: 14px; bottom: 14px; z-index: 69; width: 12rem; aspect-ratio: 1; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,.35); box-shadow: 0 20px 60px rgba(0,0,0,.5); background: #000; }
     .deck-cam video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
     .deck-cam-name { position: absolute; left: 0; right: 0; bottom: 8%; text-align: center; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.8); }
-    .deck-notes:not([hidden]) ~ .deck-cam, .deck-cam.shifted { left: auto; right: 72px; bottom: 14px; width: 8rem; }
-
-    .reveal-js [data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
-    [data-reveal].in { opacity: 1; transform: none; }
-    @media (prefers-reduced-motion: reduce) { .reveal-js [data-reveal] { opacity: 1; transform: none; transition: none; } }
+    .deck-notes:not([hidden]) ~ .deck-cam { left: auto; right: 72px; width: 8rem; }
   </style>
 
   <script>
     import gsap from 'gsap';
-    import { ScrollTrigger } from 'gsap/ScrollTrigger';
     import '../../components/scroll-progress';
-    gsap.registerPlugin(ScrollTrigger);
 
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // ?nomotion=1 = the reduced-motion path on demand (also how the design tooling verifies layout).
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches || new URLSearchParams(location.search).has('nomotion');
+    const main = document.querySelector<HTMLElement>('main.cs');
 
-    // ── Deck engine (?deck=1): slides = top-level sections; arrows / space / PgUp-PgDn move,
-    //    Home/End jump, N toggles speaker notes, F fullscreen, ?cam=1 shows the presenter camera.
-    const deckMain = document.querySelector<HTMLElement>('main.cs[data-deck]');
-    if (deckMain) {
-      document.documentElement.classList.add('deck');
-      const slides = Array.from(deckMain.querySelectorAll<HTMLElement>(':scope > section'));
+    // Headings that hollow→fill and the hero glint need their text as data for the pseudo layer.
+    document.querySelectorAll<HTMLElement>('.glint, .hollow').forEach((el) => { el.dataset.text = el.textContent?.trim() ?? ''; });
+
+    if (main) {
+      document.documentElement.classList.add('beats');
+      const isDeck = main.hasAttribute('data-deck');
+      if (isDeck) document.documentElement.classList.add('deck');
+      // Beats = visible top-level sections (deck-only ones only count in deck mode).
+      const beats = Array.from(main.querySelectorAll<HTMLElement>(':scope > section')).filter((s) => isDeck || !s.classList.contains('deck-only'));
+      beats.forEach((s) => { if (s.querySelector(':scope > .sketch')) s.classList.add('has-sketch'); });
+
+      // ── per-beat enter animations (play to completion; reset on leave so they replay) ──
+      type Anim = { enter: () => gsap.core.Timeline | void; reset: () => void };
+      const anims = new Map<HTMLElement, Anim>();
+      for (const s of beats) {
+        const tl = () => gsap.timeline({ defaults: { ease: 'power3.out' } });
+        const sketch = s.querySelector<SVGSVGElement>('.sketch svg');
+        const strokes = sketch ? Array.from(sketch.querySelectorAll<SVGGeometryElement>('.ink, .ink-thin, .accent, .strike')) : [];
+        const lengths = strokes.map((el) => el.getTotalLength());
+        const rest = sketch ? Array.from(sketch.querySelectorAll('text, .fill-accent, .fill-easy, .fill-stretch, .fill-ache')) : [];
+        const hollow = s.querySelector<HTMLElement>('.hollow');
+        const lines = Array.from(s.querySelectorAll<HTMLElement>('.leadin h3, .lede, .cite, .keypoints, .eyebrow, .hint'));
+        const cards = Array.from(s.querySelectorAll<HTMLElement>('.persona, .breakdown > div, .phases .card, .shot, .threads .stat, .device, .wheel-copy, .video-main, .yt'));
+        const reset = () => {
+          if (reduced) return;
+          strokes.forEach((el, i) => { el.style.strokeDasharray = `${lengths[i]}`; el.style.strokeDashoffset = `${lengths[i]}`; });
+          gsap.set(rest, { opacity: 0 });
+          if (hollow) hollow.style.setProperty('--unfill', '100%');
+          gsap.set([...lines, ...cards], { opacity: 0, y: 18 });
+          const fig = s.querySelector('.sketch'); if (fig) gsap.set(fig, { opacity: 0, y: 24 });
+        };
+        const enter = () => {
+          if (reduced) { if (hollow) hollow.style.setProperty('--unfill', '0%'); return; }
+          const t = tl();
+          if (hollow) t.to(hollow, { '--unfill': '0%', duration: 0.9, ease: 'power2.inOut' }, 0);
+          if (lines.length) t.to(lines, { opacity: 1, y: 0, duration: 0.7, stagger: 0.08 }, 0.1);
+          if (cards.length) t.to(cards, { opacity: 1, y: 0, duration: 0.7, stagger: 0.07 }, 0.25);
+          const fig = s.querySelector('.sketch');
+          if (fig) t.to(fig, { opacity: 1, y: 0, duration: 0.6 }, 0.15);
+          if (strokes.length) t.to(strokes, { strokeDashoffset: 0, duration: 1.4, ease: 'power1.inOut', stagger: { each: 0.012 } }, 0.35);
+          if (rest.length) t.to(rest, { opacity: 1, duration: 0.5, stagger: 0.02, ease: 'power1.out' }, 1.2);
+          return t;
+        };
+        anims.set(s, { enter, reset });
+        reset();
+      }
+
+      // ── navigation ──
+      let cur = -1, busy = false;
       const fill = document.querySelector<HTMLElement>('.deck-fill');
-      const notes = document.querySelector<HTMLElement>('.deck-notes');
       const notesBody = document.querySelector<HTMLElement>('.deck-notes-body');
+      const notes = document.querySelector<HTMLElement>('.deck-notes');
       const progress = document.querySelector<HTMLElement>('scroll-progress');
-      let cur = 0;
-      const current = () => {
-        const y = window.scrollY + window.innerHeight * 0.35;
-        let i = 0; for (let k = 0; k < slides.length; k++) if (slides[k].offsetTop <= y) i = k;
-        return i;
+      const nav = document.createElement('nav'); nav.className = 'beats-nav'; nav.setAttribute('aria-label', 'Beats');
+      beats.forEach((s, i) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', `Beat ${i + 1}`); b.addEventListener('click', () => go(i)); nav.append(b); });
+      document.body.append(nav);
+      const dots = Array.from(nav.children) as HTMLButtonElement[];
+      const hint = document.createElement('p'); hint.className = 'beat-hint'; hint.textContent = isDeck ? '→ next · ← back · N notes · F fullscreen' : '↓ scroll or → to continue'; document.body.append(hint);
+
+      const paint = (i: number) => {
+        dots.forEach((d, k) => d.classList.toggle('on', k === i));
+        if (fill) fill.style.width = `${((i + 1) / beats.length) * 100}%`;
+        progress?.setAttribute('label', `${i + 1} / ${beats.length}`);
+        progress?.setAttribute('progress', String(i / Math.max(1, beats.length - 1)));
+        if (notesBody) notesBody.textContent = beats[i].dataset.notes ?? '(no notes for this beat)';
+        history.replaceState(null, '', `#b${i + 1}`);
+        hint.style.opacity = i >= beats.length - 1 ? '0' : '';
       };
-      const paint = () => {
-        cur = current();
-        if (fill) fill.style.width = `${((cur + 1) / slides.length) * 100}%`;
-        progress?.setAttribute('label', `${cur + 1} / ${slides.length}`);
-        if (notesBody) notesBody.textContent = slides[cur].dataset.notes ?? '(no notes for this slide)';
+
+      const go = (i: number) => {
+        i = Math.max(0, Math.min(beats.length - 1, i));
+        if (i === cur || busy) return;
+        busy = true;
+        const prev = cur >= 0 ? beats[cur] : null, next = beats[i];
+        const dir = i > cur ? 1 : -1;
+        cur = i; paint(i);
+        const done = () => { busy = false; };
+        if (reduced) {
+          prev?.classList.remove('active'); next.classList.add('active'); anims.get(next)?.enter(); done(); return;
+        }
+        const t = gsap.timeline({ onComplete: done });
+        if (prev) {
+          t.to(prev, { opacity: 0, y: -28 * dir, scale: 0.985, duration: 0.45, ease: 'power2.in', onComplete: () => { prev.classList.remove('active'); gsap.set(prev, { clearProps: 'transform,opacity' }); anims.get(prev)?.reset(); } }, 0);
+        }
+        t.add(() => { next.classList.add('active'); }, prev ? 0.3 : 0);
+        t.fromTo(next, { opacity: 0, y: 34 * dir, scale: 1.01 }, { opacity: 1, y: 0, scale: 1, duration: 0.75, ease: 'power3.out' }, prev ? 0.3 : 0);
+        t.add(() => { anims.get(next)?.enter(); }, prev ? 0.45 : 0.15);
       };
-      const go = (i: number) => { const t = slides[Math.max(0, Math.min(slides.length - 1, i))]; window.scrollTo({ top: t.offsetTop, behavior: reduced ? 'auto' : 'smooth' }); };
-      window.addEventListener('scroll', paint, { passive: true });
+
+      // wheel → one beat per gesture (throttled); ignore the depth wheel and inner scrollers
+      let lastWheel = 0;
+      window.addEventListener('wheel', (e) => {
+        const target = e.target as HTMLElement;
+        if (target.closest('.wheel, .deck-notes')) return;
+        const inner = target.closest<HTMLElement>('.cs > section');
+        if (inner && inner.scrollHeight > inner.clientHeight + 4) { // a tall beat scrolls inside itself first
+          const atEnd = e.deltaY > 0 ? inner.scrollTop + inner.clientHeight >= inner.scrollHeight - 2 : inner.scrollTop <= 0;
+          if (!atEnd) return;
+        }
+        e.preventDefault();
+        const now = performance.now();
+        if (now - lastWheel < 900 || Math.abs(e.deltaY) < 8) return;
+        lastWheel = now; go(cur + (e.deltaY > 0 ? 1 : -1));
+      }, { passive: false });
+      // touch swipe
+      let ty = 0;
+      window.addEventListener('touchstart', (e) => { ty = e.touches[0].clientY; }, { passive: true });
+      window.addEventListener('touchend', (e) => { const dy = ty - e.changedTouches[0].clientY; if (Math.abs(dy) > 60) go(cur + (dy > 0 ? 1 : -1)); }, { passive: true });
+      // keys
       window.addEventListener('keydown', (e) => {
         if ((e.target as HTMLElement)?.closest('input, textarea, select, [role=slider]')) return;
-        if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(current() + 1); }
-        else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); go(current() - 1); }
+        if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(cur + 1); }
+        else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); go(cur - 1); }
         else if (e.key === 'Home') { e.preventDefault(); go(0); }
-        else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
-        else if (e.key.toLowerCase() === 'n') { if (notes) notes.hidden = !notes.hidden; }
+        else if (e.key === 'End') { e.preventDefault(); go(beats.length - 1); }
+        else if (e.key.toLowerCase() === 'n' && notes) notes.hidden = !notes.hidden;
         else if (e.key.toLowerCase() === 'f') { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); }
       });
-      paint();
-      // Presenter camera bubble (?cam=1) — for the live call: your face inside the page.
+      // back-to-top puck → first beat
+      progress?.addEventListener('totop', () => go(0));
+
+      // hero: slow ken-burns on the scan while the hero beat is up
+      const heroImg = document.querySelector<HTMLElement>('.hero-bg img');
+      if (heroImg && !reduced) gsap.fromTo(heroImg, { scale: 1.08, xPercent: 1 }, { scale: 1, xPercent: -1, duration: 14, ease: 'sine.inOut', repeat: -1, yoyo: true });
+
+      // presenter camera (?cam=1)
       if (new URLSearchParams(location.search).get('cam') === '1' && navigator.mediaDevices?.getUserMedia) {
         const cam = document.querySelector<HTMLElement>('.deck-cam'); const video = cam?.querySelector('video');
         navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 640, height: 640 }, audio: false })
           .then((stream) => { if (cam && video) { video.srcObject = stream; cam.hidden = false; } })
           .catch((err) => console.warn('camera unavailable:', err));
       }
+
+      const start = Math.max(0, Math.min(beats.length - 1, (parseInt((location.hash.match(/#b(\d+)/) ?? [])[1] ?? '1', 10) || 1) - 1));
+      go(start);
     }
-
-    // ── Scroll choreography (GSAP) — everything below is scrubbed to scroll position ──
-    if (!reduced) {
-      // These get GSAP treatment instead of the generic fade-up reveal.
-      document.querySelectorAll('.leadin h3, .breakdown > div, .persona, .sketch, .phases .card, .shot, .device').forEach((el) => el.removeAttribute('data-reveal'));
-
-      // Hero: the scan settles and drifts up; the title slides away under it.
-      gsap.fromTo('.hero-bg img', { scale: 1.12, yPercent: 0 }, { scale: 1, yPercent: -8, ease: 'none', scrollTrigger: { trigger: '.cs-hero', start: 'top top', end: 'bottom top', scrub: true } });
-      gsap.to('.hero-copy', { yPercent: 22, opacity: 0.15, ease: 'none', scrollTrigger: { trigger: '.cs-hero', start: 'top top', end: 'bottom top', scrub: true } });
-
-      // Section headings: a stroked skeleton that fills with the gradient as it enters (wipe L→R).
-      document.querySelectorAll<HTMLElement>('.hollow').forEach((h) => {
-        h.removeAttribute('data-reveal');
-        h.dataset.text = h.textContent?.trim() ?? '';
-        gsap.fromTo(h, { '--unfill': '100%' }, { '--unfill': '0%', ease: 'none', scrollTrigger: { trigger: h, start: 'top 90%', end: 'top 42%', scrub: true } });
-      });
-
-      // Candid lines: each one slides in as it crosses the lower third.
-      gsap.utils.toArray<HTMLElement>('.leadin h3').forEach((h) => {
-        gsap.fromTo(h, { opacity: 0, x: -28 }, { opacity: 1, x: 0, ease: 'none', scrollTrigger: { trigger: h, start: 'top 92%', end: 'top 62%', scrub: true } });
-      });
-
-      // Whiteboard sketches DRAW themselves on as you scroll: every stroke's dash-offset is
-      // scrubbed from its full length to 0 (ink first, then labels and fills fade in).
-      document.querySelectorAll<SVGSVGElement>('.sketch svg').forEach((svg) => {
-        const strokes = Array.from(svg.querySelectorAll<SVGGeometryElement>('.ink, .ink-thin, .accent, .strike'));
-        for (const el of strokes) { const L = el.getTotalLength(); el.style.strokeDasharray = `${L}`; el.style.strokeDashoffset = `${L}`; }
-        const rest = svg.querySelectorAll('text, .fill-accent, .fill-easy, .fill-stretch, .fill-ache');
-        gsap.set(rest, { opacity: 0 });
-        gsap.timeline({ scrollTrigger: { trigger: svg, start: 'top 88%', end: 'bottom 40%', scrub: true } })
-          .to(strokes, { strokeDashoffset: 0, ease: 'none', duration: 1, stagger: { each: 0.015 } }, 0)
-          .to(rest, { opacity: 1, duration: 0.35, stagger: 0.015, ease: 'none' }, 0.5);
-      });
-
-      // Cards stagger up as their grid arrives.
-      for (const sel of ['.breakdown', '.personas', '.phases', '.strip']) {
-        const kids = document.querySelectorAll(`${sel} > *`);
-        if (kids.length) gsap.from(kids, { y: 34, opacity: 0, duration: 0.8, stagger: 0.09, ease: 'power3.out', scrollTrigger: { trigger: sel, start: 'top 82%' } });
-      }
-      // Process photos drift a little (parallax inside their frames).
-      gsap.utils.toArray<HTMLElement>('.shot img').forEach((img) => {
-        gsap.fromTo(img, { yPercent: -5 }, { yPercent: 5, ease: 'none', scrollTrigger: { trigger: img, start: 'top bottom', end: 'bottom top', scrub: true } });
-      });
-      // The device lands.
-      gsap.from('.device', { scale: 0.88, opacity: 0, y: 40, duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: '.wheel-wrap', start: 'top 78%' } });
-    }
-
-    // Reveal-on-scroll for everything else (same pattern as the home page — visible by default).
-    const els = Array.from(document.querySelectorAll('[data-reveal]'));
-    if (els.length && !reduced && 'IntersectionObserver' in window) {
-      document.documentElement.classList.add('reveal-js');
-      const io = new IntersectionObserver((entries) => {
-        for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
-      els.forEach((el) => io.observe(el));
-      setTimeout(() => els.forEach((el) => el.classList.add('in')), 2500);
-    }
-    document.querySelectorAll<HTMLElement>('.glint, .hollow').forEach((el) => { el.dataset.text = el.textContent?.trim() ?? ''; });
 
     // The live radial thumb-wheel — the 2013 idea in 2026 componentry: drag/spin with pointer
     // or thumb, momentum + friction under the pad, oversized invisible hitbox, keyboard-nudgeable.
@@ -883,8 +945,8 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       wheel.addEventListener('pointerup', release); wheel.addEventListener('pointercancel', release);
       wheel.addEventListener('keydown', (e) => {
         const step = e.shiftKey ? 36 : 9;
-        if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { angle += step; paint(); e.preventDefault(); }
-        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { angle -= step; paint(); e.preventDefault(); }
+        if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { angle += step; paint(); e.preventDefault(); e.stopPropagation(); }
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { angle -= step; paint(); e.preventDefault(); e.stopPropagation(); }
       });
       paint();
     }

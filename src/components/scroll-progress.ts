@@ -51,18 +51,26 @@ export class ScrollProgress extends HTMLElement {
     path.style.strokeDasharray = `${L} ${L}`;
     path.style.strokeDashoffset = `${L}`;
 
+    // Two sources of truth: page scroll (default) or an explicit `progress` attribute (0–1) for
+    // pages that don't scroll (the beat engine). Click emits `totop` and, if nothing handles it,
+    // scrolls the window to the top.
     const onScroll = () => {
-      const height = document.documentElement.scrollHeight - window.innerHeight;
-      const on = window.scrollY > 50;
+      const explicit = this.getAttribute('progress');
+      let p: number, on: boolean;
+      if (explicit !== null) { p = Math.max(0, Math.min(1, parseFloat(explicit) || 0)); on = p > 0.02; }
+      else { const height = document.documentElement.scrollHeight - window.innerHeight; p = height > 0 ? Math.min(window.scrollY, height) / height : 0; on = window.scrollY > 50; }
       wrap.classList.toggle('visible', on);
       label.classList.toggle('visible', on && !!label.textContent);
-      if (height > 0) path.style.strokeDashoffset = `${L - (Math.min(window.scrollY, height) * L) / height}`;
+      path.style.strokeDashoffset = `${L - p * L}`;
     };
     const { signal } = this.#ac;
     window.addEventListener('scroll', onScroll, { passive: true, signal });
     window.addEventListener('resize', onScroll, { passive: true, signal });
-    wrap.addEventListener('click', () => window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }), { signal });
-    new MutationObserver(() => { label.textContent = this.getAttribute('label') ?? ''; onScroll(); }).observe(this, { attributes: true, attributeFilter: ['label'] });
+    wrap.addEventListener('click', () => {
+      const ev = new CustomEvent('totop', { cancelable: true }); this.dispatchEvent(ev);
+      if (this.getAttribute('progress') === null) window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    }, { signal });
+    new MutationObserver(() => { label.textContent = this.getAttribute('label') ?? ''; onScroll(); }).observe(this, { attributes: true, attributeFilter: ['label', 'progress'] });
     label.textContent = this.getAttribute('label') ?? '';
     onScroll();
   }
