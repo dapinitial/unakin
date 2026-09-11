@@ -1077,6 +1077,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
           const voices = speechSynthesis.getVoices();
           const pick = () => (want && voices.find((v) => v.name.toLowerCase().includes(want.toLowerCase())))
             ?? voices.find((v) => /en[-_]US/i.test(v.lang) && /(Premium|Enhanced)/i.test(v.name))
+            ?? voices.find((v) => /^en/i.test(v.lang) && /(Premium|Enhanced)/i.test(v.name))   // e.g. Lee (Premium), en-AU
             ?? voices.find((v) => /en[-_]US/i.test(v.lang) && /^(Ava|Zoe|Evan|Tom|Allison|Nicky)\b/i.test(v.name))
             ?? voices.find((v) => /Google US English/i.test(v.name))
             ?? voices.find((v) => /en[-_]US/i.test(v.lang) && /Samantha|Alex/i.test(v.name))
