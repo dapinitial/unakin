@@ -250,12 +250,9 @@ const work = [
     /* Once the glass is in, the drawn lines go invisible but the glint keeps running through
        them — a ghost pulse tracing the form. Lines also fade with the shatter (--p from the
        component) so shards never fly over a static drawing. */
-    .outline :global(stop) { transition: stop-opacity 0.5s ease; }
-    glass-model[data-loaded] .outline :global(stop.base) { stop-opacity: 0; }
-    glass-model[data-loaded] .outline :global(stop.glint) { stop-opacity: 0; }        /* quiet at rest… */
-    glass-model[data-loaded]:hover .outline :global(stop.glint) { stop-opacity: 0.85; } /* …glints on hover */
-    glass-model[data-loaded] .outline :global(svg) { filter: drop-shadow(0 0 6px rgba(79, 227, 255, 0.5)); }
-    .hero-model .outline { opacity: calc(1 - var(--p, 0) * 1.6); }
+    /* Loading state only: once the glass has flashed in, the drawing is gone. */
+    glass-model[data-loaded] .outline { opacity: 0; pointer-events: none; }
+    .hero-model:not([data-loaded]) .outline { opacity: calc(1 - var(--p, 0) * 1.6); }
     glass-model[data-error] .outline { opacity: 0.9; } /* no WebGL / load failed → the drawing IS the art */
     @media (prefers-reduced-motion: reduce) { .outline :global(path) { stroke-dashoffset: 0; animation: none !important; } }
 
@@ -421,14 +418,17 @@ const work = [
     // any outline is still showing; stops once every model has dissolved it.
     const sweeps = Array.from(document.querySelectorAll<SVGLinearGradientElement>('linearGradient[data-sweep]'));
     if (sweeps.length && !reduced) {
-      // Runs for the life of the page: after load the base strokes are invisible and only this
-      // glint remains, tracing the form every few seconds (a sweep, then a pause).
+      // Light sweeps through the drawing while it's the loading state; stops once every model
+      // has flashed in (plus a beat for the dissolve) — or keeps going if a model failed.
+      const hosts = Array.from(document.querySelectorAll('glass-model'));
       const t0 = performance.now();
+      let doneAt = 0;
       const tick = (now: number) => {
-        const cycle = ((now - t0) / 3600) % 1;                 // 3.6s cycle: 1.6s sweep, 2s rest
-        const v = cycle < 0.45 ? -1100 + 2200 * (cycle / 0.45) : 1400;
+        const v = -1100 + 2200 * (((now - t0) / 2200) % 1);
         for (const g of sweeps) g.setAttribute('gradientTransform', `translate(${v.toFixed(1)} ${v.toFixed(1)})`);
-        requestAnimationFrame(tick);
+        const allIn = hosts.every((h) => h.hasAttribute('data-loaded') && !h.hasAttribute('data-error'));
+        if (allIn && !doneAt) doneAt = now;
+        if (!doneAt || now - doneAt < 1500) requestAnimationFrame(tick);
       };
       requestAnimationFrame(tick);
     }
