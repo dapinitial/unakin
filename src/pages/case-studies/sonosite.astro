@@ -111,6 +111,7 @@ const here = Astro.url.pathname;
             ['Sonographer', 'lives in depth and gain', ['Adjusts depth and gain constantly while watching the image, not the controls.', 'Probe angled precisely; device thumb-driven without looking.', "Can't afford overshooting a tissue layer, or hunting for a slider."]],
             ['18D', 'Special Forces medical sergeant', ['Austere, unpredictable, weight-critical. Every gram and every second counts.', 'Probe on a casualty; device gripped one-handed, maybe in the dark.', "Can't afford two hands, fine motor precision, or nested menus."]],
             ['68W', 'Army combat medic', ['Point-of-injury care under stress; gloved; equipment must just work.', 'Probe steady; the thumb does everything else.', "Can't afford a control that needs a grip change, or a gesture that isn't forgiving."]],
+            ['EMT', 'first responders', ['Roadside, in the back of a moving rig, at a scene that is still unfolding — gloved, braced, on the clock.', 'Probe on the patient; device in the hand that is also steadying them.', "Can't afford to look down, dig through a menu, or lose a capture to a bump in the road."]],
           ].map(([name, tag, facts]) => (
             <article class="persona" data-reveal>
               <h4>{name} <span class="muted">— {tag}</span></h4>
@@ -484,7 +485,7 @@ const here = Astro.url.pathname;
     .timeline li { position: relative; padding-left: 1.2rem; }
     .timeline li::before { content: ''; position: absolute; left: 0; top: 0.62em; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--mint); }
 
-    .personas { display: grid; grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); gap: 1.1rem; margin-top: 1.8rem; }
+    .personas { display: grid; grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); gap: 1.1rem; margin-top: 1.8rem; } /* 5 cards → 3 + 2 */
     .persona { background: rgba(13,18,32,.55); border: 1px solid var(--border); border-radius: 16px; padding: 1.2rem 1.3rem; backdrop-filter: blur(8px); }
     .persona h4 { font-family: 'Fraunces', serif; font-size: 1.15rem; margin-bottom: 0.5rem; }
     .persona h4 .muted { font-family: system-ui, sans-serif; font-weight: 400; font-size: 0.85rem; }
