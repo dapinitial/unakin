@@ -156,6 +156,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       <!-- ============ USERS ============ -->
       <section class="block container narrow">
         <span class="ghost-word" aria-hidden="true">HANDS</span>
+        <p class="eyebrow">The constraint meets the people</p>
         <h2 class="display-h hollow sec-h">Their other hand is on the patient.</h2>
         <p class="lede" data-reveal>This wasn't a consumer app. The people holding this device were shedding pack weight and carrying diagnostic imaging into places where you don't get to set it down, look away, or regrip. Every persona shares one fact: <strong>one hand is on the transducer, so the whole interface belongs to a thumb.</strong></p>
         <div class="personas">
@@ -217,7 +218,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       <section class="block container narrow">
         <span class="ghost-word" aria-hidden="true">THUMB</span>
         <h2 class="display-h hollow sec-h">Where a thumb actually lives.</h2>
-        <p class="lede" data-reveal>We weren't guessing. In February 2013 Steven Hoober published a field observation of <strong>1,333</strong> people using their phones in the wild: <strong>75%</strong> drove the interaction with a thumb, and grips split roughly <strong>49% one-handed, 36% cradled, 15% two-handed</strong>. That study is where the "thumb zone" comes from — the sweep radius of a thumb mapped onto the screen: a <em>natural</em> zone at the bottom, a <em>stretch</em> zone in the middle, and an <em>ow</em> zone at the top that needs a regrip or a second hand.</p>
+        <p class="lede" data-reveal>I wasn't guessing. In February 2013 Steven Hoober published a field observation of <strong>1,333</strong> people using their phones in the wild: <strong>75%</strong> drove the interaction with a thumb, and grips split roughly <strong>49% one-handed, 36% cradled, 15% two-handed</strong>. That study is where the "thumb zone" comes from — the sweep radius of a thumb mapped onto the screen: a <em>natural</em> zone at the bottom, a <em>stretch</em> zone in the middle, and an <em>ow</em> zone at the top that needs a regrip or a second hand.</p>
         <p class="lede" data-reveal>Josh Clark's <em>Designing for Touch</em> had laid down the era's gesture rules, and the platforms had published their target sizes — iOS 44&nbsp;pt, Android 48&nbsp;dp, Windows Phone 34&nbsp;px, Nokia a flat 1&nbsp;cm — because a thumb pad is roughly 16–20&nbsp;mm and it doesn't care about your pixel grid. For our users, "regrip" means "hand off the patient." So the top of the screen wasn't merely awkward. It was off limits.</p>
         <div class="cite" data-reveal>
           <p>Hoober, S. (2013, Feb). <em>How Do Users Really Hold Mobile Devices?</em> UXmatters — 1,333-user field study; 75% thumb; 49/36/15 grip split.</p>
@@ -257,15 +258,15 @@ const deck = Astro.url.searchParams.get('deck') === '1';
               <text class="hand accent-txt small" x="640" y="248">→ top of screen: OFF LIMITS</text>
             </g>
           </svg>
-          <figcaption>The thumb zone, drawn the way we talked about it at the whiteboard — and why "stretch" was never acceptable for someone whose other hand is holding a probe.</figcaption>
+          <figcaption>The thumb zone, drawn the way I talked it through at the whiteboard — and why "stretch" was never acceptable for someone whose other hand is holding a probe.</figcaption>
         </figure>
       </section>
 
       <!-- ============ SKETCH 3: A/B ============ -->
       <section class="block container narrow">
         <h2 class="display-h hollow sec-h" data-reveal>The exploration that failed — and the one that didn't.</h2>
-        <p class="lede" data-reveal>We started where everyone starts: random-access patterns. Flyout menus. Dropdowns. Accordions. They're fine when you have two hands. On the iPad Mini, watching people actually use them, the hotzones lit up immediately — every one of those patterns eventually asked the thumb to reach somewhere it couldn't, and the body answered with a regrip. Regrip means the probe hand moves. That's not a usability ding; in this context it's a failure.</p>
-        <p class="lede" data-reveal>So the radial thumb motion stopped being an idea we were exploring because it was novel. It became the only geometry that fit: <strong>put the controls on the arc the thumb already travels, and the grip never changes.</strong></p>
+        <p class="lede" data-reveal>I started where everyone starts: random-access patterns. Flyout menus. Dropdowns. Accordions. They're fine when you have two hands. On the iPad Mini, watching people actually use them, I saw the hotzones light up immediately — every one of those patterns eventually asked the thumb to reach somewhere it couldn't, and the body answered with a regrip. Regrip means the probe hand moves. That's not a usability ding; in this context it's a failure.</p>
+        <p class="lede" data-reveal>So the radial thumb motion stopped being an idea I was exploring because it was novel. It became the only geometry that fit: <strong>put the controls on the arc the thumb already travels, and the grip never changes.</strong></p>
         <figure class="sketch" data-reveal>
           <svg viewBox="0 0 900 440" role="img" aria-label="Hand sketch A/B: left, flyout, dropdown and accordion menus with the thumb reaching and regripping, crossed out; right, a radial wheel in the thumb zone with the grip holding.">
             <g filter="url(#sketch)">
@@ -298,7 +299,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
               <text class="hand" x="480" y="428">✓ nothing leaves the arc</text>
             </g>
           </svg>
-          <figcaption>The A/B, as I sketched it before we built it. Left: every random-access pattern eventually asks for a reach. Right: the wheel lives where the thumb already is.</figcaption>
+          <figcaption>The A/B, as I sketched it before I built it. Left: every random-access pattern eventually asks for a reach. Right: the wheel lives where the thumb already is.</figcaption>
         </figure>
       </section>
 
@@ -370,19 +371,19 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       <!-- ============ VALIDATION ============ -->
       <section class="block container narrow">
         <span class="ghost-word" aria-hidden="true">PROOF</span>
-        <h2 class="display-h hollow sec-h">Prove the pattern on familiar ground first.</h2>
-        <p class="lede" data-reveal>A novel interaction and an unfamiliar domain, tested together, tell you nothing — you can't separate "the wheel is confusing" from "ultrasound is confusing." So we split them.</p>
+        <h2 class="display-h hollow sec-h">I proved the pattern on familiar ground first.</h2>
+        <p class="lede" data-reveal>A novel interaction and an unfamiliar domain, tested together, tell you nothing — you can't separate "the wheel is confusing" from "ultrasound is confusing." So I split them.</p>
         <div class="phases">
           <article class="card" data-reveal>
             <h6>Phase 1 · de-risk the paradigm</h6>
             <h4>The same wheel, driving a digital camera.</h4>
-            <p>We built the radial wheel to navigate a camera's settings — features people already understood — and A/B'd it against flyout, dropdown, and accordion menus on the same familiar tasks. Monitoring, surveys, direct observation. Testing on the familiar isolates the <em>interaction</em> from the domain: we were judging the paradigm, not the product.</p>
+            <p>I built the radial wheel to navigate a camera's settings — features people already understood — and A/B'd it against flyout, dropdown, and accordion menus on the same familiar tasks. Monitoring, surveys, direct observation. Testing on the familiar isolates the <em>interaction</em> from the domain: I was judging the paradigm, not the product.</p>
             <p class="result">✓ The wheel won. Unanimously.</p>
           </article>
           <article class="card" data-reveal>
             <h6>Phase 2 · transfer to the real stakes</h6>
             <h4>Then the iViz, with real users — and non-users.</h4>
-            <p>We put the wheel into the ultrasound context and sat it in front of existing SonoSite users <em>and</em> people who'd never touched one. If the pattern only worked for experts, we'd have learned that here.</p>
+            <p>I put the wheel into the ultrasound context and sat it in front of existing SonoSite users <em>and</em> people who'd never touched one. If the pattern only worked for experts, I'd have learned it here.</p>
             <p class="result">✓ Both groups breezed through.</p>
           </article>
         </div>
@@ -392,7 +393,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       <section class="block container narrow">
         <h2 class="display-h hollow sec-h" data-reveal>Tuning the physics. Why it had to be code.</h2>
         <p class="lede" data-reveal>This is the part a static wireframe can't do. A wheel that turns too fast shoots past the tissue layer you're measuring; too slow, and the thumb fatigues. Friction and inertia under the pad have to be <em>felt</em> to be tuned. The hitbox has to be larger than the graphic so a gloved thumb that drifts doesn't lose the control. Press-and-hold needs a real threshold — long enough that a slip never triggers it, short enough that it never feels stuck.</p>
-        <p class="lede" data-reveal>None of that is decidable in a drawing. That's why the industrial designers needed someone who could build the gesture, hand it to a nurse on an iPad Mini, and watch what her thumb did.</p>
+        <p class="lede" data-reveal>None of that is decidable in a drawing. That's why the industrial designers needed someone who could build the gesture, hand it to a nurse on an iPad Mini, and watch what her thumb did. That someone was me.</p>
       </section>
 
       <!-- ============ THE MESSY MIDDLE ============ -->
@@ -618,7 +619,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     /* the sections still carry .container/.narrow from the scrolling layout — in beat mode the
        frame is the viewport; the inner max-width lives on the children instead */
     .cs > section.container, .cs > section.container.narrow { width: auto; margin: 0; }
-    .cs > section { padding-inline: max(clamp(1.25rem, 5vw, 4rem), calc((100vw - 1240px) / 2)); } /* cap the frame at ~1240px */
+    .cs > section { padding-inline: max(clamp(1.25rem, 5vw, 4rem), calc((100vw - 1440px) / 2)); } /* cap the frame at ~1440px — a 16" MacBook gets the room */
     .cs > section.has-sketch .sec-h { max-width: 22ch; }
     .cs > section.has-sketch .lede { font-size: 0.98rem; line-height: 1.6; }
     .cs > section.has-sketch .cite { font-size: 0.7rem; }
@@ -698,14 +699,14 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     .cite p { margin-bottom: 0.25rem; }
 
     /* sketch beats: copy left, whiteboard right, the board fills the height */
-    .cs > section.has-sketch { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); column-gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; }
+    .cs > section.has-sketch { grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr); column-gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; } /* the board gets ~62% */
     .cs > section.has-sketch > *:not(.sketch):not(.ghost-word) { grid-column: 1; max-width: 34rem; margin-inline: 0; }
     .cs > section.has-sketch > .sketch { grid-column: 2; grid-row: 1 / span 6; }
     @media (max-width: 900px) { .cs > section.has-sketch { grid-template-columns: minmax(0, 1fr); } .cs > section.has-sketch > .sketch { grid-column: 1; grid-row: auto; } }
     .sketch { --hand: 'Segoe Print', 'Segoe Script', 'Bradley Hand', 'Chalkboard SE', cursive; --ink: #e7eaff; --accent-c: #8bf0cf;
       width: 100%; margin: 0; background: linear-gradient(180deg, rgba(20,26,44,.7), rgba(13,18,32,.5)); border: 1px solid rgba(188,192,255,.1); border-radius: 22px; padding: clamp(1rem, 2.5vw, 2rem); backdrop-filter: blur(10px); box-shadow: 0 30px 80px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05); transform: rotate(-0.35deg); }
     .cs > section:nth-of-type(even) .sketch { transform: rotate(0.3deg); }
-    .sketch svg { display: block; width: 100%; height: auto; max-height: calc(100vh - 16rem); }
+    .sketch svg { display: block; width: 100%; height: auto; max-height: calc(100vh - 11rem); }
     .sketch figcaption { font-family: var(--hand); font-size: 0.95rem; color: var(--muted); margin: 0.8rem 0.3rem 0; }
     .sketch .ink { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
     .sketch .ink-thin { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; opacity: 0.85; }
@@ -872,13 +873,15 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         if (reduced) {
           prev?.classList.remove('active'); next.classList.add('active'); anims.get(next)?.enter(); done(); return;
         }
+        // Cinematic hand-off (davidpuerto.com energy): the leaving beat pans away and recedes while
+        // the arriving beat is already coming in from slightly large — both on screen at once.
         const t = gsap.timeline({ onComplete: done });
         if (prev) {
-          t.to(prev, { opacity: 0, y: -28 * dir, scale: 0.985, duration: 0.45, ease: 'power2.in', onComplete: () => { prev.classList.remove('active'); gsap.set(prev, { clearProps: 'transform,opacity' }); anims.get(prev)?.reset(); } }, 0);
+          t.to(prev, { opacity: 0, yPercent: -7 * dir, scale: 0.93, filter: 'blur(6px)', duration: 0.75, ease: 'power2.inOut', onComplete: () => { prev.classList.remove('active'); gsap.set(prev, { clearProps: 'transform,opacity,filter' }); anims.get(prev)?.reset(); } }, 0);
         }
-        t.add(() => { next.classList.add('active'); }, prev ? 0.3 : 0);
-        t.fromTo(next, { opacity: 0, y: 34 * dir, scale: 1.01 }, { opacity: 1, y: 0, scale: 1, duration: 0.75, ease: 'power3.out' }, prev ? 0.3 : 0);
-        t.add(() => { anims.get(next)?.enter(); }, prev ? 0.45 : 0.15);
+        t.add(() => { next.classList.add('active'); }, prev ? 0.12 : 0);
+        t.fromTo(next, { opacity: 0, yPercent: 9 * dir, scale: 1.07, filter: 'blur(4px)' }, { opacity: 1, yPercent: 0, scale: 1, filter: 'blur(0px)', duration: 0.95, ease: 'power3.out' }, prev ? 0.12 : 0);
+        t.add(() => { anims.get(next)?.enter(); }, prev ? 0.35 : 0.15);
       };
 
       // wheel → one beat per gesture (throttled); ignore the depth wheel and inner scrollers
