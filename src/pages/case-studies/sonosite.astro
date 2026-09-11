@@ -664,14 +664,13 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     :global(.arc-toc-close) { font: inherit; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); background: transparent; border: 1px solid var(--border); border-radius: 999px; padding: 0.5rem 0.9rem; cursor: pointer; }
     :global(.arc-toc-close:hover) { color: var(--text); border-color: var(--accent); }
     :global(.arc-toc-actions) { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
-    :global(a.arc-toc-close) { text-decoration: none; color: var(--accent); }
     :global(.arc-body) { display: grid; grid-template-rows: minmax(0, 46%) minmax(0, 1fr); gap: 1rem; min-height: 0; }
     :global(.arc-svg) { width: 100%; height: 100%; display: block; overflow: visible; }
     :global(.arc-svg .base) { stroke: rgba(188,192,255,.18); stroke-width: 1; }
     :global(.arc-svg .pyramid) { fill: none; stroke: rgba(188,192,255,.35); stroke-width: 1.5; stroke-dasharray: 4 6; }
     :global(.arc-svg .done) { fill: none; stroke: url(#arc-grad); stroke-width: 3; stroke-linecap: round; }
     :global(.arc-svg .dot) { fill: rgba(13,18,32,.9); stroke: rgba(188,192,255,.55); stroke-width: 1.5; cursor: pointer; transition: r .2s ease; }
-    :global(.arc-svg .dot:hover) { r: 9; stroke: #fff; }
+    :global(.arc-svg .dot:hover), :global(.arc-svg .dot.hi) { r: 9; stroke: #fff; fill: rgba(255,255,255,.25); }
     :global(.arc-svg .dot.past) { fill: var(--accent); stroke: var(--accent); }
     :global(.arc-svg .dot.now) { fill: #fff; stroke: #fff; r: 9; filter: drop-shadow(0 0 8px rgba(255,255,255,.8)); }
     :global(.arc-svg .stage) { font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; fill: var(--muted); }
@@ -682,7 +681,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     :global(.arc-col h4.on) { color: var(--mint); }
     :global(.arc-col ol) { list-style: none; display: grid; gap: 0.25rem; }
     :global(.arc-col button) { width: 100%; text-align: left; font: inherit; font-size: 0.82rem; line-height: 1.3; color: var(--muted); background: transparent; border: 0; border-left: 2px solid transparent; padding: 0.3rem 0.5rem; cursor: pointer; border-radius: 0 8px 8px 0; }
-    :global(.arc-col button:hover) { color: var(--text); background: rgba(255,255,255,.05); }
+    :global(.arc-col button:hover), :global(.arc-col button.hi) { color: var(--text); background: rgba(255,255,255,.07); border-left-color: rgba(255,255,255,.5); }
     :global(.arc-col button.now) { color: #fff; border-left-color: var(--mint); background: rgba(139,240,207,.08); }
     :global(.arc-col button.past) { color: var(--accent); }
     :global(.arc-col button small) { font-family: var(--mono); font-size: 0.62rem; letter-spacing: .1em; opacity: .7; margin-right: .4rem; }
@@ -1033,7 +1032,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       const pathD = beats.map((_, i) => `${i ? 'L' : 'M'}${px(i).toFixed(1)} ${py(i).toFixed(1)}`).join(' ');
       const stageX = (name: (typeof STAGES)[number]) => { const idx = beats.map((_, i) => i).filter((i) => stageOf(i) === name); return idx.length ? (px(idx[0]) + px(idx[idx.length - 1])) / 2 : -999; };
       toc.innerHTML = `
-        <div class="arc-toc-head"><h2 class="display-h">The story arc</h2><div class="arc-toc-actions"><a class="arc-toc-close" href="${isDeck ? '/case-studies/sonosite' : '/case-studies/sonosite?deck=1'}">${isDeck ? 'Case study · 15 beats' : 'Full deck · 28 beats'} →</a><button type="button" class="arc-toc-close">Close · Esc</button></div></div>
+        <div class="arc-toc-head"><h2 class="display-h">The story arc</h2><div class="arc-toc-actions"><button type="button" class="arc-toc-close">Close · Esc</button></div></div>
         <div class="arc-body">
           <svg class="arc-svg" viewBox="0 0 ${W} ${H}" aria-hidden="true">
             <defs><linearGradient id="arc-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6d4aff"/><stop offset=".6" stop-color="#bcc0ff"/><stop offset="1" stop-color="#8bf0cf"/></linearGradient></defs>
@@ -1071,6 +1070,13 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         if (i !== undefined) { closeToc(); go(+i); return; }
         if (t.closest('.arc-toc-close') || t === toc) closeToc();
       });
+      // hover / focus a dot ⇄ its list entry: both light up together (mouse, keyboard, or the gaze cursor)
+      const hiToc = (i: string | undefined, on: boolean) => { if (i === undefined) return;
+        toc.querySelectorAll<HTMLElement>(`[data-i="${i}"]`).forEach((el) => { el.classList.toggle('hi', on); if (on && el.tagName === 'BUTTON') el.scrollIntoView({ block: 'nearest' }); }); };
+      toc.addEventListener('mouseover', (e) => hiToc((e.target as HTMLElement).closest<HTMLElement>('[data-i]')?.dataset.i, true));
+      toc.addEventListener('mouseout', (e) => hiToc((e.target as HTMLElement).closest<HTMLElement>('[data-i]')?.dataset.i, false));
+      toc.addEventListener('focusin', (e) => hiToc((e.target as HTMLElement).closest<HTMLElement>('[data-i]')?.dataset.i, true));
+      toc.addEventListener('focusout', (e) => hiToc((e.target as HTMLElement).closest<HTMLElement>('[data-i]')?.dataset.i, false));
       window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeToc(); else if (e.key.toLowerCase() === 't') { toc.classList.contains('open') ? closeToc() : openToc(); } });
       // ── narration: S speaks the current beat. Prefers David's own clip
       //    (/audio/sonosite/beat-NN.mp3 — HeyGen voice clone), falls back to the browser's voice
