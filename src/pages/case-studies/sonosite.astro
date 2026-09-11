@@ -829,6 +829,21 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     .deck-cam video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
     .deck-cam-name { position: absolute; left: 0; right: 0; bottom: 8%; text-align: center; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.8); }
     .deck-notes:not([hidden]) ~ .deck-cam { left: auto; right: 72px; width: 8rem; }
+    /* presenter tools injected into the site header once Spacelab Access is detected (JS-created → :global) */
+    :global(.deck-tools) { display: inline-flex; gap: 0.5rem; margin-right: 0.4rem; }
+    :global(.deck-tool) { display: inline-flex; align-items: center; gap: 0.45rem; font: inherit; font-size: 0.8rem; color: var(--muted); background: none; border: 1px solid var(--border); border-radius: 999px; padding: 0.4rem 0.85rem; cursor: pointer; transition: border-color .2s, color .2s; }
+    :global(.deck-tool:hover), :global(.deck-tool:focus-visible) { border-color: var(--accent); color: var(--text); }
+    :global(.deck-tool i) { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.25); transition: background .2s, box-shadow .2s; }
+    :global(.deck-tool.on i) { background: var(--mint); box-shadow: 0 0 10px var(--mint); }
+    :global(.deck-tool[aria-pressed="true"]) { border-color: var(--accent); color: var(--text); }
+    :global(.deck-legend) { position: fixed; right: 14px; top: 74px; z-index: 71; width: min(92vw, 22rem); padding: 1rem 1.2rem; border-radius: 16px; background: rgba(13,18,32,.92); border: 1px solid var(--border); backdrop-filter: blur(14px); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+    :global(.deck-legend .eyebrow) { margin: 0; }
+    :global(.deck-legend-state) { margin: 0.3rem 0 0.6rem; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mint); }
+    :global(.deck-legend dl) { display: grid; grid-template-columns: minmax(0, 9.5rem) 1fr; gap: 0.45rem 0.9rem; margin: 0; font-size: 0.88rem; }
+    :global(.deck-legend dt) { font-family: var(--mono); font-size: 0.72rem; line-height: 1.5; color: var(--text); }
+    :global(.deck-legend dd) { margin: 0; color: var(--muted); }
+    :global(.deck-legend-foot) { margin: 0.7rem 0 0; font-size: 0.72rem; color: var(--muted); }
+    @media (max-width: 560px) { :global(.deck-tools) { display: none; } }
   </style>
 
   <script>
@@ -1131,6 +1146,43 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         return true;
       };
       if (!hookCursor()) { const iv = setInterval(() => { if (hookCursor()) clearInterval(iv); }, 500); setTimeout(() => clearInterval(iv), 20000); }
+
+      // ── Presenter tools in the site header (deck only, and only once the extension is present) ──
+      // "Eyes" opens the full-page gaze calibration (SLCursor.calibrate) or closes it if it's up;
+      // "Voice" shows the command legend + live mic state. Both live in the header per David's ask
+      // so the calibration can cover the whole page first and come back on demand.
+      const mountTools = () => {
+        const SL = (window as any).SLCursor; const nav = document.querySelector('header.nav .navlinks');
+        if (!SL?.bus || !nav || document.querySelector('.deck-tools')) return !!SL?.bus;
+        const tools = document.createElement('span'); tools.className = 'deck-tools';
+        tools.innerHTML = `<button type="button" class="deck-tool" data-tool="eyes" aria-pressed="false"><i></i>Eyes</button><button type="button" class="deck-tool" data-tool="voice" aria-expanded="false" aria-controls="deck-voice-legend"><i></i>Voice</button>`;
+        nav.prepend(tools);
+        const eyes = tools.querySelector<HTMLButtonElement>('[data-tool=eyes]')!, voice = tools.querySelector<HTMLButtonElement>('[data-tool=voice]')!;
+        const legend = document.createElement('aside'); legend.id = 'deck-voice-legend'; legend.className = 'deck-legend'; legend.hidden = true; legend.setAttribute('aria-label', 'Voice commands');
+        legend.innerHTML = `<p class="eyebrow">Voice · say any of these</p><p class="deck-legend-state"></p>
+          <dl><dt>next · back</dt><dd>move one beat</dd><dt>beat 12</dt><dd>jump to a beat</dd><dt>first · last</dt><dd>the ends</dd>
+          <dt>story arc</dt><dd>open the map · “close” hides it</dd><dt>read · stop reading</dt><dd>narrate this beat</dd><dt>notes</dt><dd>talking points</dd>
+          <dt>full screen</dt><dd>toggle</dd><dt>eyes on · eyes off · calibrate</dt><dd>gaze steering</dd><dt>click · open</dt><dd>activate what the cursor is on</dd></dl>
+          <p class="deck-legend-foot">Esc or “close” hides this.</p>`;
+        document.body.append(legend);
+        const state = legend.querySelector<HTMLElement>('.deck-legend-state')!;
+        const paintVoice = (on: boolean, err?: string) => { voice.classList.toggle('on', on); state.textContent = err === 'not-allowed' || err === 'service-not-allowed' ? 'Mic blocked for this site — click the camera/mic icon in the address bar, allow, reload.' : on ? 'Listening.' : 'Mic off.'; };
+        paintVoice(!!SL.voiceOn?.());
+        SL.bus.on('voice:state', (d: { on: boolean; error?: string }) => paintVoice(!!d?.on, d?.error));
+        const paintEyes = (open: boolean) => { eyes.classList.toggle('on', !!SL.gazeOn?.()); eyes.setAttribute('aria-pressed', String(open)); };
+        SL.bus.on('gaze:calibration', (d: { open: boolean }) => paintEyes(!!d?.open));
+        eyes.addEventListener('click', () => { if (eyes.getAttribute('aria-pressed') === 'true') SL.closeCalibration?.(); else SL.calibrate?.(); });
+        const showLegend = (on: boolean) => { legend.hidden = !on; voice.setAttribute('aria-expanded', String(on)); };
+        voice.addEventListener('click', () => showLegend(legend.hidden));
+        window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !legend.hidden) showLegend(false); });
+        SL.bus.on('voice:phrase', (ev: { text: string; handled: boolean }) => {
+          const t = (ev.text || '').toLowerCase();
+          if (/\b(what can i say|voice help|commands|help)\b/.test(t)) { ev.handled = true; showLegend(true); }
+          else if (/\b(close|dismiss|hide)\b/.test(t) && !legend.hidden && !ev.handled) { ev.handled = true; showLegend(false); }
+        });
+        return true;
+      };
+      if (isDeck && !mountTools()) { const iv = setInterval(() => { if (mountTools()) clearInterval(iv); }, 500); setTimeout(() => clearInterval(iv), 20000); }
 
       // the book puck opens the map (no more back-to-top)
       progress?.addEventListener('totop', (e) => { e.preventDefault(); toc.classList.contains('open') ? closeToc() : openToc(); });
