@@ -33,7 +33,23 @@ const PINK = 0xff4fd8, CYAN = 0x4fe3ff;
 const TINT = new THREE.Color(0x86e9ff);   // cyan-teal glass body (the reference's blown glass)
 const ENERGY = 0xa8f7ff;                  // the light that runs through the veins
 
+// iOS / iPadOS WebKit renders physical transmission as a blown-out, frosted white (the
+// transmission pass loses the scene behind the glass), which washes out the rim lights and
+// bloom. iPadOS Safari reports itself as a Mac, so sniff by touch points too.
+const IOS = typeof navigator !== 'undefined' &&
+  (/iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+
 function glassMaterial() {
+  if (IOS) {
+    // Alpha glass: reflection + clearcoat + tint, no transmission. Same look at a distance,
+    // predictable on Apple GPUs.
+    return new THREE.MeshPhysicalMaterial({
+      color: TINT, metalness: 0, roughness: 0.18,
+      clearcoat: 1, clearcoatRoughness: 0.12, envMapIntensity: 0.6, specularIntensity: 0.9,
+      transparent: true, opacity: 0.62, depthWrite: false,
+      emissive: new THREE.Color(ENERGY), emissiveIntensity: 0,
+    });
+  }
   return new THREE.MeshPhysicalMaterial({
     color: 0xe6fbff, metalness: 0, roughness: 0.14,
     transmission: 1, thickness: 0.9, ior: 1.5,

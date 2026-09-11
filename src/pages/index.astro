@@ -198,8 +198,16 @@ const work = [
       font-family: var(--display); text-transform: uppercase; font-size: clamp(5rem, 15vw, 15rem); letter-spacing: 0.08em;
       color: transparent; -webkit-text-stroke: 1px rgba(188, 192, 255, 0.16); user-select: none; pointer-events: none; white-space: nowrap;
     }
-    @media (max-width: 860px) {
-      .hero { grid-template-columns: 1fr; min-height: 0; padding-top: 2rem; }
+    /* Tablets (iPad portrait is 768–834px) keep the two-column hero; only phones stack.
+       In that range the copy column is ~400px, so the title steps down and takes a wider track
+       so "NOT AKIN TO" stays on one line. */
+    @media (max-width: 1000px) and (min-width: 721px) {
+      .hero { grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); gap: 1.25rem; }
+      .hero-title { font-size: clamp(2.2rem, 5vw, 5.6rem); }
+      .hero-art { max-height: 60vh; }
+    }
+    @media (max-width: 720px) {
+      .hero { grid-template-columns: 1fr; min-height: 0; padding-top: 2rem; padding-bottom: 1.5rem; }
       .hero-art { order: -1; aspect-ratio: auto; height: 46vh; max-height: 22rem; margin-inline: -1.25rem; }
       .hero-model { inset: 0; }
       .ghost-word { font-size: clamp(3.5rem, 22vw, 7rem); }
@@ -211,7 +219,7 @@ const work = [
     .stat-h2 { left: -8%; top: 30%; max-width: 12rem; }
     .stat-h3 { left: -4%; bottom: 14%; }
     .stat-h4 { right: -3%; bottom: 6%; max-width: 13rem; }
-    @media (max-width: 860px) { .stat-h1 { right: 0; } .stat-h2 { left: 0; } .stat-h3 { left: 0; bottom: 22%; } .stat-h4 { right: 0; bottom: 2%; } }
+    @media (max-width: 720px) { .stat-h1 { right: 0; } .stat-h2 { left: 0; } .stat-h3 { left: 0; bottom: 22%; } .stat-h4 { right: 0; bottom: 2%; } }
 
     /* Cards animate in (scale + rise) when their model is in view; headings scramble via JS. */
     .stat { opacity: 0; transform: translateY(14px) scale(0.94); transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
@@ -237,7 +245,7 @@ const work = [
     .stat-b { right: -6%; top: 30%; max-width: 13rem; }
     .stat-c { left: 2%; bottom: 16%; }
     .stat-d { right: -2%; bottom: 4%; max-width: 13rem; }
-    @media (max-width: 860px) {
+    @media (max-width: 720px) {
       .thesis { grid-template-columns: 1fr; gap: 1rem; }
       .thesis-art { max-height: 60vh; }
       .stat-a { left: 0; } .stat-b { right: 0; } .stat-c { left: 0; bottom: 20%; } .stat-d { right: 0; bottom: 2%; }
@@ -249,7 +257,11 @@ const work = [
     .block-h em { font-style: normal; color: var(--accent); -webkit-text-fill-color: var(--accent); }
     .hero-title { line-height: 0.82; text-wrap: initial; } /* the <br> sets the two lines; don't let balance re-split them */
 
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 1.1rem; }
+    /* Four service cards: 4-up on desktop, 2×2 on tablets (never 3 + an orphan, never four
+       cramped columns at iPad-landscape width), single column on phones. */
+    .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.1rem; }
+    @media (max-width: 1200px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 560px) { .grid { grid-template-columns: minmax(0, 1fr); } }
     .card { background: rgba(13, 18, 32, 0.55); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(8px); transition: border-color 0.2s ease, transform 0.2s ease; }
     .card:hover { border-color: rgba(188, 192, 255, 0.35); transform: translateY(-2px); }
     .card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
