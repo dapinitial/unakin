@@ -31,19 +31,24 @@ const here = Astro.url.pathname;
   ) : (
     <main class="cs">
       <!-- ============ HERO ============ -->
-      <section class="cs-hero container">
-        <p class="eyebrow" data-reveal>Case study · FujiFilm SonoSite · 2013 → shipped 2015</p>
-        <h1 class="display-h cs-title" data-reveal>
-          <span class="glint">iViz — think</span><br />
-          <span class="grad-text glint">Tricorder.</span>
-        </h1>
-        <ul class="keypoints" data-reveal>
-          <li>Hardware-device UX</li>
-          <li>One-thumb radial navigation</li>
-          <li>Prototyped in code, on the device's footprint</li>
-        </ul>
-        <div class="hero-img" data-reveal>
-          <img src="/images/case-studies/sonosite/sonosite2.jpg" alt="The iViz prototype UI: the radial wheel in the thumb corner driving depth while the scan fills the screen" loading="eager" />
+      <section class="cs-hero">
+        <!-- full-bleed scan UI behind the title; parallax + slow settle via GSAP -->
+        <div class="hero-bg" aria-hidden="true">
+          <img src="/images/case-studies/sonosite/sonosite2.jpg" alt="" loading="eager" fetchpriority="high" />
+          <div class="hero-scrim"></div>
+        </div>
+        <div class="container hero-copy">
+          <p class="eyebrow" data-reveal>Case study · FujiFilm SonoSite · 2013 → shipped 2015</p>
+          <h1 class="display-h cs-title" data-reveal>
+            <span class="glint">iViz — think</span><br />
+            <span class="grad-text glint">Tricorder.</span>
+          </h1>
+          <ul class="keypoints" data-reveal>
+            <li>Hardware-device UX</li>
+            <li>One-thumb radial navigation</li>
+            <li>Prototyped in code, on the device's footprint</li>
+          </ul>
+          <p class="scroll-cue mono" data-reveal>↓ scroll</p>
         </div>
       </section>
 
@@ -432,12 +437,20 @@ const here = Astro.url.pathname;
 
     /* ---------- case study ---------- */
     .cs { position: relative; z-index: 3; }
-    .cs-hero { padding: clamp(3rem, 9vh, 6rem) 0 1rem; }
+    /* Full-bleed hero: the scan UI is the ground, the title sits in the dark left third. */
+    .cs-hero { position: relative; min-height: calc(100vh - 4.5rem); display: flex; align-items: flex-end; overflow: hidden; margin-top: -4.5rem; padding-top: 4.5rem; }
+    .hero-bg { position: absolute; inset: 0; z-index: 0; }
+    .hero-bg img { position: absolute; inset: -6%; width: 112%; height: 112%; object-fit: cover; object-position: 60% 50%; will-change: transform; filter: saturate(0.85); }
+    .hero-scrim { position: absolute; inset: 0; background:
+      linear-gradient(90deg, rgba(8,10,15,.96) 0%, rgba(8,10,15,.82) 38%, rgba(8,10,15,.25) 70%, rgba(8,10,15,.45) 100%),
+      linear-gradient(0deg, rgba(8,10,15,1) 0%, rgba(8,10,15,.35) 30%, transparent 60%); }
+    .hero-copy { position: relative; z-index: 1; padding: 0 0 clamp(3rem, 9vh, 6rem); }
     .cs-title { font-size: clamp(2.6rem, 7.5vw, 6rem); line-height: 0.84; margin: 1rem 0 1.4rem; text-wrap: initial; }
     .keypoints { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); }
     .keypoints li::before { content: '◆ '; color: var(--mint); }
-    .hero-img { margin-top: 2.4rem; border-radius: 22px; overflow: hidden; border: 1px solid var(--border); background: rgba(13,18,32,.5); }
-    .hero-img img { display: block; width: 100%; height: auto; }
+    .scroll-cue { margin-top: 2.2rem; font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); animation: cue 2.2s ease-in-out infinite; }
+    @keyframes cue { 0%, 100% { transform: translateY(0); opacity: .6; } 50% { transform: translateY(6px); opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { .scroll-cue { animation: none; } }
 
     .sec-h { font-size: clamp(1.6rem, 4vw, 2.7rem); margin: 0.6rem 0 1.2rem; max-width: 24ch; }
     .lede { font-size: clamp(1.02rem, 1.6vw, 1.15rem); line-height: 1.75; color: var(--muted); margin-bottom: 1.1rem; max-width: 66ch; }
@@ -538,9 +551,53 @@ const here = Astro.url.pathname;
   </style>
 
   <script>
-    // Reveal-on-scroll (same pattern as the home page — content visible by default).
-    const els = Array.from(document.querySelectorAll('[data-reveal]'));
+    import gsap from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    gsap.registerPlugin(ScrollTrigger);
+
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ── Scroll choreography (GSAP) — everything below is scrubbed to scroll position ──
+    if (!reduced) {
+      // These get GSAP treatment instead of the generic fade-up reveal.
+      document.querySelectorAll('.leadin h3, .breakdown > div, .persona, .sketch, .phases .card, .shot, .device').forEach((el) => el.removeAttribute('data-reveal'));
+
+      // Hero: the scan settles and drifts up; the title slides away under it.
+      gsap.fromTo('.hero-bg img', { scale: 1.12, yPercent: 0 }, { scale: 1, yPercent: -8, ease: 'none', scrollTrigger: { trigger: '.cs-hero', start: 'top top', end: 'bottom top', scrub: true } });
+      gsap.to('.hero-copy', { yPercent: 22, opacity: 0.15, ease: 'none', scrollTrigger: { trigger: '.cs-hero', start: 'top top', end: 'bottom top', scrub: true } });
+
+      // Candid lines: each one slides in as it crosses the lower third.
+      gsap.utils.toArray<HTMLElement>('.leadin h3').forEach((h) => {
+        gsap.fromTo(h, { opacity: 0, x: -28 }, { opacity: 1, x: 0, ease: 'none', scrollTrigger: { trigger: h, start: 'top 92%', end: 'top 62%', scrub: true } });
+      });
+
+      // Whiteboard sketches DRAW themselves on as you scroll: every stroke's dash-offset is
+      // scrubbed from its full length to 0 (ink first, then labels and fills fade in).
+      document.querySelectorAll<SVGSVGElement>('.sketch svg').forEach((svg) => {
+        const strokes = Array.from(svg.querySelectorAll<SVGGeometryElement>('.ink, .ink-thin, .accent, .strike'));
+        for (const el of strokes) { const L = el.getTotalLength(); el.style.strokeDasharray = `${L}`; el.style.strokeDashoffset = `${L}`; }
+        const rest = svg.querySelectorAll('text, .fill-accent, .fill-easy, .fill-stretch, .fill-ache');
+        gsap.set(rest, { opacity: 0 });
+        gsap.timeline({ scrollTrigger: { trigger: svg, start: 'top 88%', end: 'bottom 40%', scrub: true } })
+          .to(strokes, { strokeDashoffset: 0, ease: 'none', duration: 1, stagger: { each: 0.015 } }, 0)
+          .to(rest, { opacity: 1, duration: 0.35, stagger: 0.015, ease: 'none' }, 0.5);
+      });
+
+      // Cards stagger up as their grid arrives.
+      for (const sel of ['.breakdown', '.personas', '.phases', '.strip']) {
+        const kids = document.querySelectorAll(`${sel} > *`);
+        if (kids.length) gsap.from(kids, { y: 34, opacity: 0, duration: 0.8, stagger: 0.09, ease: 'power3.out', scrollTrigger: { trigger: sel, start: 'top 82%' } });
+      }
+      // Process photos drift a little (parallax inside their frames).
+      gsap.utils.toArray<HTMLElement>('.shot img').forEach((img) => {
+        gsap.fromTo(img, { yPercent: -5 }, { yPercent: 5, ease: 'none', scrollTrigger: { trigger: img, start: 'top bottom', end: 'bottom top', scrub: true } });
+      });
+      // The device lands.
+      gsap.from('.device', { scale: 0.88, opacity: 0, y: 40, duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: '.wheel-wrap', start: 'top 78%' } });
+    }
+
+    // Reveal-on-scroll for everything else (same pattern as the home page — visible by default).
+    const els = Array.from(document.querySelectorAll('[data-reveal]'));
     if (els.length && !reduced && 'IntersectionObserver' in window) {
       document.documentElement.classList.add('reveal-js');
       const io = new IntersectionObserver((entries) => {
