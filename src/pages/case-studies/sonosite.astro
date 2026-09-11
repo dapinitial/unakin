@@ -520,7 +520,8 @@ const here = Astro.url.pathname;
 
     .strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; margin-top: 1.4rem; }
     .shot { margin: 0; background: rgba(13,18,32,.55); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
-    .shot img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; filter: saturate(0.9); }
+    /* contain, not cover — the wheel lives at the bottom of the portrait shots and it's the point */
+    .shot img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: contain; background: #070910; filter: saturate(0.9); }
     .shot figcaption { padding: 0.7rem 0.9rem 0.9rem; font-size: 0.82rem; line-height: 1.45; }
 
     .video-main { padding: 0.6rem; margin-top: 1.2rem; }
