@@ -40,6 +40,7 @@ const ld = {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <link rel="preload" href="/fonts/neotrax-regular.otf" as="font" type="font/otf" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -89,10 +90,11 @@ const ld = {
 
     <style is:global>
       /* Neotrax — techno display face (Befonts, commercial-use license on file). */
+      /* Preloaded in <head>; block (not swap) so display headings never flash the fallback face. */
       @font-face {
         font-family: 'Neotrax';
         src: url('/fonts/neotrax-regular.otf') format('opentype');
-        font-weight: 400; font-style: normal; font-display: swap;
+        font-weight: 400; font-style: normal; font-display: block;
       }
       :root {
         --bg-1: rgb(8, 10, 15);
@@ -133,18 +135,29 @@ const ld = {
          every size. .glint adds a pink→white→cyan light sweeping through the letterforms
          (a highlight layer over the base fill, clipped to the text; sweeps, then rests). */
       .display-h { font-family: var(--display); text-transform: uppercase; font-weight: 400; line-height: 0.86; letter-spacing: 0.07em; text-wrap: balance; }
+      /* On hover: a light sweeps the letter OUTLINES first (a stroked copy of the text, masked
+         by a moving band), then the same band sweeps through the FILL ~250ms behind. Quiet at rest. */
       .glint {
         --fill: linear-gradient(#f4f5fb, #f4f5fb);
-        background-image:
-          linear-gradient(105deg, transparent 42%, rgba(255, 79, 216, 0.85) 47%, #fff 50%, rgba(79, 227, 255, 0.85) 53%, transparent 58%),
-          var(--fill);
+        --band: linear-gradient(105deg, transparent 42%, rgba(255, 79, 216, 0.85) 47%, #fff 50%, rgba(79, 227, 255, 0.85) 53%, transparent 58%);
+        position: relative; display: inline-block;
+        background-image: var(--band), var(--fill);
         background-size: 260% 100%, 100% 100%; background-position: 130% 0, 0 0; background-repeat: no-repeat;
         -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
-        animation: glint 7s ease-in-out infinite;
       }
       .glint.grad-text { --fill: linear-gradient(162deg, #fff 0%, var(--accent) 62%, var(--violet) 100%); }
-      @keyframes glint { 0%, 8% { background-position: 130% 0, 0 0; } 34%, 100% { background-position: -130% 0, 0 0; } }
-      @media (prefers-reduced-motion: reduce) { .glint { animation: none; background-position: -130% 0, 0 0; } }
+      .glint::before {
+        content: attr(data-text); position: absolute; inset: 0; pointer-events: none;
+        color: transparent; -webkit-text-fill-color: transparent; -webkit-text-stroke: 1.5px #fff;
+        -webkit-mask-image: linear-gradient(105deg, transparent 40%, #000 50%, transparent 60%); mask-image: linear-gradient(105deg, transparent 40%, #000 50%, transparent 60%);
+        -webkit-mask-size: 260% 100%; mask-size: 260% 100%; -webkit-mask-position: 130% 0; mask-position: 130% 0; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+        opacity: 0;
+      }
+      .glint:hover::before { animation: glint-stroke 0.9s ease-in-out forwards; }
+      .glint:hover { animation: glint-fill 0.9s ease-in-out 0.25s forwards; }
+      @keyframes glint-stroke { 0% { opacity: 1; mask-position: 130% 0; -webkit-mask-position: 130% 0; } 100% { opacity: 1; mask-position: -130% 0; -webkit-mask-position: -130% 0; } }
+      @keyframes glint-fill { from { background-position: 130% 0, 0 0; } to { background-position: -130% 0, 0 0; } }
+      @media (prefers-reduced-motion: reduce) { .glint:hover, .glint:hover::before { animation: none; } }
       .container { width: min(100% - 2.5rem, 1120px); margin-inline: auto; }
       .container.narrow { width: min(100% - 2.5rem, 720px); }
       .muted { color: var(--muted); }

@@ -159,6 +159,13 @@ export class GlassModel extends HTMLElement {
       root.position.sub(center);
       pivot.add(root);
       apply();
+      // Hand the page the model's on-screen box (its x/y bounds at the model's mid-depth,
+      // projected through this camera) so the SVG outline can be pinned exactly onto the glass.
+      const min = box.min.clone().multiplyScalar(s).sub(center), max = box.max.clone().multiplyScalar(s).sub(center);
+      const a = new THREE.Vector3(min.x, max.y, 0).project(camera), b = new THREE.Vector3(max.x, min.y, 0).project(camera);
+      const l = (a.x + 1) / 2 * 100, t = (1 - a.y) / 2 * 100, r = (b.x + 1) / 2 * 100, btm = (1 - b.y) / 2 * 100;
+      this.style.setProperty('--ol', `${l.toFixed(2)}%`); this.style.setProperty('--ot', `${t.toFixed(2)}%`);
+      this.style.setProperty('--ow', `${(r - l).toFixed(2)}%`); this.style.setProperty('--oh', `${(btm - t).toFixed(2)}%`);
       // Tuning hook (used by the design review tooling; harmless in prod).
       (this as any)._dbg = { meshMats, edgeMats, core, pink, cyan, beat, root, get edgeBase() { return edgeBase; }, setBase: (v: number) => (edgeBase = v), render: () => composer.render() };
 
@@ -214,6 +221,7 @@ export class GlassModel extends HTMLElement {
       pivot.rotation.x += 0.06 * (targetY - pivot.rotation.x);
       if (!reduced) {
         pivot.rotation.z = Math.sin(now * 0.00035) * 0.06;
+        this.style.setProperty('--rz', `${(-pivot.rotation.z * 57.2958).toFixed(2)}deg`); // keeps the SVG ghost swaying with the glass
         // Energy flows along the lines; a beat surges its brightness, speed, and the inner light.
         const flow = (pulse === 'heart' ? 0.9 : 0.5) * (1 + beat.v * 2.5) * dt;
         for (const m of edgeMats) { m.dashOffset -= flow; m.opacity = edgeBase * (1 + beat.v * 0.9); }

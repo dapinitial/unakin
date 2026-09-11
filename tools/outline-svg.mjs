@@ -91,15 +91,17 @@ for (const v of verts) for (;;) { const c = walk(v); if (c.length < 2) break; ch
 // ── project (orthographic, +Z view), fit to a 1000×1000 box, emit ──
 let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
 for (let v = 0; v < positions.length / 3; v++) { const x = positions[v*3], y = positions[v*3+1]; if (x<minX) minX=x; if (x>maxX) maxX=x; if (y<minY) minY=y; if (y>maxY) maxY=y; }
-const span = Math.max(maxX - minX, maxY - minY); const S = 940 / span;
-const ox = (1000 - (maxX - minX) * S) / 2, oy = (1000 - (maxY - minY) * S) / 2;
-const px = (v) => ((positions[v*3] - minX) * S + ox).toFixed(1);
-const py = (v) => ((maxY - positions[v*3+1]) * S + oy).toFixed(1);
+// viewBox = the model's exact x/y bounding box (no padding) so the page can pin the drawing to
+// the projected 3D bounds; preserveAspectRatio=none lets that box be matched exactly.
+const span = Math.max(maxX - minX, maxY - minY); const S = 1000 / span;
+const VW = ((maxX - minX) * S).toFixed(1), VH = ((maxY - minY) * S).toFixed(1);
+const px = (v) => ((positions[v*3] - minX) * S).toFixed(1);
+const py = (v) => ((maxY - positions[v*3+1]) * S).toFixed(1);
 // longest strokes first so the draw-on reads as "the outline appears, then detail"
 chains.sort((a, b) => b.length - a.length);
 // pathLength="1" → CSS can draw every stroke with dasharray/dashoffset 1 regardless of its real length.
 const paths = chains.map((c, i) => `<path pathLength="1" d="M${px(c[0])} ${py(c[0])}${c.slice(1).map((v) => `L${px(v)} ${py(v)}`).join('')}" style="--i:${i}"/>`);
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VW} ${VH}" preserveAspectRatio="none" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 ${paths.join('\n')}
 </svg>
 `;

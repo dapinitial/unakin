@@ -230,7 +230,13 @@ const work = [
     /* SVG line-art loading state: strokes draw on (gradient sliding through them) once the
        model is in view, then dissolve when the glass flashes in. Sized to sit exactly where
        the 3D model renders (the canvas host is inset -22% / -24%). */
-    .outline { position: absolute; inset: 12.5%; opacity: 1; transition: opacity 0.6s ease; --step: 5ms; }
+    /* Pinned to the model's projected bounds (--ol/--ot/--ow/--oh from <glass-model>), swaying
+       with it (--rz); until the model reports, a sensible default box. */
+    .outline {
+      position: absolute; left: var(--ol, 12.5%); top: var(--ot, 12.5%); width: var(--ow, 75%); height: var(--oh, 75%);
+      transform: rotate(var(--rz, 0deg)); transform-origin: 50% 50%;
+      opacity: 1; transition: opacity 0.6s ease, left 0.3s ease, top 0.3s ease, width 0.3s ease, height 0.3s ease; --step: 5ms;
+    }
     .thesis-model .outline { --step: 3ms; }
     /* The SVG is injected via set:html, so its nodes have no Astro scope attribute → :global. */
     /* one glow filter on the whole drawing (not per path): bloom for the light sweep */
@@ -244,9 +250,10 @@ const work = [
     /* Once the glass is in, the drawn lines go invisible but the glint keeps running through
        them — a ghost pulse tracing the form. Lines also fade with the shatter (--p from the
        component) so shards never fly over a static drawing. */
-    .outline :global(stop) { transition: stop-opacity 0.8s ease; }
+    .outline :global(stop) { transition: stop-opacity 0.5s ease; }
     glass-model[data-loaded] .outline :global(stop.base) { stop-opacity: 0; }
-    glass-model[data-loaded] .outline :global(stop.glint) { stop-opacity: 0.8; }
+    glass-model[data-loaded] .outline :global(stop.glint) { stop-opacity: 0; }        /* quiet at rest… */
+    glass-model[data-loaded]:hover .outline :global(stop.glint) { stop-opacity: 0.85; } /* …glints on hover */
     glass-model[data-loaded] .outline :global(svg) { filter: drop-shadow(0 0 6px rgba(79, 227, 255, 0.5)); }
     .hero-model .outline { opacity: calc(1 - var(--p, 0) * 1.6); }
     glass-model[data-error] .outline { opacity: 0.9; } /* no WebGL / load failed → the drawing IS the art */
@@ -293,7 +300,7 @@ const work = [
     /* Section headings share the hero's display voice (Neotrax, uppercase, glint) at a smaller size. */
     .block-h { font-size: clamp(1.7rem, 4.4vw, 3.1rem); margin: 0.9rem 0 2rem; max-width: 22ch; }
     .block-h em { font-style: normal; color: var(--accent); -webkit-text-fill-color: var(--accent); }
-    .hero-title { line-height: 0.82; }
+    .hero-title { line-height: 0.82; text-wrap: initial; } /* the <br> sets the two lines; don't let balance re-split them */
 
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 1.1rem; }
     .card { background: rgba(13, 18, 32, 0.55); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(8px); transition: border-color 0.2s ease, transform 0.2s ease; }
@@ -426,36 +433,40 @@ const work = [
       requestAnimationFrame(tick);
     }
 
-    // Stat cards: animate in with their model, and scramble the heading in (enter) / out (leave).
+    // Stat cards: rise in with their model; the heading resolves from glyphs, one card at a time
+    // (enter only — leaving just fades). Kept deliberately light: a single rAF, short, staggered.
     const GLYPHS = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#%+';
-    const scramble = (el: HTMLElement, target: string, dur: number, out = false) => {
-      const prev = (el as any)._raf; if (prev) cancelAnimationFrame(prev);
+    const scramble = (el: HTMLElement, target: string, dur: number) => {
       const start = performance.now();
       const tick = (now: number) => {
         const t = Math.min(1, (now - start) / dur);
         let s = '';
         for (let i = 0; i < target.length; i++) {
           const ch = target[i];
-          const settled = out ? t < i / target.length : t > (i + 1) / target.length + 0.1;
-          s += ch === ' ' ? ' ' : settled ? ch : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+          s += ch === ' ' ? ' ' : t > (i + 1) / target.length ? ch : GLYPHS[(Math.random() * GLYPHS.length) | 0];
         }
-        el.textContent = s;
-        if (t < 1) (el as any)._raf = requestAnimationFrame(tick); else el.textContent = out ? s : target;
+        el.textContent = t < 1 ? s : target;
+        if (t < 1) requestAnimationFrame(tick);
       };
-      (el as any)._raf = requestAnimationFrame(tick);
+      requestAnimationFrame(tick);
     };
     const stats = Array.from(document.querySelectorAll<HTMLElement>('.stat'));
     if (stats.length && !reduced && 'IntersectionObserver' in window) {
-      for (const st of stats) { const b = st.querySelector('b')!; b.dataset.text = b.textContent ?? ''; }
+      let queue = Promise.resolve();
       const sio = new IntersectionObserver((entries) => {
         for (const e of entries) {
-          const st = e.target as HTMLElement; const b = st.querySelector('b')!; const text = b.dataset.text ?? '';
-          if (e.isIntersecting) { st.classList.add('in'); scramble(b, text, 650); }
-          else if (st.classList.contains('in')) { scramble(b, text, 420, true); st.classList.remove('in'); }
+          const st = e.target as HTMLElement;
+          if (!e.isIntersecting) { st.classList.remove('in'); continue; }
+          const b = st.querySelector('b')!; const text = b.dataset.text ?? (b.dataset.text = b.textContent ?? '');
+          // serialize: each card starts 140ms after the previous one began
+          queue = queue.then(() => new Promise<void>((res) => { st.classList.add('in'); scramble(b, text, 420); setTimeout(res, 140); }));
         }
       }, { threshold: 0.4, rootMargin: '0px 0px -6% 0px' });
-      stats.forEach((st, i) => { st.style.transitionDelay = `${(i % 4) * 90}ms`; sio.observe(st); });
+      stats.forEach((st) => sio.observe(st));
     } else stats.forEach((st) => st.classList.add('in'));
+
+    // Heading glint runs on hover (CSS); the pseudo-element stroke pass needs the text as data.
+    document.querySelectorAll<HTMLElement>('.glint').forEach((el) => { el.dataset.text = el.textContent?.trim() ?? ''; });
 
     // Intake form → /api/intake
     const form = document.getElementById('intake') as HTMLFormElement | null;
