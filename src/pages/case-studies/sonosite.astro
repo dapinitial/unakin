@@ -513,16 +513,18 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         </section>
 
         <!-- ============ DECK: CURSOR LAB + EXTENSION ============ -->
-        <section class="block container deck-only" data-notes="For Hart + Heinzen. The cursor lab is where the HUD cursor lives; the Chrome extension (Spacelab Access) puts that cursor on ANY website — hand today (point / pinch / fist-scroll), gaze + voice next — fully on-device (MediaPipe WASM bundled; camera never leaves the machine). Demo idea: operate Studio with the hand cursor. Test conditions: front-lit, glasses on/off.">
-          <p class="eyebrow">Cursor lab · Spacelab Access</p>
-          <h2 class="display-h hollow sec-h">Operate any website by hand. On-device.</h2>
+        <section class="block container deck-only" data-notes="For Hart + Heinzen. Cursor lab = the radial HUD cursor on the portfolio: pointer / keyboard / gaze (head+eyes, blink-to-click) / voice / hand, all adapters over one input bus — 'adding voice or gaze changed the core by zero lines.' Spacelab Access = that same cursor as a Chrome extension on ANY website: hand shipped first (point / pinch / fist-scroll), gaze + voice next — fully on-device (MediaPipe WASM bundled; the camera never leaves the machine). Demo: operate Studio with the hand cursor. Conditions: front-lit, glasses on/off.">
+          <p class="eyebrow">Cursor lab → Spacelab Access</p>
+          <h2 class="display-h hollow sec-h">One cursor, every input. Now on any website.</h2>
           <div class="threads">
-            <div class="stat"><b>Point</b><span>index finger moves the HUD cursor</span></div>
-            <div class="stat"><b>Pinch</b><span>thumb + index clicks whatever it's over</span></div>
-            <div class="stat"><b>Fist</b><span>move up / down to scroll</span></div>
+            <div class="stat"><b>Gaze</b><span>head + eyes · blink to click</span></div>
+            <div class="stat"><b>Voice</b><span>commands, on-device</span></div>
+            <div class="stat"><b>Hand</b><span>point · pinch to click · fist to scroll</span></div>
+            <div class="stat"><b>Pointer · keys</b><span>every path complete on its own</span></div>
+            <div class="stat"><b>1 bus</b><span>each modality is a small adapter over one core</span></div>
             <div class="stat"><b>0 bytes</b><span>leave the machine — MediaPipe runs locally</span></div>
           </div>
-          <p class="lede">A Chrome extension that drops the multimodal cursor onto any page — built to demo operating my own products the way someone using assistive tech would. Gaze and voice are next.</p>
+          <p class="lede">The cursor lab is where the radial HUD cursor lives — gaze, voice, hand, pointer, keyboard, all driving one core. <strong>Spacelab Access</strong> is that cursor as a Chrome extension, dropped onto <em>any</em> page: hand control shipped first, gaze and voice landing next — built to operate my own products the way someone using assistive tech would.</p>
         </section>
 
         <!-- ============ DECK: SHIPMATE — LIVE DEPLOY ============ -->
