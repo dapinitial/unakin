@@ -70,9 +70,16 @@ const deck = Astro.url.searchParams.get('deck') === '1';
 
         <!-- ============ DECK: ACT 2 TITLE ============ -->
         <section class="block container deck-only slide-title" data-notes="Elevate iViz: research-grounded, hardware, gesture, A/B-tested — tailor-made for Kait (hardware + iteration) and Sarah (research in the loop). Show the messy middle.">
-          <p class="eyebrow">Act 2 · Where the instinct comes from</p>
+          <p class="eyebrow">Act 1 · the inciting incident</p>
           <h2 class="display-h cs-title"><span class="glint">SonoSite</span><br /><span class="grad-text glint">iViz, 2013.</span></h2>
           <p class="lede">A radial thumb gesture on a handheld ultrasound — prototyped in code, validated in two phases, shipped. The thumb-wheel that became the cursor.</p>
+        </section>
+
+        <!-- ============ DECK: THE PROBLEM ============ -->
+        <section class="block container deck-only slide-title" data-notes="Name the problem in one line and let it sit: 'The body sets the rules. Not the screen.' Everything in the next twelve minutes is that sentence, tested.">
+          <p class="eyebrow">Act 1 · the problem</p>
+          <h2 class="display-h cs-title"><span class="glint">The body sets</span><br /><span class="grad-text glint">the rules.</span></h2>
+          <p class="lede">Not the screen. A medic has one hand on the probe — so the whole interface belongs to a thumb. Design the input to fit how the body actually moves, and everything else follows.</p>
         </section>
       </>)}
 
@@ -461,36 +468,24 @@ const deck = Astro.url.searchParams.get('deck') === '1';
 
       {deck && (<>
         <!-- ============ DECK: SEGUE — ACCESSIBILITY ============ -->
-        <section class="block container narrow deck-only" data-notes="Say this as the hinge, not a credential. For Dame: never lead with WCAG/S360 — outcome + autonomy first; standards as receipts, once. Keep the posture humble. Then pivot: 'and that discipline is what I'm building with today.'">
+        <section class="block container narrow deck-only" data-notes="Say this as the hinge, not a credential. For Dame: never lead with WCAG/S360 — outcome + autonomy first; standards as receipts, once. Keep the posture humble. Then pivot to THE TURN.">
           <span class="ghost-word" aria-hidden="true">ALWAYS</span>
+          <p class="eyebrow">Act 2 · first win</p>
           <h2 class="display-h hollow sec-h">Accessibility always enters the picture.</h2>
           <p class="lede">It was never the headline on iViz — the headline was a medic with one hand free. But design the input to fit how the body actually moves, and accessibility arrives as a consequence: a gloved thumb, a gesture that forgives a slip, a control you can operate without looking. That's the discipline, and it's followed me everywhere since.</p>
           <p class="lede">At Microsoft it meant S360 bug bashes — often — and re-designing when the bar said so. I'd prototype, put it in front of the accessibility leads in C+AI, and if I was missing the mark they'd tell me; the dialogue with the people who live these barriers is what sharpened the work. Eventually I was moonlighting for Azure, opening pull requests to fix accessibility bugs myself. Standards are the rigor underneath. <strong>The thesis is who can now do what.</strong></p>
         </section>
 
-        <!-- ============ DECK: ACT 3 TITLE ============ -->
-        <section class="block container deck-only slide-title" data-notes="Transition: 'Same instinct, today's tools. Here's how I'm using AI to solve real problems right now — and how I keep it trustworthy.'">
-          <p class="eyebrow">Act 3 · Today</p>
-          <h2 class="display-h cs-title"><span class="glint">AI, solving</span><br /><span class="grad-text glint">real problems.</span></h2>
-          <p class="lede">Not demos. Products people use — with the trust rails designed in.</p>
+        <!-- ============ DECK: THE TURN (midpoint) ============ -->
+        <section class="block container deck-only slide-title" data-notes="The midpoint. Slow down. 'Then the world changed. Input went multimodal — gaze, voice, hands. AI arrived. And the problem got HARDER: the question stopped being can we build it, and became: can anyone trust it?' Everything after this is about trust.">
+          <p class="eyebrow">Act 2 · the turn</p>
+          <h2 class="display-h cs-title"><span class="glint">Then the</span><br /><span class="grad-text glint">world changed.</span></h2>
+          <p class="lede">Input went multimodal. AI arrived. And the problem got harder — because the question stopped being <em>can we build it</em> and became <strong>can anyone trust it?</strong></p>
         </section>
 
-        <!-- ============ DECK: SPACELAB STUDIO / SUPER COMPOSER ============ -->
-        <section class="block container deck-only" data-notes="Open studio.spacelabforever.com live. Compose something in a few seconds. Say: 'this is the public sibling of the Apple system; same DNA.' Offer to drop the link at the end.">
-          <p class="eyebrow">Spacelab Studio · Super Composer</p>
-          <h2 class="display-h hollow sec-h">Chat with Claude. Ship a campaign.</h2>
-          <div class="threads">
-            <div class="stat"><b>Design chat</b><span>Claude generates and surgically edits the HTML — edit vs. replace vs. redesign, intent-aware</span></div>
-            <div class="stat"><b>Compat</b><span>one-click lint for what breaks outside Apple Mail; repairs handed back to the AI as one request</span></div>
-            <div class="stat"><b>Pitch mode</b><span>30+ scroll-animated blocks → a single self-contained page (GSAP + Lenis)</span></div>
-            <div class="stat"><b>Media</b><span>Imagen + Veo inline; CID-embedded video that plays natively in Apple Mail</span></div>
-          </div>
-          <p class="lede">Bring-your-own keys, nothing persisted server-side. Public sandbox at <strong>spacelabforever.com/studio</strong>.</p>
-        </section>
-
-        <!-- ============ DECK: APPLE — SYSTEMS, AI, TRUST ============ -->
-        <section class="block container deck-only" data-notes="Problem→approach→outcome; keep Apple internals abstract. 'Executive communication ran on charts and dashboards — a lot of it in Tableau — in a brutally unforgiving medium. My job wasn't make it prettier; it was: how do you move a skeptical org onto a new, AI-assisted system they'll trust with executive-level communication?' The AI + rigor move: Claude Code → a 514-test harness encoding the design system so the experience cannot ship broken. The real work was trust: moved us off Tableau, onboarded the existing keynote charts so the switch felt safe. FILL [YOUR SPECIFICS] with true numbers only: proved on real exec content · never failed a send · X teams onboarded · time saved.">
-          <p class="eyebrow">Apple · systems, AI, and earning trust</p>
+        <!-- ============ DECK: APPLE — ESCALATION 1 ============ -->
+        <section class="block container deck-only" data-notes="Escalation 1. Problem→approach→outcome; keep Apple internals abstract. 'Executive communication ran on charts and dashboards — a lot of it in Tableau — in a brutally unforgiving medium. My job wasn't make it prettier; it was: how do you move a skeptical org onto a new, AI-assisted system they'll trust with executive-level communication?' The AI + rigor move: Claude Code → a 514-test harness encoding the design system so the experience cannot ship broken. The real work was trust: moved us off Tableau, onboarded the existing keynote charts so the switch felt safe. FILL [YOUR SPECIFICS] with true numbers only.">
+          <p class="eyebrow">Act 2 · escalation one · Apple</p>
           <h2 class="display-h hollow sec-h">Move a skeptical org onto a system it can trust.</h2>
           <div class="threads">
             <div class="stat"><b>514</b><span>tests encoding the design system — it cannot ship broken</span></div>
@@ -500,36 +495,28 @@ const deck = Astro.url.searchParams.get('deck') === '1';
           <p class="lede">As a designer I didn't hand off a mockup and hope engineering kept the intent. I built the thing that <em>enforces</em> it in production. AI to accelerate rigor, not just exploration.</p>
         </section>
 
-        <!-- ============ DECK: UNAKIN — BUSINESS + AI VELOCITY ============ -->
-        <section class="block container deck-only" data-notes="For Pendlay. 'We needed contracts. Instead of paying DocuSign, I built our own e-sign/portal with Claude Code — draft→publish gated in Postgres row-level security, so a client can't see a draft even if the UI leaks. That tooling won and retained our first client.' Show the portal + docs briefly. This very deck is on the site it produced.">
-          <p class="eyebrow">Unakin · the studio</p>
-          <h2 class="display-h hollow sec-h">Needed contracts. Built the portal.</h2>
+        <!-- ============ DECK: UNAKIN — ESCALATION 2 ============ -->
+        <section class="block container deck-only" data-notes="Escalation 2, for Pendlay. 'We needed contracts. Instead of paying DocuSign, I built our own e-sign/portal with Claude Code — draft→publish gated in Postgres row-level security, so a client can't see a draft even if the UI leaks. That tooling won and retained our first client.' Trust enforced in the database, not the UI. This very deck is on the site it produced.">
+          <p class="eyebrow">Act 2 · escalation two · Unakin</p>
+          <h2 class="display-h hollow sec-h">Needed contracts. Built the portal. Put the trust in Postgres.</h2>
           <div class="threads">
             <div class="stat"><b>$0</b><span>per signature — our own e-sign, with audit, certificate, and canonical PDF</span></div>
-            <div class="stat"><b>RLS</b><span>draft → publish gated in Postgres; a client can't see a draft even if the UI leaks</span></div>
+            <div class="stat"><b>RLS</b><span>draft → publish gated in the database; a client can't see a draft even if the UI leaks</span></div>
             <div class="stat"><b>1st client</b><span>won and retained with that tooling — the Mapbox 3D engagement</span></div>
           </div>
           <p class="lede">And the site you're looking at — glass anatomy, fractured GLBs, this deck — is the same studio, shipped in days.</p>
         </section>
 
-        <!-- ============ DECK: CURSOR LAB + EXTENSION ============ -->
-        <section class="block container deck-only" data-notes="For Hart + Heinzen. Cursor lab = the radial HUD cursor on the portfolio: pointer / keyboard / gaze (head+eyes, blink-to-click) / voice / hand, all adapters over one input bus — 'adding voice or gaze changed the core by zero lines.' Spacelab Access = that same cursor as a Chrome extension on ANY website: hand shipped first (point / pinch / fist-scroll), gaze + voice next — fully on-device (MediaPipe WASM bundled; the camera never leaves the machine). Demo: operate Studio with the hand cursor. Conditions: front-lit, glasses on/off.">
-          <p class="eyebrow">Cursor lab → Spacelab Access</p>
-          <h2 class="display-h hollow sec-h">One cursor, every input. Now on any website.</h2>
-          <div class="threads">
-            <div class="stat"><b>Gaze</b><span>head + eyes · blink to click</span></div>
-            <div class="stat"><b>Voice</b><span>commands, on-device</span></div>
-            <div class="stat"><b>Hand</b><span>point · pinch to click · fist to scroll</span></div>
-            <div class="stat"><b>Pointer · keys</b><span>every path complete on its own</span></div>
-            <div class="stat"><b>1 bus</b><span>each modality is a small adapter over one core</span></div>
-            <div class="stat"><b>0 bytes</b><span>leave the machine — MediaPipe runs locally</span></div>
-          </div>
-          <p class="lede">The cursor lab is where the radial HUD cursor lives — gaze, voice, hand, pointer, keyboard, all driving one core. <strong>Spacelab Access</strong> is that cursor as a Chrome extension, dropped onto <em>any</em> page: hand control shipped first, gaze and voice landing next — built to operate my own products the way someone using assistive tech would.</p>
+        <!-- ============ DECK: THE CLIMAX ============ -->
+        <section class="block container deck-only slide-title" data-notes="The low point, one line: 'Agentic AI can ship anything. Including a mistake.' Beat. 'So I built the gate — and I'll show you it live.' Then Shipmate.">
+          <p class="eyebrow">Act 2 · the climax</p>
+          <h2 class="display-h cs-title"><span class="glint">Agentic AI can ship</span><br /><span class="grad-text glint">anything.</span></h2>
+          <p class="lede">Including a mistake. So the question isn't how fast an agent can ship — it's what it is <strong>refused</strong> from shipping.</p>
         </section>
 
-        <!-- ============ DECK: SHIPMATE — LIVE DEPLOY ============ -->
-        <section class="block container deck-only" data-notes="The showstopper. 'I'll ship a real change to production right now — and I want you to watch the safety gate.' Small, visible, reversible change on a low-stakes project. plan → execute. Narrate: 'execute is refused in code unless a plan ran in the last 10 minutes — a mishearing or a prompt injection literally cannot ship prod. That's designing trust into an agentic system.' Have rollback + the backup clip ready.">
-          <p class="eyebrow">Shipmate · agentic, shipped</p>
+        <!-- ============ DECK: SHIPMATE — LIVE ============ -->
+        <section class="block container deck-only" data-notes="Climax, live. 'I'll ship a real change to production right now — and I want you to watch the safety gate.' Small, visible, reversible change on a low-stakes project. plan → execute. Narrate: 'execute is refused in code unless a plan ran in the last 10 minutes — a mishearing or a prompt injection literally cannot ship prod. That's designing trust into an agentic system.' Rollback + backup clip ready. If the network is shaky: play the clip and say why.">
+          <p class="eyebrow">Act 2 · climax · Shipmate</p>
           <h2 class="display-h hollow sec-h">Ship to production. Live. With the gate on.</h2>
           <div class="threads">
             <div class="stat"><b>plan →</b><span>the agent proposes the change and shows its work</span></div>
@@ -539,31 +526,40 @@ const deck = Astro.url.searchParams.get('deck') === '1';
           <p class="lede">A mishearing or a prompt injection literally cannot ship prod. That's what designing trust into an agentic system looks like.</p>
         </section>
 
-        <!-- ============ DECK: PANOGRAM ============ -->
-        <section class="block container deck-only" data-notes="For Schoeck/Hart. 360° WebGL viewer + 3D globe + Claude annotation. 'Spatial-native interaction, and AI that can see a flat crop of a sphere — with a safety rail: AI annotations render as unverified until confirmed.'">
-          <p class="eyebrow">panogram · spatial + multimodal, shipped</p>
-          <h2 class="display-h hollow sec-h">AI that can see a sphere — and says when it isn't sure.</h2>
-          <p class="lede">A 360° WebGL viewer and 3D globe with Claude annotation. AI annotations render as <em>unverified</em> until a person confirms them — the trust rail, again.</p>
+        <!-- ============ DECK: THE NEW NORMAL — CURSOR ============ -->
+        <section class="block container deck-only" data-notes="Act 3 opens. The resolution: the wheel became the cursor. Cursor lab = the radial HUD cursor on the portfolio: pointer / keyboard / gaze (head+eyes, blink-to-click) / voice / hand, all adapters over one input bus — 'adding voice or gaze changed the core by zero lines.' Spacelab Access = that same cursor as a Chrome extension on ANY website: hand shipped first, gaze + voice next — fully on-device. This deck is being driven by it right now if the demo's on.">
+          <span class="ghost-word" aria-hidden="true">CURSOR</span>
+          <p class="eyebrow">Act 3 · the new normal</p>
+          <h2 class="display-h hollow sec-h">The wheel became the cursor. Now on any website.</h2>
+          <div class="threads">
+            <div class="stat"><b>Gaze</b><span>head + eyes · blink to click</span></div>
+            <div class="stat"><b>Voice</b><span>commands, on-device</span></div>
+            <div class="stat"><b>Hand</b><span>point · pinch to click · fist to scroll</span></div>
+            <div class="stat"><b>1 bus</b><span>each modality is a small adapter over one core</span></div>
+            <div class="stat"><b>0 bytes</b><span>leave the machine — MediaPipe runs locally</span></div>
+          </div>
+          <p class="lede">Thumb to gaze — same instinct: put the control on a radius matched to a motion the body already makes. <strong>Spacelab Access</strong> drops that cursor onto any page as a Chrome extension: hand shipped first, gaze and voice next.</p>
         </section>
 
-        <!-- ============ DECK: THROUGHLINE ============ -->
-        <section class="block container deck-only" data-notes="The twelve-year arc: iViz 2013 — a radial thumb gesture on a handheld ultrasound, prototyped in HTML/CSS/JS, A/B-validated → today's gaze / voice / gesture. 'Touch → spatial gesture → multimodal. Same instinct; the tech finally caught up.'">
-          <span class="ghost-word" aria-hidden="true">ARC</span>
-          <h2 class="display-h hollow sec-h">Touch → gesture → multimodal.</h2>
+        <!-- ============ DECK: STUDIO — THE CLOSE ============ -->
+        <section class="block container deck-only" data-notes="Close on the thing they can touch. Open studio.spacelabforever.com live. Compose something in a few seconds — 'this is the public sibling of the Apple system; same DNA.' Panogram in one line if there's time: spatial 360° + AI annotations that render unverified until confirmed — the trust rail again. Then: 'Guest passes are coming to your inbox — $3 of credits, no keys, no card.'">
+          <p class="eyebrow">Act 3 · resolution · Spacelab Studio</p>
+          <h2 class="display-h hollow sec-h">Chat with Claude. Ship a campaign. Here's the thing you can touch.</h2>
           <div class="threads">
-            <div class="stat"><b>2013</b><span>a thumb on a radius — iViz</span></div>
-            <div class="stat"><b>2014–17</b><span>humanizing a tool at scale — Lyric</span></div>
-            <div class="stat"><b>2026</b><span>gaze · voice · hand — the radial HUD cursor</span></div>
+            <div class="stat"><b>Design chat</b><span>Claude generates and surgically edits the HTML — intent-aware</span></div>
+            <div class="stat"><b>Compat</b><span>one-click lint for what breaks outside Apple Mail; repairs handed back to the AI</span></div>
+            <div class="stat"><b>Pitch mode</b><span>30+ scroll-animated blocks → one self-contained page</span></div>
+            <div class="stat"><b>Media</b><span>Imagen + Veo inline; video that plays natively in Apple Mail</span></div>
           </div>
-          <p class="lede">Same instinct: put the control on a radius matched to a motion the body already makes. The tech finally caught up.</p>
+          <p class="lede">The public sibling of the Apple system — same DNA, same trust rails (AI output verified before it ships; in panogram, AI annotations stay <em>unverified</em> until a person confirms). <strong>Guest passes are coming to your inbox</strong> — $3 of credits, no keys, no card.</p>
         </section>
 
         <!-- ============ DECK: CLOSE ============ -->
-        <section class="block container narrow deck-only slide-title" data-notes="Say it: 'I didn't design a portfolio. I designed an interaction framework that meets every person through whatever input they have — and I built it out of my own face, because returning is what I do. I've been building the future of how people touch computers for twelve years, to your own accessibility bar. I'd love to do it here, on Windows.' Then Q&A: drop studio.spacelabforever.com in chat; invite them to try the gaze cursor; have the portal / panogram ready.">
-          <p class="eyebrow">Close</p>
+        <section class="block container narrow deck-only slide-title" data-notes="Say it: 'I didn't design a portfolio. I designed an interaction framework that meets every person through whatever input they have — and I built it out of my own face, because returning is what I do. I've been building the future of how people touch computers for twelve years, to your own accessibility bar. I'd love to do it here, on Windows.' Then Q&A: Studio open in a tab, the cursor ready, the portal ready.">
+          <p class="eyebrow">The ask</p>
           <h2 class="display-h cs-title"><span class="glint">I'd love to do it</span><br /><span class="grad-text glint">here, on Windows.</span></h2>
           <p class="lede">I didn't design a portfolio. I designed an interaction framework that meets every person through whatever input they have. Twelve years of building the future of how people touch computers — to your accessibility bar.</p>
-          <p class="hint mono">Q&amp;A · studio.spacelabforever.com · the gaze cursor · portal.unakin.com · panogram</p>
+          <p class="hint mono">Q&amp;A · studio.spacelabforever.com · the gaze cursor · portal.unakin.com</p>
         </section>
       </>)}
 
@@ -603,7 +599,14 @@ const deck = Astro.url.searchParams.get('deck') === '1';
        No native scrolling. Every top-level section is absolutely positioned over the viewport;
        the active one is visible, the rest are parked. Wheel / keys / swipe / dots move between
        beats; each beat's animations play to completion on enter (never tied to scroll). */
-    :global(html.beats), :global(html.beats body) { height: 100%; overflow: hidden; overscroll-behavior: none; }
+    /* Scroll proxy: the document is 3 screens tall behind a hidden scrollbar and parked at the
+       middle. Anything that scrolls the window (a hand-tracking extension's fist-scroll, voice
+       "down"/"up", a screen reader) moves the beat and re-parks — so assistive input drives the
+       deck without knowing about it. Real wheel input is handled directly. */
+    :global(html.beats) { height: 100%; overflow-y: scroll; overscroll-behavior: none; scrollbar-width: none; scroll-behavior: auto !important; /* proxy needs instant jumps, not smooth trickles */ }
+    :global(html.beats::-webkit-scrollbar) { display: none; }
+    :global(html.beats body) { height: 300vh; overflow: visible; }
+    :global(html:fullscreen .nav) { display: none; }
     :global(html.beats .foot) { display: none; }
     .cs { position: fixed; inset: 0; z-index: 3; overflow: hidden; }
     .cs > section {
@@ -627,11 +630,19 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     @media (max-height: 700px), (max-width: 900px) { .cs > section { align-content: start; overflow-y: auto; } }
 
     /* beat navigation (dots) */
-    .beats-nav { position: fixed; right: 18px; top: 50%; translate: 0 -50%; z-index: 60; display: grid; gap: 9px; }
-    .beats-nav button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%; background: rgba(255,255,255,.22); cursor: pointer; transition: transform .25s ease, background .25s ease; }
-    .beats-nav button:hover { background: rgba(255,255,255,.55); }
-    .beats-nav button.on { background: #fff; transform: scale(1.5); }
-    .beats-nav button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    /* dots are pinch-sized (a hand cursor needs targets, not pixels) */
+    .beats-nav { position: fixed; right: 16px; top: 50%; translate: 0 -50%; z-index: 60; display: grid; gap: 6px; }
+    .beats-nav button { width: 26px; height: 22px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
+    .beats-nav button::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,.22); transition: transform .25s ease, background .25s ease; }
+    .beats-nav button:hover::before { background: rgba(255,255,255,.6); transform: scale(1.3); }
+    .beats-nav button.on::before { background: #fff; transform: scale(1.6); }
+    .beats-nav button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+    /* edge zones: the whole left / right 9% of the frame is a prev / next button — pinch anywhere there */
+    .beat-zone { position: fixed; top: 4.5rem; bottom: 0; width: 9vw; min-width: 64px; z-index: 55; border: 0; background: transparent; cursor: pointer; color: rgba(255,255,255,.0); font-size: 2.2rem; display: grid; place-items: center; transition: color .25s ease, background .25s ease; }
+    .beat-zone.prev { left: 0; } .beat-zone.next { right: 0; }
+    .beat-zone:hover, .beat-zone:focus-visible { color: rgba(255,255,255,.85); background: linear-gradient(90deg, rgba(255,255,255,.06), transparent); outline: none; }
+    .beat-zone.next:hover, .beat-zone.next:focus-visible { background: linear-gradient(270deg, rgba(255,255,255,.06), transparent); }
+    .beat-zone[disabled] { display: none; }
     .beat-hint { position: fixed; left: 50%; bottom: 18px; translate: -50% 0; z-index: 60; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); opacity: .8; animation: cue 2.2s ease-in-out infinite; }
     @keyframes cue { 0%, 100% { transform: translateY(0); opacity: .5; } 50% { transform: translateY(5px); opacity: .95; } }
     @media (prefers-reduced-motion: reduce) { .beat-hint { animation: none; } }
@@ -760,7 +771,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     .cs.deck .deck-only { display: grid; }
     .cs.deck .slide-title .cs-title { font-size: clamp(3rem, 9vw, 7.5rem); }
     .cs.deck .slide-title .lede { max-width: 52ch; font-size: clamp(1.1rem, 1.8vw, 1.4rem); }
-    :global(html.deck .nav) { display: none; }
+    /* the header stays in deck mode; it only leaves in true fullscreen (F) */
     .deck-bar { position: fixed; left: 0; right: 0; top: 0; height: 3px; z-index: 70; background: rgba(255,255,255,.08); }
     .deck-fill { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--violet), var(--accent), var(--mint)); transition: width .4s ease; }
     .deck-notes { position: fixed; left: 14px; bottom: 14px; z-index: 70; width: min(92vw, 34rem); max-height: 42vh; overflow: auto; padding: 1rem 1.2rem; border-radius: 16px; background: rgba(13,18,32,.9); border: 1px solid var(--border); backdrop-filter: blur(14px); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
@@ -846,6 +857,8 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         if (notesBody) notesBody.textContent = beats[i].dataset.notes ?? '(no notes for this beat)';
         history.replaceState(null, '', `#b${i + 1}`);
         hint.style.opacity = i >= beats.length - 1 ? '0' : '';
+        document.querySelectorAll<HTMLButtonElement>('.beat-zone.prev').forEach((z) => z.toggleAttribute('disabled', i <= 0));
+        document.querySelectorAll<HTMLButtonElement>('.beat-zone.next').forEach((z) => z.toggleAttribute('disabled', i >= beats.length - 1));
       };
 
       const go = (i: number) => {
@@ -883,10 +896,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         if (now - lastWheel < 900 || Math.abs(e.deltaY) < 8) return;
         lastWheel = now; go(cur + (e.deltaY > 0 ? 1 : -1));
       }, { passive: false });
-      // touch swipe
-      let ty = 0;
-      window.addEventListener('touchstart', (e) => { ty = e.touches[0].clientY; }, { passive: true });
-      window.addEventListener('touchend', (e) => { const dy = ty - e.changedTouches[0].clientY; if (Math.abs(dy) > 60) go(cur + (dy > 0 ? 1 : -1)); }, { passive: true });
+      // touch: native swipe scrolls the parked window → the scroll proxy below turns it into a beat move
       // keys
       window.addEventListener('keydown', (e) => {
         if ((e.target as HTMLElement)?.closest('input, textarea, select, [role=slider]')) return;
@@ -899,6 +909,32 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       });
       // back-to-top puck → first beat
       progress?.addEventListener('totop', () => go(0));
+
+      // edge zones: big prev / next buttons a hand cursor (or a finger) can hit
+      const mkZone = (dir: -1 | 1) => { const b = document.createElement('button'); b.type = 'button'; b.className = `beat-zone ${dir < 0 ? 'prev' : 'next'}`; b.setAttribute('aria-label', dir < 0 ? 'Previous beat' : 'Next beat'); b.textContent = dir < 0 ? '‹' : '›'; b.addEventListener('click', () => go(cur + dir)); document.body.append(b); return b; };
+      const zPrev = mkZone(-1), zNext = mkZone(1);
+      const paintZones = () => { zPrev.toggleAttribute('disabled', cur <= 0); zNext.toggleAttribute('disabled', cur >= beats.length - 1); };
+      nav.addEventListener('click', paintZones); zPrev.addEventListener('click', paintZones); zNext.addEventListener('click', paintZones);
+
+      // scroll proxy: the window is parked at 1 screen down; any window scroll (extension fist /
+      // voice "down" / "up" / "top" / "bottom", assistive tech) becomes a beat move, then re-parks.
+      const park = () => window.scrollTo({ top: window.innerHeight, behavior: 'auto' });
+      let parking = true; // ignore the browser's own restore + our first park
+      history.scrollRestoration = 'manual';
+      park();
+      setTimeout(() => { parking = false; }, 400);
+      window.addEventListener('scroll', () => {
+        if (parking) return;
+        const dy = window.scrollY - window.innerHeight;
+        if (Math.abs(dy) < 40) return;
+        parking = true;
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        if (window.scrollY <= 1) go(0); else if (window.scrollY >= max - 1) go(beats.length - 1); else go(cur + (dy > 0 ? 1 : -1));
+        park(); paintZones();
+        setTimeout(() => { parking = false; }, 700);
+      }, { passive: true });
+      window.addEventListener('resize', park, { passive: true });
+      paintZones();
 
       // hero: slow ken-burns on the scan while the hero beat is up
       const heroImg = document.querySelector<HTMLElement>('.hero-bg img');
