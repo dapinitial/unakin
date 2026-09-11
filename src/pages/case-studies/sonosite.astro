@@ -1152,7 +1152,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       };
       if (!hookCursor()) { const iv = setInterval(() => { if (hookCursor()) clearInterval(iv); }, 500); setTimeout(() => clearInterval(iv), 20000); }
 
-      // ── Presenter tools in the site header (deck only, and only once the extension is present) ──
+      // ── Presenter tools in the site header (both views, only once the extension is present) ──
       // "Eyes" opens the full-page gaze calibration (SLCursor.calibrate) or closes it if it's up;
       // "Voice" shows the command legend + live mic state. Both live in the header per David's ask
       // so the calibration can cover the whole page first and come back on demand.
@@ -1187,7 +1187,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         });
         return true;
       };
-      if (isDeck && !mountTools()) { const iv = setInterval(() => { if (mountTools()) clearInterval(iv); }, 500); setTimeout(() => clearInterval(iv), 20000); }
+      if (!mountTools()) { const iv = setInterval(() => { if (mountTools()) clearInterval(iv); }, 500); setTimeout(() => clearInterval(iv), 20000); }
 
       // the book puck opens the map (no more back-to-top)
       progress?.addEventListener('totop', (e) => { e.preventDefault(); toc.classList.contains('open') ? closeToc() : openToc(); });
