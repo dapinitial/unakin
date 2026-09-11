@@ -620,7 +620,10 @@ const deck = Astro.url.searchParams.get('deck') === '1';
        frame is the viewport; the inner max-width lives on the children instead */
     .cs > section.container, .cs > section.container.narrow { width: auto; margin: 0; }
     .cs > section { padding-inline: max(clamp(1.25rem, 5vw, 4rem), calc((100vw - 1440px) / 2)); } /* cap the frame at ~1440px — a 16" MacBook gets the room */
-    .cs > section.has-sketch .sec-h { max-width: 22ch; }
+    /* sized so the longest single word ("EXPLORATION") never overflows the copy column — an
+       overflowing word shows as a half-filled skeleton because the gradient copy clips to the box */
+    .cs > section.has-sketch .sec-h { max-width: 26ch; font-size: clamp(1.5rem, 2.9vw, 2.7rem); }
+    .hollow { overflow-wrap: normal; }
     .cs > section.has-sketch .lede { font-size: 0.98rem; line-height: 1.6; }
     .cs > section.has-sketch .cite { font-size: 0.7rem; }
     .cs > section > * { max-width: 1120px; width: 100%; margin-inline: auto; }
