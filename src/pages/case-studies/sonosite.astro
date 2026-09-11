@@ -23,6 +23,11 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         <p class="muted lock-sub">Hardware-device UX · one-thumb radial navigation · prototyped in code, 2013. Shared with a password for portfolio review.</p>
         <form method="POST" action="/api/unlock" class="lock-form">
           <input type="hidden" name="next" value={here} />
+          <script is:inline>
+            // A deep link (#b7) never reaches the server, so it would be lost through the unlock
+            // redirect — carry the hash along in `next` so you land on the beat you were sent to.
+            (function () { var f = document.currentScript.closest('form'), n = f && f.querySelector('[name=next]'); if (n && location.hash) n.value += location.hash; })();
+          </script>
           <label>Password<input name="password" type="password" required autocomplete="current-password" autofocus placeholder="••••••••" /></label>
           <button class="btn" type="submit">Open the study →</button>
         </form>
