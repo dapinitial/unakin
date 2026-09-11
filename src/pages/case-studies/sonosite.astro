@@ -558,17 +558,12 @@ const deck = Astro.url.searchParams.get('deck') === '1';
           <p class="lede">The public sibling of the Apple system — same DNA, same trust rails (AI output verified before it ships; in panogram, AI annotations stay <em>unverified</em> until a person confirms). <strong>Guest passes are coming to your inbox</strong> — $3 of credits, no keys, no card.</p>
         </section>
 
-        <!-- ============ DECK: CLOSE ============ -->
-        <section class="block container narrow deck-only slide-title" data-stage="resolution" data-notes="Say it: 'I didn't design a portfolio. I designed an interaction framework that meets every person through whatever input they have — and I built it out of my own face, because returning is what I do. I've been building the future of how people touch computers for twelve years, to your own accessibility bar. I'd love to do it here, on Windows.' Then Q&A: Studio open in a tab, the cursor ready, the portal ready.">
-          <p class="eyebrow">The ask</p>
-          <h2 class="display-h cs-title"><span class="stroke">I'd love to do it</span><br /><span class="grad-text glint">here, on Windows.</span></h2>
-          <p class="lede">I didn't design a portfolio. I designed an interaction framework that meets every person through whatever input they have. Twelve years of building the future of how people touch computers — to your accessibility bar.</p>
-          <p class="hint mono">Q&amp;A · studio.spacelabforever.com · the gaze cursor · portal.unakin.com</p>
-        </section>
+
       </>)}
 
-      <section class="block container narrow closing" data-reveal data-notes="(Case-study mode only.) &quot;Happy to go deeper on any of it — the research, the physics, or the code.&quot;" data-stage-cs="resolution" data-stage="resolution">
+      <section class="block container narrow closing" data-reveal data-notes="The close — alignment, not an ask. Say the mission in your own words: &quot;Empower every person and every organization on the planet to achieve more. I spent four years at Microsoft; that sentence is why the input bus exists — every path complete on its own, so the person in front of the device gets to do more, whatever input they have.&quot; Then: &quot;Happy to go deeper on any of it — the research, the physics, or the code.&quot; Stop. Let them talk." data-stage-cs="resolution" data-stage="resolution">
         <h2 class="display-h hollow sec-h">Thanks for listening.</h2>
+        <p class="lede"><strong>Empower every person and every organization on the planet to achieve more.</strong> I spent four years at Microsoft; that sentence is why the input bus exists — every path complete on its own, so the person in front of the device gets to do more, whatever input they have.</p>
         <p class="lede muted">Happy to go deeper on any of it — the research, the physics, or the code.</p>
       </section>
 
@@ -697,6 +692,13 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     .keypoints { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); }
     .keypoints li::before { content: '◆ '; color: var(--mint); }
     .scroll-cue { display: none; }
+
+    /* skip link: first in tab order, visible only on focus, opens the story-arc navigation */
+    :global(.skip-link) { position: fixed; left: 14px; top: 14px; z-index: 90; transform: translateY(-160%); opacity: 0; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: #0b0d16; background: var(--accent); border-radius: 999px; padding: 0.6rem 1rem; transition: transform .2s ease, opacity .2s ease; }
+    :global(.skip-link:focus-visible) { transform: none; opacity: 1; outline: 2px solid #fff; outline-offset: 2px; }
+    /* the beat counter is momentary: fades in on change, out after ~2s */
+    :global(.beat-num) { opacity: 0; transition: opacity .35s ease; }
+    :global(.beat-num.show) { opacity: 1; }
 
     /* ---------- type ---------- */
     /* hollow fill: the stroked base and the gradient copy must wrap identically → no balancing */
@@ -883,23 +885,25 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       }
 
       // ── navigation ──
-      let cur = -1, busy = false;
+      let cur = -1, busy = false, lastGoAt = -1e9;
       const fill = document.querySelector<HTMLElement>('.deck-fill');
       const notesBody = document.querySelector<HTMLElement>('.deck-notes-body');
       const notes = document.querySelector<HTMLElement>('.deck-notes');
       const progress = document.querySelector<HTMLElement>('scroll-progress');
-      const nav = document.createElement('nav'); nav.className = 'beats-nav'; nav.setAttribute('aria-label', 'Beats');
-      beats.forEach((s, i) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', `Beat ${i + 1}`); b.addEventListener('click', () => go(i)); nav.append(b); });
-      document.body.append(nav);
-      const dots = Array.from(nav.children) as HTMLButtonElement[];
+      // Skip link (first in tab order, visible on focus) → opens the story-arc navigation.
+      const skip = document.createElement('a'); skip.className = 'skip-link'; skip.href = '#arc'; skip.textContent = 'Skip to story navigation';
+      document.body.prepend(skip);
       // big hollow beat numeral (depth, and a quiet "where am I")
+      let numT = 0;
       const num = document.createElement('div'); num.className = 'beat-num'; num.setAttribute('aria-hidden', 'true'); document.body.append(num);
       const hint = document.createElement('p'); hint.className = 'beat-hint'; hint.textContent = isDeck ? '→ next · ← back · N notes · F fullscreen' : '↓ scroll or → to continue'; document.body.append(hint);
 
       const paint = (i: number) => {
-        dots.forEach((d, k) => d.classList.toggle('on', k === i));
         if (fill) fill.style.width = `${((i + 1) / beats.length) * 100}%`;
+        // the counter shows for a moment on each change, then fades
         progress?.setAttribute('label', `${i + 1} / ${beats.length}`);
+        num.classList.add('show');
+        clearTimeout(numT); numT = window.setTimeout(() => { num.classList.remove('show'); progress?.setAttribute('label', ''); }, 2000);
         progress?.setAttribute('progress', String(i / Math.max(1, beats.length - 1)));
         if (notesBody) notesBody.textContent = beats[i].dataset.notes ?? '(no notes for this beat)';
         history.replaceState(null, '', `#b${i + 1}`);
@@ -912,7 +916,11 @@ const deck = Astro.url.searchParams.get('deck') === '1';
 
       const go = (i: number) => {
         i = Math.max(0, Math.min(beats.length - 1, i));
+        // hard rate limit: no source (proxy, keys, extension, narration) advances more than one beat per 400ms
+        if (performance.now() - lastGoAt < 400) return;
         if (i === cur || busy) return;
+        lastGoAt = performance.now();
+        ((window as any).__golog ??= []).push({ t: Math.round(performance.now()), from: cur, to: i, stack: (new Error().stack ?? '').split('\n').slice(1, 9).map((l) => l.trim().replace(/https?:\/\/[^/]+\/_astro\//, '')).join(' | ') });
         busy = true;
         const prev = cur >= 0 ? beats[cur] : null, next = beats[i];
         const dir = i > cur ? 1 : -1;
@@ -1029,8 +1037,10 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         const frac = beats.length > 1 ? cur / (beats.length - 1) : 1;
         donePath.style.strokeDashoffset = `${doneLen * (1 - frac)}`;
       };
-      const openToc = () => { paintToc(); toc.classList.add('open'); };
-      const closeToc = () => toc.classList.remove('open');
+      let tocReturn: HTMLElement | null = null;
+      const openToc = () => { paintToc(); tocReturn = document.activeElement as HTMLElement; toc.classList.add('open'); setTimeout(() => (toc.querySelector<HTMLButtonElement>('.arc-col button.now') ?? toc.querySelector<HTMLButtonElement>('.arc-col button'))?.focus(), 60); };
+      const closeToc = () => { toc.classList.remove('open'); tocReturn?.focus?.(); };
+      skip.addEventListener('click', (e) => { e.preventDefault(); openToc(); });
       toc.addEventListener('click', (e) => {
         const t = e.target as HTMLElement;
         const i = t.closest<HTMLElement>('[data-i]')?.dataset.i;
@@ -1043,24 +1053,34 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       //    reading the on-screen copy. Stops on beat change. Also a live demo of ear-navigable beats.
       let clip: HTMLAudioElement | null = null; let speaking = false;
       const stopSpeech = () => { speaking = false; try { speechSynthesis.cancel(); } catch {} if (clip) { clip.pause(); clip = null; } };
-      const speak = (i: number) => {
+      const speak = (i: number, onEnd?: () => void) => {
         stopSpeech(); speaking = true;
         const s = beats[i];
         const text = [s.querySelector('h1, h2')?.textContent ?? '', ...Array.from(s.querySelectorAll('.lede, .leadin h3')).map((el) => el.textContent ?? '')].join('. ').replace(/\s+/g, ' ').trim();
         const nn = String(i + 1).padStart(2, '0');
         const a = new Audio(`/audio/sonosite/${isDeck ? 'deck-' : 'beat-'}${nn}.mp3`);
-        a.addEventListener('canplay', () => { if (!speaking) return; clip = a; a.play().catch(() => fallback()); }, { once: true });
+        a.addEventListener('canplay', () => { if (!speaking) return; clip = a; a.addEventListener('ended', () => { if (speaking) { speaking = false; onEnd?.(); } }, { once: true }); a.play().catch(() => fallback()); }, { once: true });
         a.addEventListener('error', () => { if (speaking) fallback(); }, { once: true });
         const fallback = () => {
           if (!('speechSynthesis' in window) || !text) return;
           const u = new SpeechSynthesisUtterance(text); u.rate = 0.98; u.pitch = 1;
           const v = speechSynthesis.getVoices().find((v) => /en-US/i.test(v.lang) && /Samantha|Alex|Google US|Natural/i.test(v.name)) ?? speechSynthesis.getVoices().find((v) => /en/i.test(v.lang));
           if (v) u.voice = v;
+          u.onend = () => { if (speaking) { speaking = false; onEnd?.(); } };
           speechSynthesis.speak(u);
         };
       };
-      window.addEventListener('keydown', (e) => { if ((e.target as HTMLElement)?.closest('input, textarea, select')) return; if (e.key.toLowerCase() === 's') { speaking ? stopSpeech() : speak(cur); } });
-      window.addEventListener('beatchange', stopSpeech); // paint() fires this on every beat change
+      // Auto-narrate (?narrate=1 or Shift+S): each beat speaks on arrival and advances when the clip ends.
+      let narrate = new URLSearchParams(location.search).get('narrate') === '1';
+      (window as any).__diag = () => ({ narrate, speaking, cur });
+      const narrateBeat = () => speak(cur, () => { if (narrate && cur < beats.length - 1) go(cur + 1); });
+      window.addEventListener('keydown', (e) => {
+        if ((e.target as HTMLElement)?.closest('input, textarea, select')) return;
+        if (e.key === 'S' && e.shiftKey) { narrate = !narrate; narrate ? narrateBeat() : stopSpeech(); }
+        else if (e.key.toLowerCase() === 's') { speaking ? stopSpeech() : speak(cur); }
+      });
+      window.addEventListener('beatchange', () => { stopSpeech(); if (narrate) setTimeout(narrateBeat, 900); }); // paint() fires this on every beat change
+      if (narrate) setTimeout(narrateBeat, 1200);
 
       // the book puck opens the map (no more back-to-top)
       progress?.addEventListener('totop', (e) => { e.preventDefault(); toc.classList.contains('open') ? closeToc() : openToc(); });
@@ -1069,7 +1089,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       const mkZone = (dir: -1 | 1) => { const b = document.createElement('button'); b.type = 'button'; b.className = `beat-zone ${dir < 0 ? 'prev' : 'next'}`; b.setAttribute('aria-label', dir < 0 ? 'Previous beat' : 'Next beat'); b.textContent = dir < 0 ? '‹' : '›'; b.addEventListener('click', () => go(cur + dir)); document.body.append(b); return b; };
       const zPrev = mkZone(-1), zNext = mkZone(1);
       const paintZones = () => { zPrev.toggleAttribute('disabled', cur <= 0); zNext.toggleAttribute('disabled', cur >= beats.length - 1); };
-      nav.addEventListener('click', paintZones); zPrev.addEventListener('click', paintZones); zNext.addEventListener('click', paintZones);
+      zPrev.addEventListener('click', paintZones); zNext.addEventListener('click', paintZones);
 
       // scroll proxy: the window is parked at 1 screen down; any window scroll (extension fist /
       // voice "down" / "up" / "top" / "bottom", assistive tech) becomes a beat move, then re-parks.
