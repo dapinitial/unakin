@@ -192,9 +192,15 @@ export class GlassModel extends HTMLElement {
         }
       }
 
+      // Shatter starts once the host's top passes 12% of the viewport — but never before scroll
+      // position 0. On short viewports (iPad, phones) the host already sits above that line at
+      // load, which left the model partially exploded at rest and unable to fully re-form on
+      // scrolling back up. Clamping the start to ≥ 0 keeps progress 0 at the top of the page;
+      // invalidateOnRefresh re-measures on resize / orientation change.
+      const shatterStart = () => Math.max(0, this.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.12);
       this.#scrollTrigger = ScrollTrigger.create({
-        trigger: this, scrub: 0.6,
-        start: mode === 'assemble' ? 'top 90%' : 'top 12%',
+        trigger: this, scrub: 0.6, invalidateOnRefresh: true,
+        start: mode === 'assemble' ? 'top 90%' : shatterStart,
         end: mode === 'assemble' ? 'center 45%' : 'bottom top',
         onUpdate: (self) => { progress = mode === 'assemble' ? 1 - self.progress : self.progress; apply(); },
       });
