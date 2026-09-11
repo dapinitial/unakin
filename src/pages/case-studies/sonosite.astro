@@ -842,10 +842,14 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     :global(.deck-tool i) { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.25); transition: background .2s, box-shadow .2s; }
     :global(.deck-tool.on i) { background: var(--mint); box-shadow: 0 0 10px var(--mint); }
     :global(.deck-tool[aria-pressed="true"]) { border-color: var(--accent); color: var(--text); }
-    :global(.deck-legend) { position: fixed; right: 14px; top: 74px; z-index: 71; width: min(92vw, 22rem); padding: 1rem 1.2rem; border-radius: 16px; background: rgba(13,18,32,.92); border: 1px solid var(--border); backdrop-filter: blur(14px); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+    :global(.deck-legend) { position: fixed; right: 14px; top: 74px; z-index: 71; width: min(94vw, 50rem); max-height: calc(100vh - 90px); overflow: auto; padding: 1rem 1.2rem; border-radius: 16px; background: rgba(13,18,32,.92); border: 1px solid var(--border); backdrop-filter: blur(14px); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
     :global(.deck-legend .eyebrow) { margin: 0; }
+    :global(.deck-legend-cols) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; }
+    @media (max-width: 720px) { :global(.deck-legend-cols) { grid-template-columns: 1fr; } }
+    :global(.deck-tool-help) { width: 2.1rem; padding: 0.4rem 0; justify-content: center; font-family: var(--mono); }
+    :global(.deck-tool.busy i) { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
     :global(.deck-legend-state) { margin: 0.3rem 0 0.6rem; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mint); }
-    :global(.deck-legend dl) { display: grid; grid-template-columns: minmax(0, 9.5rem) 1fr; gap: 0.45rem 0.9rem; margin: 0; font-size: 0.88rem; }
+    :global(.deck-legend dl) { display: grid; grid-template-columns: minmax(0, 8rem) 1fr; gap: 0.45rem 0.9rem; margin: 0; font-size: 0.88rem; }
     :global(.deck-legend dt) { font-family: var(--mono); font-size: 0.72rem; line-height: 1.5; color: var(--text); }
     :global(.deck-legend dd) { margin: 0; color: var(--muted); }
     :global(.deck-legend-foot) { margin: 0.7rem 0 0; font-size: 0.72rem; color: var(--muted); }
@@ -1168,29 +1172,38 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         const SL = (window as any).SLCursor; const nav = document.querySelector('header.nav .navlinks');
         if (!SL?.bus || !nav || document.querySelector('.deck-tools')) return !!SL?.bus;
         const tools = document.createElement('span'); tools.className = 'deck-tools';
-        tools.innerHTML = `<button type="button" class="deck-tool" data-tool="eyes" aria-pressed="false"><i></i>Eyes</button><button type="button" class="deck-tool" data-tool="voice" aria-expanded="false" aria-controls="deck-voice-legend"><i></i>Voice</button>`;
+        tools.innerHTML = `<button type="button" class="deck-tool" data-tool="eyes" aria-pressed="false"><i></i>Eyes</button><button type="button" class="deck-tool" data-tool="hand" aria-pressed="false"><i></i>Hand</button><button type="button" class="deck-tool" data-tool="voice" aria-pressed="false"><i></i>Voice</button><button type="button" class="deck-tool deck-tool-help" data-tool="help" aria-expanded="false" aria-controls="deck-legend" aria-label="How to drive this">?</button>`;
         nav.prepend(tools);
-        const eyes = tools.querySelector<HTMLButtonElement>('[data-tool=eyes]')!, voice = tools.querySelector<HTMLButtonElement>('[data-tool=voice]')!;
-        const legend = document.createElement('aside'); legend.id = 'deck-voice-legend'; legend.className = 'deck-legend'; legend.hidden = true; legend.setAttribute('aria-label', 'Voice commands');
-        legend.innerHTML = `<p class="eyebrow">Voice · say any of these</p><p class="deck-legend-state"></p>
-          <dl><dt>next · back</dt><dd>move one beat</dd><dt>beat 12</dt><dd>jump to a beat</dd><dt>first · last</dt><dd>the ends</dd>
-          <dt>story arc</dt><dd>open the map · “close” hides it</dd><dt>read · stop reading</dt><dd>narrate this beat</dd><dt>notes</dt><dd>talking points</dd>
-          <dt>full screen</dt><dd>toggle</dd><dt>eyes on · eyes off · calibrate</dt><dd>gaze steering</dd><dt>click · open</dt><dd>activate what the cursor is on</dd></dl>
-          <p class="deck-legend-foot">Esc or “close” hides this.</p>`;
+        const btn = (k: string) => tools.querySelector<HTMLButtonElement>(`[data-tool=${k}]`)!;
+        const eyes = btn('eyes'), hand = btn('hand'), voice = btn('voice'), help = btn('help');
+        const legend = document.createElement('aside'); legend.id = 'deck-legend'; legend.className = 'deck-legend'; legend.hidden = true; legend.setAttribute('aria-label', 'How to drive this');
+        legend.innerHTML = `<div class="deck-legend-cols">
+          <section><p class="eyebrow">Eyes</p><p class="deck-legend-state" data-for="eyes"></p>
+            <dl><dt>turn your head</dt><dd>steers the cursor</dd><dt>blink</dt><dd>clicks what it's on — links, buttons, video</dd><dt>one eye shut + tilt</dt><dd>scrolls up or down</dd><dt>“calibrate”</dt><dd>redo the two-second setup · Esc closes it</dd></dl></section>
+          <section><p class="eyebrow">Hand</p><p class="deck-legend-state" data-for="hand"></p>
+            <dl><dt>point</dt><dd>index finger moves the cursor</dd><dt>pinch</dt><dd>thumb + index taps a click</dd><dt>fist, move up / down</dt><dd>scrolls · moves a beat here</dd><dt>pinch + drag</dt><dd>spins the wheel</dd></dl></section>
+          <section><p class="eyebrow">Voice</p><p class="deck-legend-state" data-for="voice"></p>
+            <dl><dt>next · back</dt><dd>move one beat</dd><dt>beat 12</dt><dd>jump to a beat</dd><dt>first · last</dt><dd>the ends</dd><dt>story arc · close</dt><dd>the map</dd><dt>read · stop reading</dt><dd>narrate this beat</dd><dt>notes</dt><dd>talking points</dd><dt>full screen</dt><dd>toggle</dd><dt>eyes on · off</dt><dd>gaze steering</dd><dt>hand on · off</dt><dd>hand tracking</dd><dt>click · open</dt><dd>activate what the cursor is on</dd><dt>help</dt><dd>this panel</dd></dl></section>
+          </div><p class="deck-legend-foot">Esc or “close” hides this. Esc twice stops every input.</p>`;
         document.body.append(legend);
-        const state = legend.querySelector<HTMLElement>('.deck-legend-state')!;
-        const paintVoice = (on: boolean, err?: string) => { voice.classList.toggle('on', on); state.textContent = err === 'not-allowed' || err === 'service-not-allowed' ? 'Mic blocked for this site — click the camera/mic icon in the address bar, allow, reload.' : on ? 'Listening.' : 'Mic off.'; };
-        paintVoice(!!SL.voiceOn?.());
+        const state = (k: string) => legend.querySelector<HTMLElement>(`.deck-legend-state[data-for=${k}]`)!;
+        const paint = (k: string, on: boolean, msg?: string) => { const b = btn(k); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); state(k).textContent = msg ?? (on ? 'On' : 'Off'); };
+        const paintVoice = (on: boolean, err?: string) => paint('voice', on, err === 'not-allowed' || err === 'service-not-allowed' ? 'Mic blocked for this site — click the camera/mic icon in the address bar, allow, reload.' : undefined);
+        paint('eyes', !!SL.gazeOn?.()); paint('hand', !!SL.handOn?.()); paintVoice(!!SL.voiceOn?.());
+        SL.bus.on('gaze:state', (d: { on: boolean }) => paint('eyes', !!d?.on));
+        SL.bus.on('hand:state', (d: { on: boolean }) => paint('hand', !!d?.on));
         SL.bus.on('voice:state', (d: { on: boolean; error?: string }) => paintVoice(!!d?.on, d?.error));
-        const paintEyes = (open: boolean) => { eyes.classList.toggle('on', !!SL.gazeOn?.()); eyes.setAttribute('aria-pressed', String(open)); };
-        SL.bus.on('gaze:calibration', (d: { open: boolean }) => paintEyes(!!d?.open));
-        eyes.addEventListener('click', () => { if (eyes.getAttribute('aria-pressed') === 'true') SL.closeCalibration?.(); else SL.calibrate?.(); });
-        const showLegend = (on: boolean) => { legend.hidden = !on; voice.setAttribute('aria-expanded', String(on)); };
-        voice.addEventListener('click', () => showLegend(legend.hidden));
+        let calOpen = false; SL.bus.on('gaze:calibration', (d: { open: boolean }) => { calOpen = !!d?.open; eyes.classList.toggle('busy', calOpen); });
+        // Eyes: off → on (calibration takes the page) · calibrating → dismiss the overlay · on → off
+        eyes.addEventListener('click', () => { if (calOpen) SL.closeCalibration?.(); else if (SL.gazeOn?.()) SL.stopGaze?.(); else SL.calibrate?.(); });
+        hand.addEventListener('click', () => { SL.handOn?.() ? SL.stopHand?.() : SL.startHand?.().catch?.(() => {}); });
+        voice.addEventListener('click', () => { if (SL.voiceOn?.()) SL.stopVoice?.(); else { try { SL.startVoice?.(); } catch {} } });
+        const showLegend = (on: boolean) => { legend.hidden = !on; help.setAttribute('aria-expanded', String(on)); };
+        help.addEventListener('click', () => showLegend(legend.hidden));
         window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !legend.hidden) showLegend(false); });
         SL.bus.on('voice:phrase', (ev: { text: string; handled: boolean }) => {
           const t = (ev.text || '').toLowerCase();
-          if (/\b(what can i say|voice help|commands|help)\b/.test(t)) { ev.handled = true; showLegend(true); }
+          if (/\b(what can i say|voice help|commands|help|instructions)\b/.test(t)) { ev.handled = true; showLegend(true); }
           else if (/\b(close|dismiss|hide)\b/.test(t) && !legend.hidden && !ev.handled) { ev.handled = true; showLegend(false); }
         });
         return true;
