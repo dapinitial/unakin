@@ -1054,22 +1054,41 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       //    (/audio/sonosite/beat-NN.mp3 — HeyGen voice clone), falls back to the browser's voice
       //    reading the on-screen copy. Stops on beat change. Also a live demo of ear-navigable beats.
       let clip: HTMLAudioElement | null = null; let speaking = false;
+      if ('speechSynthesis' in window) { speechSynthesis.getVoices(); speechSynthesis.addEventListener?.('voiceschanged', () => speechSynthesis.getVoices()); }
+      if (new URLSearchParams(location.search).has('voices')) setTimeout(() => console.table(speechSynthesis.getVoices().filter((v) => /^en/i.test(v.lang)).map((v) => ({ name: v.name, lang: v.lang, local: v.localService }))), 800);
       const stopSpeech = () => { speaking = false; try { speechSynthesis.cancel(); } catch {} if (clip) { clip.pause(); clip = null; } };
       const speak = (i: number, onEnd?: () => void) => {
         stopSpeech(); speaking = true;
         const s = beats[i];
-        const text = [s.querySelector('h1, h2')?.textContent ?? '', ...Array.from(s.querySelectorAll('.lede, .leadin h3')).map((el) => el.textContent ?? '')].join('. ').replace(/\s+/g, ' ').trim();
+        // Speakable text: heading, then each paragraph as its own sentence run. Em-dashes, quotes,
+        // bullets and glued spans are what make TTS pause strangely — normalise them first.
+        const clean = (t: string) => t.replace(/\s+/g, ' ').replace(/\s*[—–]\s*/g, ', ').replace(/[“”"◆→·]/g, '').replace(/\s+([,.;:!?])/g, '$1').replace(/([a-z0-9])\s*\.\s*([A-Z])/g, '$1. $2').trim();
+        const parts = [s.querySelector('h1, h2')?.textContent ?? '', ...Array.from(s.querySelectorAll('.lede, .leadin h3')).map((el) => (el.querySelector('em')?.textContent ?? '') + ' ' + (el.querySelector('span')?.textContent ?? (el.matches('.leadin h3') ? '' : el.textContent ?? '')))]
+          .map(clean).filter(Boolean).map((p) => (/[.!?]$/.test(p) ? p : p + '.'));
+        const text = parts.join(' ');
         const nn = String(i + 1).padStart(2, '0');
         const a = new Audio(`/audio/sonosite/${isDeck ? 'deck-' : 'beat-'}${nn}.mp3`);
         a.addEventListener('canplay', () => { if (!speaking) return; clip = a; a.addEventListener('ended', () => { if (speaking) { speaking = false; onEnd?.(); } }, { once: true }); a.play().catch(() => fallback()); }, { once: true });
         a.addEventListener('error', () => { if (speaking) fallback(); }, { once: true });
         const fallback = () => {
           if (!('speechSynthesis' in window) || !text) return;
-          const u = new SpeechSynthesisUtterance(text); u.rate = 0.98; u.pitch = 1;
-          const v = speechSynthesis.getVoices().find((v) => /en-US/i.test(v.lang) && /Samantha|Alex|Google US|Natural/i.test(v.name)) ?? speechSynthesis.getVoices().find((v) => /en/i.test(v.lang));
-          if (v) u.voice = v;
-          u.onend = () => { if (speaking) { speaking = false; onEnd?.(); } };
-          speechSynthesis.speak(u);
+          // Voice: ?voice=Name wins; else Apple Premium/Enhanced (Ava, Zoe, Evan, Tom…) → Google US English → any en-US.
+          const want = new URLSearchParams(location.search).get('voice');
+          const voices = speechSynthesis.getVoices();
+          const pick = () => (want && voices.find((v) => v.name.toLowerCase().includes(want.toLowerCase())))
+            ?? voices.find((v) => /en[-_]US/i.test(v.lang) && /(Premium|Enhanced)/i.test(v.name))
+            ?? voices.find((v) => /en[-_]US/i.test(v.lang) && /^(Ava|Zoe|Evan|Tom|Allison|Nicky)\b/i.test(v.name))
+            ?? voices.find((v) => /Google US English/i.test(v.name))
+            ?? voices.find((v) => /en[-_]US/i.test(v.lang) && /Samantha|Alex/i.test(v.name))
+            ?? voices.find((v) => /^en/i.test(v.lang));
+          const v = pick();
+          // one utterance per sentence run → natural pauses between paragraphs, no run-ons
+          const chunks = parts.length ? parts : [text];
+          chunks.forEach((chunk, k) => {
+            const u = new SpeechSynthesisUtterance(chunk); u.rate = 1.0; u.pitch = 1.0; if (v) u.voice = v;
+            if (k === chunks.length - 1) u.onend = () => { if (speaking) { speaking = false; onEnd?.(); } };
+            speechSynthesis.speak(u);
+          });
         };
       };
       // Auto-narrate (?narrate=1 or Shift+S): each beat speaks on arrival and advances when the clip ends.
