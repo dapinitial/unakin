@@ -170,8 +170,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
           {[
             ['Hospital nurse', 'the bedside triage', ['Bedside, standing, often gloved, moving between patients.', 'Probe on the patient; device in the other hand.', "Can't afford a second hand to reach a menu, or a slip that discards a capture."]],
             ['Sonographer', 'lives in depth and gain', ['Adjusts depth and gain constantly while watching the image, not the controls.', 'Probe angled precisely; device thumb-driven without looking.', "Can't afford overshooting a tissue layer, or hunting for a slider."]],
-            ['18D', 'Special Forces medical sergeant', ['Austere, unpredictable, weight-critical. Every gram and every second counts.', 'Probe on a casualty; device gripped one-handed, maybe in the dark.', "Can't afford two hands, fine motor precision, or nested menus."]],
-            ['68W', 'Army combat medic', ['Point-of-injury care under stress; gloved; equipment must just work.', 'Probe steady; the thumb does everything else.', "Can't afford a control that needs a grip change, or a gesture that isn't forgiving."]],
+            ['Combat medic', '18D Special Forces and 68W Army', ['Point-of-injury care under stress: austere, gloved, weight-critical. Every gram and every second counts.', 'Probe on a casualty; device gripped one-handed, maybe in the dark. The thumb does everything else.', "Can't afford two hands, a grip change, nested menus, or a gesture that isn't forgiving."]],
             ['EMT', 'first responders', ['Roadside, in the back of a moving rig, at a scene that is still unfolding — gloved, braced, on the clock.', 'Probe on the patient; device in the hand that is also steadying them.', "Can't afford to look down, dig through a menu, or lose a capture to a bump in the road."]],
           ].map(([name, tag, facts]) => (
             <article class="persona" data-reveal>
@@ -739,8 +738,8 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     .timeline li::before { content: ''; position: absolute; left: 0; top: 0.62em; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--mint); }
 
     /* glass panels: soft, borderless-feeling (a 1px hairline only), no boxes stacked on boxes */
-    .personas { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.8rem; margin-top: 0.6rem; } /* five across — no orphan */
-    @media (max-width: 1100px) { .personas { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    .personas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.8rem; margin-top: 0.6rem; } /* four across — no orphan */
+    @media (max-width: 1100px) { .personas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 700px) { .personas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     .persona { background: linear-gradient(180deg, rgba(20,26,44,.6), rgba(13,18,32,.35)); border: 1px solid rgba(188,192,255,.1); border-radius: 18px; padding: 1.1rem 1.2rem; backdrop-filter: blur(8px); }
     .persona h4 { font-family: 'Fraunces', serif; font-size: 1.08rem; margin-bottom: 0.4rem; }
