@@ -9,7 +9,10 @@ export const prerender = false;
 const unlocked = isUnlocked(Astro.cookies);
 const wrong = Astro.url.searchParams.get('e') === '1';
 const configured = gateConfigured();
-const here = Astro.url.pathname;
+const here = Astro.url.pathname + (Astro.url.search.replace(/[?&]e=1/, '') || ''); // keep ?deck=1 through the unlock
+// ?deck=1 turns the page into the portfolio-review deck: every section is a slide, plus the
+// run-of-show slides (cold open, frame, living portfolio, segue, AI-today, throughline, Q&A).
+const deck = Astro.url.searchParams.get('deck') === '1';
 ---
 <Base title="SonoSite iViz — a case study · Unakin" description="Private case study." path={here} noindex={true}>
   {!unlocked ? (
@@ -29,7 +32,50 @@ const here = Astro.url.pathname;
       </section>
     </main>
   ) : (
-    <main class="cs">
+    <main class={deck ? 'cs deck' : 'cs'} data-deck={deck ? '1' : undefined}>
+      {deck && (<>
+        <!-- ============ DECK: COLD OPEN ============ -->
+        <section class="block container deck-only slide-title" data-notes="Screen-share the portrait hero first (davidpuerto.com) and drive it with gaze + voice. Say: 'Everything I'm showing you, I'm steering with my eyes and my voice. This is my portfolio — but it's also the argument: I build interfaces that meet every person through whatever input they have.' Fallback: pointer + voice, demo gaze once, controlled.">
+          <p class="eyebrow">Portfolio review · Microsoft Windows &amp; Devices · Senior Product Designer</p>
+          <h1 class="display-h cs-title"><span class="glint">David</span><br /><span class="grad-text glint">Puerto.</span></h1>
+          <p class="lede">For twelve years I've designed novel ways for people to interact with computers — and used AI to build things people weren't sure were possible, then made them trustworthy enough to ship and adopt.</p>
+          <p class="hint mono">→ arrows to advance · N notes · F fullscreen</p>
+        </section>
+
+        <!-- ============ DECK: FRAME ============ -->
+        <section class="block container deck-only" data-notes="Name the three threads. Tell them the shape: the interaction system, then the systems-and-trust work at Apple, then deploy something to production live.">
+          <p class="eyebrow">The frame</p>
+          <h2 class="display-h hollow sec-h">Three threads, one hour.</h2>
+          <div class="threads">
+            <div class="stat"><b>01</b><span>Novel multimodal interaction</span></div>
+            <div class="stat"><b>02</b><span>AI as a force multiplier</span></div>
+            <div class="stat"><b>03</b><span>Earning trust · driving adoption</span></div>
+          </div>
+          <p class="lede">The interaction system → the systems-and-trust work at Apple → ship something to production, live → the twelve-year throughline.</p>
+        </section>
+
+        <!-- ============ DECK: ACT 1 — LIVING PORTFOLIO ============ -->
+        <section class="block container deck-only" data-notes="Portrait wall: brush / scatter / return across every input. The HUD cursor: radial HUD, bloom-open previews, pointer / keyboard / gaze (head+eyes, blink-to-click) / voice. Lead with the OUTCOME for Dame + Heinzen: 'someone who can't use a mouse operates this fully by gaze, voice, or switch. Every path is complete on its own; nothing's gated behind one modality; on-device. Disability is the opportunity.' Then, briefly, receipts: S360 + bug bashes with the teams who live these barriers, shipping fixes iteratively to WCAG 2.1 AA. Systems note (Sharma/Pendlay): one input bus — every modality is a small adapter over a shared core; adding voice or gaze changed the core by zero lines.">
+          <p class="eyebrow">Act 1 · The living portfolio</p>
+          <h2 class="display-h hollow sec-h">Multimodal. Inclusive by architecture.</h2>
+          <div class="threads">
+            <div class="stat"><b>Gaze</b><span>head + eyes · blink to click</span></div>
+            <div class="stat"><b>Voice</b><span>"scatter" · "come back"</span></div>
+            <div class="stat"><b>Hand</b><span>point · pinch · fist to scroll</span></div>
+            <div class="stat"><b>1 bus</b><span>every modality is an adapter over one core</span></div>
+          </div>
+          <p class="lede">Start with who gains: someone who can't use a mouse — a motor disability, an injury, or just hands full — operates this fully by gaze, voice, or switch. Every path is complete on its own. Nothing is gated behind one modality. It's on-device.</p>
+          <p class="hint mono">→ live: davidpuerto.com · the HUD cursor</p>
+        </section>
+
+        <!-- ============ DECK: ACT 2 TITLE ============ -->
+        <section class="block container deck-only slide-title" data-notes="Elevate iViz: research-grounded, hardware, gesture, A/B-tested — tailor-made for Kait (hardware + iteration) and Sarah (research in the loop). Show the messy middle.">
+          <p class="eyebrow">Act 2 · Where the instinct comes from</p>
+          <h2 class="display-h cs-title"><span class="glint">SonoSite</span><br /><span class="grad-text glint">iViz, 2013.</span></h2>
+          <p class="lede">A radial thumb gesture on a handheld ultrasound — prototyped in code, validated in two phases, shipped. The thumb-wheel that became the cursor.</p>
+        </section>
+      </>)}
+
       <!-- ============ HERO ============ -->
       <section class="cs-hero">
         <!-- full-bleed scan UI behind the title; parallax + slow settle via GSAP -->
@@ -413,10 +459,127 @@ const here = Astro.url.pathname;
         </figure>
       </section>
 
+      {deck && (<>
+        <!-- ============ DECK: SEGUE — ACCESSIBILITY ============ -->
+        <section class="block container narrow deck-only" data-notes="Say this as the hinge, not a credential. For Dame: never lead with WCAG/S360 — outcome + autonomy first; standards as receipts, once. Keep the posture humble. Then pivot: 'and that discipline is what I'm building with today.'">
+          <span class="ghost-word" aria-hidden="true">ALWAYS</span>
+          <h2 class="display-h hollow sec-h">Accessibility always enters the picture.</h2>
+          <p class="lede">It was never the headline on iViz — the headline was a medic with one hand free. But design the input to fit how the body actually moves, and accessibility arrives as a consequence: a gloved thumb, a gesture that forgives a slip, a control you can operate without looking. That's the discipline, and it's followed me everywhere since.</p>
+          <p class="lede">At Microsoft it meant S360 bug bashes — often — and re-designing when the bar said so. I'd prototype, put it in front of the accessibility leads in C+AI, and if I was missing the mark they'd tell me; the dialogue with the people who live these barriers is what sharpened the work. Eventually I was moonlighting for Azure, opening pull requests to fix accessibility bugs myself. Standards are the rigor underneath. <strong>The thesis is who can now do what.</strong></p>
+        </section>
+
+        <!-- ============ DECK: ACT 3 TITLE ============ -->
+        <section class="block container deck-only slide-title" data-notes="Transition: 'Same instinct, today's tools. Here's how I'm using AI to solve real problems right now — and how I keep it trustworthy.'">
+          <p class="eyebrow">Act 3 · Today</p>
+          <h2 class="display-h cs-title"><span class="glint">AI, solving</span><br /><span class="grad-text glint">real problems.</span></h2>
+          <p class="lede">Not demos. Products people use — with the trust rails designed in.</p>
+        </section>
+
+        <!-- ============ DECK: SPACELAB STUDIO / SUPER COMPOSER ============ -->
+        <section class="block container deck-only" data-notes="Open studio.spacelabforever.com live. Compose something in a few seconds. Say: 'this is the public sibling of the Apple system; same DNA.' Offer to drop the link at the end.">
+          <p class="eyebrow">Spacelab Studio · Super Composer</p>
+          <h2 class="display-h hollow sec-h">Chat with Claude. Ship a campaign.</h2>
+          <div class="threads">
+            <div class="stat"><b>Design chat</b><span>Claude generates and surgically edits the HTML — edit vs. replace vs. redesign, intent-aware</span></div>
+            <div class="stat"><b>Compat</b><span>one-click lint for what breaks outside Apple Mail; repairs handed back to the AI as one request</span></div>
+            <div class="stat"><b>Pitch mode</b><span>30+ scroll-animated blocks → a single self-contained page (GSAP + Lenis)</span></div>
+            <div class="stat"><b>Media</b><span>Imagen + Veo inline; CID-embedded video that plays natively in Apple Mail</span></div>
+          </div>
+          <p class="lede">Bring-your-own keys, nothing persisted server-side. Public sandbox at <strong>spacelabforever.com/studio</strong>.</p>
+        </section>
+
+        <!-- ============ DECK: APPLE — SYSTEMS, AI, TRUST ============ -->
+        <section class="block container deck-only" data-notes="Problem→approach→outcome; keep Apple internals abstract. 'Executive communication ran on charts and dashboards — a lot of it in Tableau — in a brutally unforgiving medium. My job wasn't make it prettier; it was: how do you move a skeptical org onto a new, AI-assisted system they'll trust with executive-level communication?' The AI + rigor move: Claude Code → a 514-test harness encoding the design system so the experience cannot ship broken. The real work was trust: moved us off Tableau, onboarded the existing keynote charts so the switch felt safe. FILL [YOUR SPECIFICS] with true numbers only: proved on real exec content · never failed a send · X teams onboarded · time saved.">
+          <p class="eyebrow">Apple · systems, AI, and earning trust</p>
+          <h2 class="display-h hollow sec-h">Move a skeptical org onto a system it can trust.</h2>
+          <div class="threads">
+            <div class="stat"><b>514</b><span>tests encoding the design system — it cannot ship broken</span></div>
+            <div class="stat"><b>Off Tableau</b><span>existing keynote charts onboarded, so the switch felt safe, not imposed</span></div>
+            <div class="stat"><b>Trust</b><span>earned on real executive content — adoption driven, not mandated</span></div>
+          </div>
+          <p class="lede">As a designer I didn't hand off a mockup and hope engineering kept the intent. I built the thing that <em>enforces</em> it in production. AI to accelerate rigor, not just exploration.</p>
+        </section>
+
+        <!-- ============ DECK: UNAKIN — BUSINESS + AI VELOCITY ============ -->
+        <section class="block container deck-only" data-notes="For Pendlay. 'We needed contracts. Instead of paying DocuSign, I built our own e-sign/portal with Claude Code — draft→publish gated in Postgres row-level security, so a client can't see a draft even if the UI leaks. That tooling won and retained our first client.' Show the portal + docs briefly. This very deck is on the site it produced.">
+          <p class="eyebrow">Unakin · the studio</p>
+          <h2 class="display-h hollow sec-h">Needed contracts. Built the portal.</h2>
+          <div class="threads">
+            <div class="stat"><b>$0</b><span>per signature — our own e-sign, with audit, certificate, and canonical PDF</span></div>
+            <div class="stat"><b>RLS</b><span>draft → publish gated in Postgres; a client can't see a draft even if the UI leaks</span></div>
+            <div class="stat"><b>1st client</b><span>won and retained with that tooling — the Mapbox 3D engagement</span></div>
+          </div>
+          <p class="lede">And the site you're looking at — glass anatomy, fractured GLBs, this deck — is the same studio, shipped in days.</p>
+        </section>
+
+        <!-- ============ DECK: CURSOR LAB + EXTENSION ============ -->
+        <section class="block container deck-only" data-notes="For Hart + Heinzen. The cursor lab is where the HUD cursor lives; the Chrome extension (Spacelab Access) puts that cursor on ANY website — hand today (point / pinch / fist-scroll), gaze + voice next — fully on-device (MediaPipe WASM bundled; camera never leaves the machine). Demo idea: operate Studio with the hand cursor. Test conditions: front-lit, glasses on/off.">
+          <p class="eyebrow">Cursor lab · Spacelab Access</p>
+          <h2 class="display-h hollow sec-h">Operate any website by hand. On-device.</h2>
+          <div class="threads">
+            <div class="stat"><b>Point</b><span>index finger moves the HUD cursor</span></div>
+            <div class="stat"><b>Pinch</b><span>thumb + index clicks whatever it's over</span></div>
+            <div class="stat"><b>Fist</b><span>move up / down to scroll</span></div>
+            <div class="stat"><b>0 bytes</b><span>leave the machine — MediaPipe runs locally</span></div>
+          </div>
+          <p class="lede">A Chrome extension that drops the multimodal cursor onto any page — built to demo operating my own products the way someone using assistive tech would. Gaze and voice are next.</p>
+        </section>
+
+        <!-- ============ DECK: SHIPMATE — LIVE DEPLOY ============ -->
+        <section class="block container deck-only" data-notes="The showstopper. 'I'll ship a real change to production right now — and I want you to watch the safety gate.' Small, visible, reversible change on a low-stakes project. plan → execute. Narrate: 'execute is refused in code unless a plan ran in the last 10 minutes — a mishearing or a prompt injection literally cannot ship prod. That's designing trust into an agentic system.' Have rollback + the backup clip ready.">
+          <p class="eyebrow">Shipmate · agentic, shipped</p>
+          <h2 class="display-h hollow sec-h">Ship to production. Live. With the gate on.</h2>
+          <div class="threads">
+            <div class="stat"><b>plan →</b><span>the agent proposes the change and shows its work</span></div>
+            <div class="stat"><b>execute</b><span>refused in code unless a plan ran in the last 10 minutes</span></div>
+            <div class="stat"><b>rollback</b><span>one call — rehearsed</span></div>
+          </div>
+          <p class="lede">A mishearing or a prompt injection literally cannot ship prod. That's what designing trust into an agentic system looks like.</p>
+        </section>
+
+        <!-- ============ DECK: PANOGRAM ============ -->
+        <section class="block container deck-only" data-notes="For Schoeck/Hart. 360° WebGL viewer + 3D globe + Claude annotation. 'Spatial-native interaction, and AI that can see a flat crop of a sphere — with a safety rail: AI annotations render as unverified until confirmed.'">
+          <p class="eyebrow">panogram · spatial + multimodal, shipped</p>
+          <h2 class="display-h hollow sec-h">AI that can see a sphere — and says when it isn't sure.</h2>
+          <p class="lede">A 360° WebGL viewer and 3D globe with Claude annotation. AI annotations render as <em>unverified</em> until a person confirms them — the trust rail, again.</p>
+        </section>
+
+        <!-- ============ DECK: THROUGHLINE ============ -->
+        <section class="block container deck-only" data-notes="The twelve-year arc: iViz 2013 — a radial thumb gesture on a handheld ultrasound, prototyped in HTML/CSS/JS, A/B-validated → today's gaze / voice / gesture. 'Touch → spatial gesture → multimodal. Same instinct; the tech finally caught up.'">
+          <span class="ghost-word" aria-hidden="true">ARC</span>
+          <h2 class="display-h hollow sec-h">Touch → gesture → multimodal.</h2>
+          <div class="threads">
+            <div class="stat"><b>2013</b><span>a thumb on a radius — iViz</span></div>
+            <div class="stat"><b>2014–17</b><span>humanizing a tool at scale — Lyric</span></div>
+            <div class="stat"><b>2026</b><span>gaze · voice · hand — the radial HUD cursor</span></div>
+          </div>
+          <p class="lede">Same instinct: put the control on a radius matched to a motion the body already makes. The tech finally caught up.</p>
+        </section>
+
+        <!-- ============ DECK: CLOSE ============ -->
+        <section class="block container narrow deck-only slide-title" data-notes="Say it: 'I didn't design a portfolio. I designed an interaction framework that meets every person through whatever input they have — and I built it out of my own face, because returning is what I do. I've been building the future of how people touch computers for twelve years, to your own accessibility bar. I'd love to do it here, on Windows.' Then Q&A: drop studio.spacelabforever.com in chat; invite them to try the gaze cursor; have the portal / panogram ready.">
+          <p class="eyebrow">Close</p>
+          <h2 class="display-h cs-title"><span class="glint">I'd love to do it</span><br /><span class="grad-text glint">here, on Windows.</span></h2>
+          <p class="lede">I didn't design a portfolio. I designed an interaction framework that meets every person through whatever input they have. Twelve years of building the future of how people touch computers — to your accessibility bar.</p>
+          <p class="hint mono">Q&amp;A · studio.spacelabforever.com · the gaze cursor · portal.unakin.com · panogram</p>
+        </section>
+      </>)}
+
       <section class="block container narrow closing" data-reveal>
         <h2 class="display-h hollow sec-h">Thanks for listening.</h2>
         <p class="lede muted">Happy to go deeper on any of it — the research, the physics, or the code.</p>
       </section>
+
+      <!-- radial scroll progress + back-to-top (David's component, Unakin skin) -->
+      <scroll-progress></scroll-progress>
+
+      {deck && (
+        <div class="deck-ui" aria-hidden="true">
+          <div class="deck-bar"><span class="deck-fill"></span></div>
+          <aside class="deck-notes" hidden><p class="eyebrow">Speaker notes · N to hide</p><div class="deck-notes-body"></div></aside>
+          <div class="deck-cam" hidden><video autoplay muted playsinline></video><span class="deck-cam-name">David Puerto</span></div>
+        </div>
+      )}
     </main>
   )}
 
@@ -552,6 +715,28 @@ const here = Astro.url.pathname;
 
     .closing { text-align: left; padding-bottom: 4rem; }
 
+    /* ── Deck mode (?deck=1): every section is a fullscreen slide ── */
+    .threads { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.9rem; margin: 1.6rem 0 1.4rem; }
+    .threads .stat { position: relative; display: grid; gap: 0.25rem; padding: 1rem 1.1rem; border-radius: 14px; background: rgba(13,18,32,.62); border: 1px solid var(--border); backdrop-filter: blur(10px); box-shadow: 0 10px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06); }
+    .threads .stat b { font-family: var(--display); font-weight: 400; font-size: 1.5rem; letter-spacing: 0.05em; color: var(--accent); line-height: 1; }
+    .threads .stat span { font-family: var(--mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); line-height: 1.5; }
+    .deck-only { display: none; }
+    .cs.deck .deck-only { display: block; }
+    .cs.deck > section { min-height: 100vh; scroll-snap-align: start; display: flex; flex-direction: column; justify-content: center; padding-top: clamp(4rem, 10vh, 7rem); padding-bottom: clamp(4rem, 10vh, 7rem); }
+    .cs.deck .cs-hero { margin-top: 0; }
+    .cs.deck .slide-title .cs-title { font-size: clamp(3rem, 9vw, 7.5rem); }
+    .cs.deck .slide-title .lede { max-width: 52ch; font-size: clamp(1.15rem, 1.9vw, 1.45rem); }
+    :global(html.deck) { scroll-snap-type: y proximity; }
+    :global(html.deck .nav), :global(html.deck .foot) { display: none; }
+    .deck-bar { position: fixed; left: 0; right: 0; top: 0; height: 3px; z-index: 70; background: rgba(255,255,255,.08); }
+    .deck-fill { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--violet), var(--accent), var(--mint)); transition: width .4s ease; }
+    .deck-notes { position: fixed; left: 14px; bottom: 14px; z-index: 70; width: min(92vw, 34rem); max-height: 42vh; overflow: auto; padding: 1rem 1.2rem; border-radius: 16px; background: rgba(13,18,32,.9); border: 1px solid var(--border); backdrop-filter: blur(14px); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+    .deck-notes-body { margin-top: 0.5rem; font-size: 0.95rem; line-height: 1.6; color: var(--text); white-space: pre-wrap; }
+    .deck-cam { position: fixed; left: 14px; bottom: 14px; z-index: 69; width: 12rem; aspect-ratio: 1; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,.35); box-shadow: 0 20px 60px rgba(0,0,0,.5); background: #000; }
+    .deck-cam video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+    .deck-cam-name { position: absolute; left: 0; right: 0; bottom: 8%; text-align: center; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.8); }
+    .deck-notes:not([hidden]) ~ .deck-cam, .deck-cam.shifted { left: auto; right: 72px; bottom: 14px; width: 8rem; }
+
     .reveal-js [data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
     [data-reveal].in { opacity: 1; transform: none; }
     @media (prefers-reduced-motion: reduce) { .reveal-js [data-reveal] { opacity: 1; transform: none; transition: none; } }
@@ -560,9 +745,53 @@ const here = Astro.url.pathname;
   <script>
     import gsap from 'gsap';
     import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    import '../../components/scroll-progress';
     gsap.registerPlugin(ScrollTrigger);
 
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ── Deck engine (?deck=1): slides = top-level sections; arrows / space / PgUp-PgDn move,
+    //    Home/End jump, N toggles speaker notes, F fullscreen, ?cam=1 shows the presenter camera.
+    const deckMain = document.querySelector<HTMLElement>('main.cs[data-deck]');
+    if (deckMain) {
+      document.documentElement.classList.add('deck');
+      const slides = Array.from(deckMain.querySelectorAll<HTMLElement>(':scope > section'));
+      const fill = document.querySelector<HTMLElement>('.deck-fill');
+      const notes = document.querySelector<HTMLElement>('.deck-notes');
+      const notesBody = document.querySelector<HTMLElement>('.deck-notes-body');
+      const progress = document.querySelector<HTMLElement>('scroll-progress');
+      let cur = 0;
+      const current = () => {
+        const y = window.scrollY + window.innerHeight * 0.35;
+        let i = 0; for (let k = 0; k < slides.length; k++) if (slides[k].offsetTop <= y) i = k;
+        return i;
+      };
+      const paint = () => {
+        cur = current();
+        if (fill) fill.style.width = `${((cur + 1) / slides.length) * 100}%`;
+        progress?.setAttribute('label', `${cur + 1} / ${slides.length}`);
+        if (notesBody) notesBody.textContent = slides[cur].dataset.notes ?? '(no notes for this slide)';
+      };
+      const go = (i: number) => { const t = slides[Math.max(0, Math.min(slides.length - 1, i))]; window.scrollTo({ top: t.offsetTop, behavior: reduced ? 'auto' : 'smooth' }); };
+      window.addEventListener('scroll', paint, { passive: true });
+      window.addEventListener('keydown', (e) => {
+        if ((e.target as HTMLElement)?.closest('input, textarea, select, [role=slider]')) return;
+        if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(current() + 1); }
+        else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); go(current() - 1); }
+        else if (e.key === 'Home') { e.preventDefault(); go(0); }
+        else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+        else if (e.key.toLowerCase() === 'n') { if (notes) notes.hidden = !notes.hidden; }
+        else if (e.key.toLowerCase() === 'f') { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); }
+      });
+      paint();
+      // Presenter camera bubble (?cam=1) — for the live call: your face inside the page.
+      if (new URLSearchParams(location.search).get('cam') === '1' && navigator.mediaDevices?.getUserMedia) {
+        const cam = document.querySelector<HTMLElement>('.deck-cam'); const video = cam?.querySelector('video');
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 640, height: 640 }, audio: false })
+          .then((stream) => { if (cam && video) { video.srcObject = stream; cam.hidden = false; } })
+          .catch((err) => console.warn('camera unavailable:', err));
+      }
+    }
 
     // ── Scroll choreography (GSAP) — everything below is scrubbed to scroll position ──
     if (!reduced) {
