@@ -7,7 +7,7 @@ pipeline that feeds the portal. Read this, then propose a Phase-1 plan before bu
 Unakin, LLC — an avant-garde **design & engineering studio** (entity-first brand; contact
 **hello@unakin.com**; a senior team with 20 years at Apple & Microsoft, award-winning —
 keep the pedigree **name-free**, no personal name in marketing copy). Premium positioning;
-never appear to undersell. Showcases: **Sedulous** (tactical-athlete readiness), **d-tours**,
+never appear to undersell. Showcases: **Sedulous** (tactical-athlete readiness), **ShotgunDetour**,
 and an **immersive 3D trail/terrain fly-by** (brand-safe — never say "panogram").
 
 ## Current state (read first, preserve the good parts)
