@@ -161,6 +161,22 @@ const ld = {
       @keyframes glint-stroke { 0% { opacity: 1; mask-position: 130% 0; -webkit-mask-position: 130% 0; } 100% { opacity: 1; mask-position: -130% 0; -webkit-mask-position: -130% 0; } }
       @keyframes glint-fill { from { background-position: 130% 0, 0 0; } to { background-position: -130% 0, 0 0; } }
       @media (prefers-reduced-motion: reduce) { .glint:hover, .glint:hover::before { animation: none; } }
+      /* Hollow → fill: a stroked skeleton of the heading, with a gradient-filled copy that wipes in
+         left→right as --unfill goes 100% → 0% (scrubbed to scroll by GSAP). Needs data-text. */
+      .hollow { position: relative; color: transparent; -webkit-text-fill-color: transparent; -webkit-text-stroke: 1px rgba(188, 192, 255, 0.55); --unfill: 100%; }
+      .hollow::before {
+        content: attr(data-text); position: absolute; inset: 0; pointer-events: none; -webkit-text-stroke: 0;
+        background: linear-gradient(162deg, #fff 0%, var(--accent) 62%, var(--violet) 100%);
+        -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+        clip-path: inset(0 var(--unfill) 0 0);
+      }
+      @media (prefers-reduced-motion: reduce) { .hollow { --unfill: 0%; } }
+      /* Ghosted background word (editorial/techno) — big, stroked, behind a section. */
+      .ghost-word {
+        position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+        font-family: var(--display); text-transform: uppercase; font-size: clamp(5rem, 15vw, 15rem); letter-spacing: 0.08em;
+        color: transparent; -webkit-text-stroke: 1px rgba(188, 192, 255, 0.16); user-select: none; pointer-events: none; white-space: nowrap;
+      }
       .container { width: min(100% - 2.5rem, 1120px); margin-inline: auto; }
       .container.narrow { width: min(100% - 2.5rem, 720px); }
       .muted { color: var(--muted); }

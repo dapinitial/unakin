@@ -102,7 +102,8 @@ const here = Astro.url.pathname;
 
       <!-- ============ USERS ============ -->
       <section class="block container narrow">
-        <h2 class="display-h glint sec-h" data-reveal>Their other hand is on the patient.</h2>
+        <span class="ghost-word" aria-hidden="true">HANDS</span>
+        <h2 class="display-h hollow sec-h">Their other hand is on the patient.</h2>
         <p class="lede" data-reveal>This wasn't a consumer app. The people holding this device were shedding pack weight and carrying diagnostic imaging into places where you don't get to set it down, look away, or regrip. Every persona shares one fact: <strong>one hand is on the transducer, so the whole interface belongs to a thumb.</strong></p>
         <div class="personas">
           {[
@@ -121,7 +122,7 @@ const here = Astro.url.pathname;
 
       <!-- ============ SKETCH 1 ============ -->
       <section class="block container narrow">
-        <h2 class="display-h glint sec-h" data-reveal>One hand is always full.</h2>
+        <h2 class="display-h hollow sec-h" data-reveal>One hand is always full.</h2>
         <p class="lede" data-reveal>In ordinary mobile design, the hand holding the phone has a free partner. In point-of-care ultrasound it doesn't: the dominant hand is holding the transducer against the patient. That leaves exactly one hand to hold the device, stabilize it, navigate, change depth, adjust gain, freeze and save. One-handed use wasn't a nice-to-have — it was the physics of the task, and it decided everything downstream.</p>
         <figure class="sketch" data-reveal>
           <svg viewBox="0 0 900 420" role="img" aria-label="Hand sketch: a medic with the transducer on the patient in one hand and the device in the other, the thumb's arc drawn on the device.">
@@ -160,7 +161,8 @@ const here = Astro.url.pathname;
 
       <!-- ============ SKETCH 2: RESEARCH ============ -->
       <section class="block container narrow">
-        <h2 class="display-h glint sec-h" data-reveal>Where a thumb actually lives.</h2>
+        <span class="ghost-word" aria-hidden="true">THUMB</span>
+        <h2 class="display-h hollow sec-h">Where a thumb actually lives.</h2>
         <p class="lede" data-reveal>We weren't guessing. In February 2013 Steven Hoober published a field observation of <strong>1,333</strong> people using their phones in the wild: <strong>75%</strong> drove the interaction with a thumb, and grips split roughly <strong>49% one-handed, 36% cradled, 15% two-handed</strong>. That study is where the "thumb zone" comes from — the sweep radius of a thumb mapped onto the screen: a <em>natural</em> zone at the bottom, a <em>stretch</em> zone in the middle, and an <em>ow</em> zone at the top that needs a regrip or a second hand.</p>
         <p class="lede" data-reveal>Josh Clark's <em>Designing for Touch</em> had laid down the era's gesture rules, and the platforms had published their target sizes — iOS 44&nbsp;pt, Android 48&nbsp;dp, Windows Phone 34&nbsp;px, Nokia a flat 1&nbsp;cm — because a thumb pad is roughly 16–20&nbsp;mm and it doesn't care about your pixel grid. For our users, "regrip" means "hand off the patient." So the top of the screen wasn't merely awkward. It was off limits.</p>
         <div class="cite" data-reveal>
@@ -207,7 +209,7 @@ const here = Astro.url.pathname;
 
       <!-- ============ SKETCH 3: A/B ============ -->
       <section class="block container narrow">
-        <h2 class="display-h glint sec-h" data-reveal>The exploration that failed — and the one that didn't.</h2>
+        <h2 class="display-h hollow sec-h" data-reveal>The exploration that failed — and the one that didn't.</h2>
         <p class="lede" data-reveal>We started where everyone starts: random-access patterns. Flyout menus. Dropdowns. Accordions. They're fine when you have two hands. On the iPad Mini, watching people actually use them, the hotzones lit up immediately — every one of those patterns eventually asked the thumb to reach somewhere it couldn't, and the body answered with a regrip. Regrip means the probe hand moves. That's not a usability ding; in this context it's a failure.</p>
         <p class="lede" data-reveal>So the radial thumb motion stopped being an idea we were exploring because it was novel. It became the only geometry that fit: <strong>put the controls on the arc the thumb already travels, and the grip never changes.</strong></p>
         <figure class="sketch" data-reveal>
@@ -248,7 +250,7 @@ const here = Astro.url.pathname;
 
       <!-- ============ SKETCH 4: WHEEL ANATOMY ============ -->
       <section class="block container narrow">
-        <h2 class="display-h glint sec-h" data-reveal>The radial thumb-wheel.</h2>
+        <h2 class="display-h hollow sec-h" data-reveal>The radial thumb-wheel.</h2>
         <p class="lede" data-reveal>The wheel sits in the lower corner — inside the natural zone — right where the holding thumb comes to rest. You spin it, or slide it out with a small sweep, to change depth or gain without breaking concentration or shifting your grip. High-frequency actions live on the arc. Deliberate actions get a deliberate gesture: press-and-hold, so a slip in slick gloves never discards patient data. And a large, fixed Home stays anchored in thumb reach — a panic button that resets you to the live scan when the field gets loud.</p>
         <figure class="sketch" data-reveal>
           <svg viewBox="0 0 900 460" role="img" aria-label="Hand sketch of the wheel anatomy: a radial wheel in the lower thumb zone with callouts for spin to adjust depth and gain, press-and-hold for mode, a fixed home button, and an oversized invisible hitbox for a gloved thumb.">
@@ -284,6 +286,7 @@ const here = Astro.url.pathname;
 
       <!-- ============ THE LIVE WHEEL ============ -->
       <section class="block container">
+        <span class="ghost-word" aria-hidden="true">WHEEL</span>
         <div class="wheel-wrap">
           <div class="device" data-reveal>
             <div class="scan"><div class="sector"></div></div>
@@ -302,7 +305,7 @@ const here = Astro.url.pathname;
             </div>
           </div>
           <div class="wheel-copy">
-            <h2 class="display-h glint sec-h" data-reveal>Remade in 2026 componentry. Spin it.</h2>
+            <h2 class="display-h hollow sec-h" data-reveal>Remade in 2026 componentry. Spin it.</h2>
             <p class="lede" data-reveal>The 2013 prototype lived on an iPad Mini and a laptop. This one lives on this page — the same idea, rebuilt with today's components: momentum and friction under the pad, an oversized invisible hitbox, keyboard-nudgeable, honest about reduced motion. Drag around the wheel with a pointer or your thumb.</p>
             <p class="lede" data-reveal>The wheel is where the thumb rests; the readout is where the eye is. You never look at the control — you feel it turn and watch the image change, exactly like the sonographer does.</p>
             <p class="hint mono" data-reveal>→ drag around the ring · arrow keys nudge · shift + arrow for a full step</p>
@@ -312,7 +315,8 @@ const here = Astro.url.pathname;
 
       <!-- ============ VALIDATION ============ -->
       <section class="block container narrow">
-        <h2 class="display-h glint sec-h" data-reveal>Prove the pattern on familiar ground first.</h2>
+        <span class="ghost-word" aria-hidden="true">PROOF</span>
+        <h2 class="display-h hollow sec-h">Prove the pattern on familiar ground first.</h2>
         <p class="lede" data-reveal>A novel interaction and an unfamiliar domain, tested together, tell you nothing — you can't separate "the wheel is confusing" from "ultrasound is confusing." So we split them.</p>
         <div class="phases">
           <article class="card" data-reveal>
@@ -332,7 +336,7 @@ const here = Astro.url.pathname;
 
       <!-- ============ TUNING ============ -->
       <section class="block container narrow">
-        <h2 class="display-h glint sec-h" data-reveal>Tuning the physics. Why it had to be code.</h2>
+        <h2 class="display-h hollow sec-h" data-reveal>Tuning the physics. Why it had to be code.</h2>
         <p class="lede" data-reveal>This is the part a static wireframe can't do. A wheel that turns too fast shoots past the tissue layer you're measuring; too slow, and the thumb fatigues. Friction and inertia under the pad have to be <em>felt</em> to be tuned. The hitbox has to be larger than the graphic so a gloved thumb that drifts doesn't lose the control. Press-and-hold needs a real threshold — long enough that a slip never triggers it, short enough that it never feels stuck.</p>
         <p class="lede" data-reveal>None of that is decidable in a drawing. That's why the industrial designers needed someone who could build the gesture, hand it to a nurse on an iPad Mini, and watch what her thumb did.</p>
       </section>
@@ -340,7 +344,7 @@ const here = Astro.url.pathname;
       <!-- ============ THE MESSY MIDDLE ============ -->
       <section class="block container">
         <p class="eyebrow" data-reveal>The messy middle · 2013</p>
-        <h2 class="display-h glint sec-h" data-reveal>What it actually looked like.</h2>
+        <h2 class="display-h hollow sec-h" data-reveal>What it actually looked like.</h2>
         <div class="strip">
           {[
             ['sonoSiteexploration.jpg', 'Phase 1: the wheel driving a camera\'s settings — Scene, HDR, flash, timer, Home — with the ultrasound vocabulary (Marker · Optimize · Save Clip · End Exam) already drafted alongside.'],
@@ -360,7 +364,7 @@ const here = Astro.url.pathname;
 
       <!-- ============ VIDEO ============ -->
       <section class="block container">
-        <h2 class="display-h glint sec-h" data-reveal>The original prototype, and iViz in the field.</h2>
+        <h2 class="display-h hollow sec-h" data-reveal>The original prototype, and iViz in the field.</h2>
         <p class="lede" data-reveal>The 2013 touch prototype (HTML5 / CSS3 / JS), then the shipped iViz doing the job it was built for.</p>
         <div class="video-main card" data-reveal>
           <video controls playsinline preload="metadata" poster="/images/case-studies/sonosite/sonosite.jpg"
@@ -378,14 +382,15 @@ const here = Astro.url.pathname;
 
       <!-- ============ ACCESSIBILITY, AS A CONSEQUENCE ============ -->
       <section class="block container narrow">
-        <h2 class="display-h glint sec-h" data-reveal>Accessibility always enters the picture.</h2>
+        <h2 class="display-h hollow sec-h" data-reveal>Accessibility always enters the picture.</h2>
         <p class="lede" data-reveal>It was never the headline on iViz — the headline was a medic with one hand free. But design the input to fit how the body actually moves, and accessibility arrives as a consequence: a gloved thumb, a gesture that forgives a slip, a control you can operate without looking. That's the discipline, and it's followed me everywhere since.</p>
         <p class="lede" data-reveal>At Microsoft it meant S360 bug bashes — often — and re-designing when the bar said so. I'd prototype, put it in front of the accessibility leads in C+AI, and if I was missing the mark they'd tell me; the dialogue with the people who live these barriers is what sharpened the work. Eventually I was moonlighting for Azure, opening pull requests to fix accessibility bugs myself. Standards are the rigor underneath. The thesis is who can now do what.</p>
       </section>
 
       <!-- ============ THE CLOSE ============ -->
       <section class="block container narrow">
-        <h2 class="display-h glint sec-h" data-reveal>The wheel became the cursor.</h2>
+        <span class="ghost-word" aria-hidden="true">CURSOR</span>
+        <h2 class="display-h hollow sec-h">The wheel became the cursor.</h2>
         <p class="lede" data-reveal>Thirteen years later I'm building an interface you drive with your gaze, your voice, and your hands — no mouse — and the cursor at the center of it is a <strong>radial HUD</strong>. That isn't a coincidence. It's the same insight: <em>put the control on a radius matched to a motion the body already makes.</em> In 2013 the motion was a thumb pivoting while the other hand held a probe. In 2026 it's an eye settling on a target. Design for the hand you have free — or the body you actually have — and the paradigm takes care of the rest.</p>
         <figure class="sketch" data-reveal>
           <svg viewBox="0 0 900 300" role="img" aria-label="Hand sketch timeline: 2013 radial thumb-wheel on a handheld device, an arrow, then the 2026 radial HUD cursor driven by gaze.">
@@ -415,7 +420,7 @@ const here = Astro.url.pathname;
       </section>
 
       <section class="block container narrow closing" data-reveal>
-        <h2 class="display-h glint sec-h">Thanks for listening.</h2>
+        <h2 class="display-h hollow sec-h">Thanks for listening.</h2>
         <p class="lede muted">Happy to go deeper on any of it — the research, the physics, or the code.</p>
       </section>
     </main>
@@ -452,8 +457,14 @@ const here = Astro.url.pathname;
     @keyframes cue { 0%, 100% { transform: translateY(0); opacity: .6; } 50% { transform: translateY(6px); opacity: 1; } }
     @media (prefers-reduced-motion: reduce) { .scroll-cue { animation: none; } }
 
-    .sec-h { font-size: clamp(1.6rem, 4vw, 2.7rem); margin: 0.6rem 0 1.2rem; max-width: 24ch; }
-    .lede { font-size: clamp(1.02rem, 1.6vw, 1.15rem); line-height: 1.75; color: var(--muted); margin-bottom: 1.1rem; max-width: 66ch; }
+    /* Rhythm: this page breathes more than the splash — each beat gets its own room. */
+    .cs .block { position: relative; padding: clamp(5rem, 13vh, 10rem) 0; }
+    .cs .container.narrow { width: min(100% - 2.5rem, 880px); }
+    .cs .block > .eyebrow { margin-bottom: 0.4rem; }
+    .cs .ghost-word { opacity: 0.7; top: 18%; z-index: 0; }
+    .cs .block > *:not(.ghost-word) { position: relative; z-index: 1; }
+    .sec-h { font-size: clamp(2.2rem, 5.6vw, 4.4rem); line-height: 0.88; margin: 0.4rem 0 1.6rem; max-width: 18ch; }
+    .lede { font-size: clamp(1.08rem, 1.7vw, 1.28rem); line-height: 1.8; color: var(--muted); margin-bottom: 1.3rem; max-width: 62ch; }
     .lede strong { color: var(--text); font-weight: 600; }
     .lede em { color: var(--accent); font-style: italic; }
     h6 { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mint); margin: 1.3rem 0 0.4rem; }
@@ -473,7 +484,7 @@ const here = Astro.url.pathname;
     .timeline li { position: relative; padding-left: 1.2rem; }
     .timeline li::before { content: ''; position: absolute; left: 0; top: 0.62em; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--mint); }
 
-    .personas { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; margin-top: 1.4rem; }
+    .personas { display: grid; grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); gap: 1.1rem; margin-top: 1.8rem; }
     .persona { background: rgba(13,18,32,.55); border: 1px solid var(--border); border-radius: 16px; padding: 1.2rem 1.3rem; backdrop-filter: blur(8px); }
     .persona h4 { font-family: 'Fraunces', serif; font-size: 1.15rem; margin-bottom: 0.5rem; }
     .persona h4 .muted { font-family: system-ui, sans-serif; font-weight: 400; font-size: 0.85rem; }
@@ -484,7 +495,9 @@ const here = Astro.url.pathname;
 
     /* whiteboard sketches, inked on glass */
     .sketch { --hand: 'Segoe Print', 'Segoe Script', 'Bradley Hand', 'Chalkboard SE', cursive; --ink: #e7eaff; --accent-c: #8bf0cf;
-      margin: 1.2rem 0 0; background: linear-gradient(180deg, rgba(20,26,44,.75), rgba(13,18,32,.75)); border: 1px solid var(--border); border-radius: 18px; padding: clamp(1rem, 3vw, 2rem); backdrop-filter: blur(10px); transform: rotate(-0.35deg); box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+      /* breaks out of the prose column: whiteboards are wide */
+      width: min(100vw - 2.5rem, 1080px); margin: 2.4rem 0 0 50%; translate: -50% 0;
+      background: linear-gradient(180deg, rgba(20,26,44,.75), rgba(13,18,32,.75)); border: 1px solid var(--border); border-radius: 22px; padding: clamp(1.2rem, 3.5vw, 2.6rem); backdrop-filter: blur(10px); transform: rotate(-0.35deg); box-shadow: 0 30px 80px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05); }
     .sketch:nth-of-type(even) { transform: rotate(0.3deg); }
     .sketch svg { display: block; width: 100%; height: auto; }
     .sketch figcaption { font-family: var(--hand); font-size: 1rem; color: var(--muted); margin: 0.9rem 0.3rem 0; }
@@ -566,6 +579,13 @@ const here = Astro.url.pathname;
       gsap.fromTo('.hero-bg img', { scale: 1.12, yPercent: 0 }, { scale: 1, yPercent: -8, ease: 'none', scrollTrigger: { trigger: '.cs-hero', start: 'top top', end: 'bottom top', scrub: true } });
       gsap.to('.hero-copy', { yPercent: 22, opacity: 0.15, ease: 'none', scrollTrigger: { trigger: '.cs-hero', start: 'top top', end: 'bottom top', scrub: true } });
 
+      // Section headings: a stroked skeleton that fills with the gradient as it enters (wipe L→R).
+      document.querySelectorAll<HTMLElement>('.hollow').forEach((h) => {
+        h.removeAttribute('data-reveal');
+        h.dataset.text = h.textContent?.trim() ?? '';
+        gsap.fromTo(h, { '--unfill': '100%' }, { '--unfill': '0%', ease: 'none', scrollTrigger: { trigger: h, start: 'top 90%', end: 'top 42%', scrub: true } });
+      });
+
       // Candid lines: each one slides in as it crosses the lower third.
       gsap.utils.toArray<HTMLElement>('.leadin h3').forEach((h) => {
         gsap.fromTo(h, { opacity: 0, x: -28 }, { opacity: 1, x: 0, ease: 'none', scrollTrigger: { trigger: h, start: 'top 92%', end: 'top 62%', scrub: true } });
@@ -606,7 +626,7 @@ const here = Astro.url.pathname;
       els.forEach((el) => io.observe(el));
       setTimeout(() => els.forEach((el) => el.classList.add('in')), 2500);
     }
-    document.querySelectorAll<HTMLElement>('.glint').forEach((el) => { el.dataset.text = el.textContent?.trim() ?? ''; });
+    document.querySelectorAll<HTMLElement>('.glint, .hollow').forEach((el) => { el.dataset.text = el.textContent?.trim() ?? ''; });
 
     // The live radial thumb-wheel — the 2013 idea in 2026 componentry: drag/spin with pointer
     // or thumb, momentum + friction under the pad, oversized invisible hitbox, keyboard-nudgeable.
