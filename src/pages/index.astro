@@ -1,24 +1,5 @@
 ---
 import Base from '../layouts/Base.astro';
-import heartSvg from '../svg/heart.svg?raw';
-import brainSvg from '../svg/brain.svg?raw';
-
-// Line-art loading state for each glass model (tools/outline-svg.mjs). The strokes act as a
-// mask over moving light: a bright white→mint band sweeps diagonally through otherwise dim
-// violet lines (userSpaceOnUse gradient, translated across the 1000-box by SMIL). Defs live
-// inside the SVG so the url(#id) reference is local and Safari-safe.
-const outline = (svg: string, id: string) => svg.replace(
-  '>',
-  `><defs><linearGradient id="${id}" data-sweep gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1000" y2="1000" spreadMethod="pad">
-    <stop class="base" offset="0" stop-color="#6d4aff" stop-opacity=".55"/>
-    <stop class="base" offset=".40" stop-color="#6d4aff" stop-opacity=".55"/>
-    <stop class="glint" offset=".47" stop-color="#ff4fd8"/>
-    <stop class="glint" offset=".52" stop-color="#ffffff"/>
-    <stop class="glint" offset=".59" stop-color="#4fe3ff"/>
-    <stop class="base" offset=".68" stop-color="#6d4aff" stop-opacity=".55"/>
-    <stop class="base" offset="1" stop-color="#6d4aff" stop-opacity=".55"/>
-  </linearGradient></defs>`,
-).replace('<svg ', `<svg style="--grad:url(#${id})" `);
 
 const services = [
   { k: 'Product design', d: 'Interfaces and product thinking — from first principle to pixel. Systems people actually want to use.' },
@@ -55,13 +36,11 @@ const work = [
       </div>
       <div class="hero-art" aria-hidden="true">
         <span class="ghost-word">HEART</span>
-        <glass-model class="hero-model" model="/models/heart.glb" mode="shatter" reveal="load" hold="1500" pulse="heart">
-          <div class="outline" set:html={outline(heartSvg, 'g-heart')} />
-        </glass-model>
+        <glass-model class="hero-model" model="/models/heart.glb" mode="shatter" reveal="load" pulse="heart"></glass-model>
         <!-- four chambers, four cards: the feeling side of the studio -->
         <div class="stat stat-h1"><b>Award</b><span>winning product design</span></div>
         <div class="stat stat-h2"><b>1st place</b><span>Seattle's largest hackathon to date</span></div>
-        <div class="stat stat-h3"><b>Global warm</b><span>ready</span></div>
+        <div class="stat stat-h3"><b>Taste</b><span>is the whole job</span></div>
         <div class="stat stat-h4"><b>Breathe</b><span>deeply · we've got it from here</span></div>
       </div>
     </section>
@@ -84,12 +63,10 @@ const work = [
     <section class="block container thesis" id="thesis">
       <div class="thesis-art" aria-hidden="true">
         <span class="ghost-word">BRAIN</span>
-        <glass-model class="thesis-model" model="/models/brain.glb" mode="assemble" spread="3.2" hold="1500" pulse="brain">
-          <div class="outline" set:html={outline(brainSvg, 'g-brain')} />
-        </glass-model>
+        <glass-model class="thesis-model" model="/models/brain.glb" mode="assemble" spread="3.2" pulse="brain"></glass-model>
         <!-- four regions, four cards: the proof side of the studio -->
         <div class="stat stat-a"><b>10+ yrs</b><span>Apple · Microsoft · Meta</span></div>
-        <div class="stat stat-b"><b>∞</b><span>delivers in ways that cannot be quantified</span></div>
+        <div class="stat stat-b"><b>0</b><span>handoffs — one team designs &amp; ships</span></div>
         <div class="stat stat-c"><b>60 fps</b><span>real-time 3D in the browser</span></div>
         <div class="stat stat-d"><b>100%</b><span>yours to own — code, keys, everything</span></div>
       </div>
@@ -228,34 +205,6 @@ const work = [
       .ghost-word { font-size: clamp(3.5rem, 22vw, 7rem); }
     }
 
-    /* SVG line-art loading state: strokes draw on (gradient sliding through them) once the
-       model is in view, then dissolve when the glass flashes in. Sized to sit exactly where
-       the 3D model renders (the canvas host is inset -22% / -24%). */
-    /* Pinned to the model's projected bounds (--ol/--ot/--ow/--oh from <glass-model>), swaying
-       with it (--rz); until the model reports, a sensible default box. */
-    .outline {
-      position: absolute; left: var(--ol, 12.5%); top: var(--ot, 12.5%); width: var(--ow, 75%); height: var(--oh, 75%);
-      transform: rotate(var(--rz, 0deg)); transform-origin: 50% 50%;
-      opacity: 1; transition: opacity 0.6s ease, left 0.3s ease, top 0.3s ease, width 0.3s ease, height 0.3s ease; --step: 5ms;
-    }
-    .thesis-model .outline { --step: 3ms; }
-    /* The SVG is injected via set:html, so its nodes have no Astro scope attribute → :global. */
-    /* one glow filter on the whole drawing (not per path): bloom for the light sweep */
-    .outline :global(svg) { width: 100%; height: 100%; display: block; overflow: visible; filter: drop-shadow(0 0 5px rgba(188, 192, 255, 0.55)); }
-    .outline :global(path) {
-      stroke: var(--grad); stroke-width: 1.6; vector-effect: non-scaling-stroke;
-      stroke-dasharray: 1; stroke-dashoffset: 1;
-    }
-    glass-model[data-view] .outline :global(path) { animation: draw 1s cubic-bezier(0.3, 0.8, 0.3, 1) forwards; animation-delay: calc(var(--i) * var(--step)); }
-    @keyframes draw { to { stroke-dashoffset: 0; } }
-    /* Once the glass is in, the drawn lines go invisible but the glint keeps running through
-       them — a ghost pulse tracing the form. Lines also fade with the shatter (--p from the
-       component) so shards never fly over a static drawing. */
-    /* Loading state only: once the glass has flashed in, the drawing is gone. */
-    glass-model[data-loaded] .outline { opacity: 0; pointer-events: none; }
-    .hero-model:not([data-loaded]) .outline { opacity: calc(1 - var(--p, 0) * 1.6); }
-    glass-model[data-error] .outline { opacity: 0.9; } /* no WebGL / load failed → the drawing IS the art */
-    @media (prefers-reduced-motion: reduce) { .outline :global(path) { stroke-dashoffset: 0; animation: none !important; } }
 
     /* Heart stat cards — one per chamber (the .stat base styles live with the thesis block). */
     .stat-h1 { right: -4%; top: 10%; }
@@ -414,25 +363,6 @@ const work = [
       setTimeout(() => els.forEach((el) => el.classList.add('in')), 2500);
     }
 
-    // Light sweep through the outline strokes: slide each stroke gradient diagonally across the
-    // drawing (JS-driven — SMIL on gradientTransform proved unreliable in Chrome). Runs while
-    // any outline is still showing; stops once every model has dissolved it.
-    const sweeps = Array.from(document.querySelectorAll<SVGLinearGradientElement>('linearGradient[data-sweep]'));
-    if (sweeps.length && !reduced) {
-      // Light sweeps through the drawing while it's the loading state; stops once every model
-      // has flashed in (plus a beat for the dissolve) — or keeps going if a model failed.
-      const hosts = Array.from(document.querySelectorAll('glass-model'));
-      const t0 = performance.now();
-      let doneAt = 0;
-      const tick = (now: number) => {
-        const v = -1100 + 2200 * (((now - t0) / 2200) % 1);
-        for (const g of sweeps) g.setAttribute('gradientTransform', `translate(${v.toFixed(1)} ${v.toFixed(1)})`);
-        const allIn = hosts.every((h) => h.hasAttribute('data-loaded') && !h.hasAttribute('data-error'));
-        if (allIn && !doneAt) doneAt = now;
-        if (!doneAt || now - doneAt < 1500) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-    }
 
     // Stat cards: rise in with their model; the heading resolves from glyphs, one card at a time
     // (enter only — leaving just fades). Kept deliberately light: a single rAF, short, staggered.
