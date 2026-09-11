@@ -656,6 +656,8 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     :global(.arc-toc-head h2) { font-size: clamp(1.4rem, 3vw, 2.2rem); margin: 0; }
     :global(.arc-toc-close) { font: inherit; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); background: transparent; border: 1px solid var(--border); border-radius: 999px; padding: 0.5rem 0.9rem; cursor: pointer; }
     :global(.arc-toc-close:hover) { color: var(--text); border-color: var(--accent); }
+    :global(.arc-toc-actions) { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+    :global(a.arc-toc-close) { text-decoration: none; color: var(--accent); }
     :global(.arc-body) { display: grid; grid-template-rows: minmax(0, 46%) minmax(0, 1fr); gap: 1rem; min-height: 0; }
     :global(.arc-svg) { width: 100%; height: 100%; display: block; overflow: visible; }
     :global(.arc-svg .base) { stroke: rgba(188,192,255,.18); stroke-width: 1; }
@@ -1009,7 +1011,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       const pathD = beats.map((_, i) => `${i ? 'L' : 'M'}${px(i).toFixed(1)} ${py(i).toFixed(1)}`).join(' ');
       const stageX = (name: (typeof STAGES)[number]) => { const idx = beats.map((_, i) => i).filter((i) => stageOf(i) === name); return idx.length ? (px(idx[0]) + px(idx[idx.length - 1])) / 2 : -999; };
       toc.innerHTML = `
-        <div class="arc-toc-head"><h2 class="display-h">The story arc</h2><button type="button" class="arc-toc-close">Close · Esc</button></div>
+        <div class="arc-toc-head"><h2 class="display-h">The story arc</h2><div class="arc-toc-actions"><a class="arc-toc-close" href="${isDeck ? '/case-studies/sonosite' : '/case-studies/sonosite?deck=1'}">${isDeck ? 'Case study · 15 beats' : 'Full deck · 28 beats'} →</a><button type="button" class="arc-toc-close">Close · Esc</button></div></div>
         <div class="arc-body">
           <svg class="arc-svg" viewBox="0 0 ${W} ${H}" aria-hidden="true">
             <defs><linearGradient id="arc-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6d4aff"/><stop offset=".6" stop-color="#bcc0ff"/><stop offset="1" stop-color="#8bf0cf"/></linearGradient></defs>

@@ -1,0 +1,6 @@
+---
+// Short URL for the portfolio-review deck: /case-studies/deck → the SonoSite page in deck mode.
+export const prerender = false;
+const q = new URLSearchParams(Astro.url.search); q.set('deck', '1');
+return Astro.redirect(`/case-studies/sonosite?${q.toString()}${Astro.url.hash}`, 302);
+---
