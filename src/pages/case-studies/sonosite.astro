@@ -936,7 +936,10 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         park(); paintZones();
         setTimeout(() => { parking = false; }, 700);
       }, { passive: true });
-      window.addEventListener('resize', park, { passive: true });
+      // A resize (fullscreen toggle, screen-share, window drag) changes innerHeight, which would
+      // make the parked position read as a scroll — guard, re-park, release.
+      let resizeT = 0;
+      window.addEventListener('resize', () => { parking = true; park(); clearTimeout(resizeT); resizeT = window.setTimeout(() => { parking = false; }, 500); }, { passive: true });
       paintZones();
 
       // hero: slow ken-burns on the scan while the hero beat is up
