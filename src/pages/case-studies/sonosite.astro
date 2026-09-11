@@ -1107,6 +1107,31 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       window.addEventListener('beatchange', () => { stopSpeech(); if (narrate) setTimeout(narrateBeat, 900); }); // paint() fires this on every beat change
       if (narrate) setTimeout(narrateBeat, 1200);
 
+      // ── Spacelab Access (the extension) external interface ──
+      // The extension's page-world cursor exposes SLCursor.bus. "next"/"back" arrive as cursor:nav;
+      // every final spoken phrase arrives as voice:phrase and the page may claim it (ev.handled).
+      const hookCursor = () => {
+        const SL = (window as any).SLCursor; if (!SL?.bus || (SL as any).__deckHooked) return !!SL?.bus;
+        (SL as any).__deckHooked = true;
+        SL.bus.on('cursor:nav', (d: { dir: string }) => go(cur + (d?.dir === 'prev' ? -1 : 1)));
+        SL.bus.on('voice:phrase', (ev: { text: string; handled: boolean }) => {
+          const t = (ev.text || '').toLowerCase();
+          const claim = (fn: () => void) => { ev.handled = true; fn(); };
+          const num = t.match(/\b(?:beat|slide|go to|jump to)\s+(\d{1,2})\b/);
+          if (num) return claim(() => go(parseInt(num[1], 10) - 1));
+          if (/\b(story arc|the arc|the map|table of contents|contents|overview)\b/.test(t)) return claim(openToc);
+          if (/\b(close|dismiss|hide)\b/.test(t) && toc.classList.contains('open')) return claim(closeToc);
+          if (/\b(stop reading|stop speaking|quiet|shush|be quiet)\b/.test(t)) return claim(stopSpeech);
+          if (/\b(read|speak|narrate)\b/.test(t)) return claim(() => speak(cur));
+          if (/\b(notes|talking points)\b/.test(t) && notes) return claim(() => { notes.hidden = !notes.hidden; });
+          if (/\b(first|start over|beginning)\b/.test(t)) return claim(() => go(0));
+          if (/\b(last|the end|finish)\b/.test(t)) return claim(() => go(beats.length - 1));
+          if (/\b(full ?screen)\b/.test(t)) return claim(() => { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); });
+        });
+        return true;
+      };
+      if (!hookCursor()) { const iv = setInterval(() => { if (hookCursor()) clearInterval(iv); }, 500); setTimeout(() => clearInterval(iv), 20000); }
+
       // the book puck opens the map (no more back-to-top)
       progress?.addEventListener('totop', (e) => { e.preventDefault(); toc.classList.contains('open') ? closeToc() : openToc(); });
 
