@@ -1073,7 +1073,10 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         const fallback = () => {
           if (!('speechSynthesis' in window) || !text) return;
           // Voice: ?voice=Name wins; else Apple Premium/Enhanced (Ava, Zoe, Evan, Tom…) → Google US English → any en-US.
-          const want = new URLSearchParams(location.search).get('voice');
+          // ?voice=Name is remembered in this browser (localStorage) so it sticks across visits.
+          const qv = new URLSearchParams(location.search).get('voice');
+          if (qv) { try { localStorage.setItem('sl.voice', qv); } catch {} }
+          let want = qv; if (!want) { try { want = localStorage.getItem('sl.voice'); } catch {} }
           const voices = speechSynthesis.getVoices();
           const pick = () => (want && voices.find((v) => v.name.toLowerCase().includes(want.toLowerCase())))
             ?? voices.find((v) => /en[-_]US/i.test(v.lang) && /(Premium|Enhanced)/i.test(v.name))
