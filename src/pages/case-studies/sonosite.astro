@@ -154,12 +154,13 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       </section>
 
       <!-- ============ USERS ============ -->
-      <section class="block container narrow" data-notes="The constraint meets the people. &quot;This wasn't a consumer app. Nurses, sonographers, 18D Special Forces medics, 68W combat medics, EMTs in the back of a moving rig. They were shedding pack weight and carrying diagnostic imaging into places where you don't get to set the device down, look away, or regrip — because the other hand is holding the probe against a patient who may be dying. So the whole interface belongs to a thumb.&quot;  Then the triage reality, plainly: &quot;And it is rarely one patient. Gunshot wounds, an IED, multiple casualties — the medic has to decide who is most critical and who is most likely to be saved, and render aid in that order. An image that takes two hands and a menu arrives too late for someone.&quot; Say it once, quietly. Don't dramatize. Sarah + Dave: real users, real stakes, from day one.">
+      <section class="block container narrow" data-notes="The constraint meets the people. &quot;This wasn't a consumer app. Nurses, sonographers, 18D Special Forces medics, 68W combat medics, EMTs in the back of a moving rig. They were shedding pack weight and carrying diagnostic imaging into places where you don't get to set the device down, look away, or regrip — because the other hand is holding the probe against a patient who may be dying. So the whole interface belongs to a thumb.&quot;  Then the triage reality, plainly: &quot;And it is rarely one patient. Gunshot wounds, an IED, multiple casualties — the medic has to decide who is most critical and who is most likely to be saved, and render aid in that order. An image that takes two hands and a menu arrives too late for someone.&quot; Say it once, quietly. Don't dramatize. Then the principle, and this is the Surface Adaptive Kit line for Sarah: &quot;Meet people where they are. That's how I define the design constraints, understand the human personas, and truly empathize with what they're trying to accomplish.&quot; Sarah + Dave: real users, real stakes, from day one.">
         <span class="ghost-word" aria-hidden="true">HANDS</span>
         <p class="eyebrow">The constraint meets the people</p>
         <h2 class="display-h hollow sec-h">Their other hand is on the patient.</h2>
         <p class="lede" data-reveal>This wasn't a consumer app. The people holding this device were shedding pack weight and carrying diagnostic imaging into places where you don't get to set it down, look away, or regrip. Every persona shares one fact: <strong>one hand is on the transducer, so the whole interface belongs to a thumb.</strong></p>
         <p class="lede">And the field is rarely one patient. Gunshot wounds, an IED, multiple casualties — a medic has to decide who is most critical and who is most likely to be saved, and render aid in that order. A diagnostic image that takes two hands and a menu is an image that arrives too late for someone.</p>
+        <p class="lede"><strong>Meet people where they are.</strong> That's how I define the design constraints, understand the human personas, and truly empathize with what they're trying to accomplish.</p>
         <div class="personas">
           {[
             ['Hospital nurse', 'the bedside triage', ['Bedside, standing, often gloved, moving between patients.', 'Probe on the patient; device in the other hand.', "Can't afford a second hand to reach a menu, or a slip that discards a capture."]],
@@ -342,7 +343,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       </section>
 
       <!-- ============ THE LIVE WHEEL ============ -->
-      <section class="block container" data-notes="Hand them the wheel — if the hand cursor is on, drive it with a pinch-drag. &quot;This is the 2013 idea rebuilt with today's components: momentum and friction under the pad, an oversized invisible hitbox, keyboard-nudgeable, honest about reduced motion. The wheel is where the thumb rests; the readout is where the eye is. You never look at the control — you feel it turn and watch the image change, exactly like the sonographer does.&quot; This is the moment the page stops being a slide.">
+      <section class="block container" data-notes="Hand them the wheel — if the hand cursor is on, drive it with a pinch-drag. &quot;This is the 2013 idea rebuilt with today's components: momentum and friction under the pad, an oversized invisible hitbox, keyboard-nudgeable, honest about reduced motion. The wheel is where the thumb rests; the readout is where the eye is. You never look at the control — you feel it turn and watch the image change, exactly like the sonographer does.&quot; This is the moment the page stops being a slide." data-stage-cs="climax">
         <span class="ghost-word" aria-hidden="true">WHEEL</span>
         <div class="wheel-wrap">
           <div class="device" data-reveal>
@@ -438,7 +439,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
       </section>
 
       <!-- ============ THE CLOSE ============ -->
-      <section class="block container narrow" data-notes="The thesis close for this act. &quot;Thirteen years later I'm building an interface you drive with your gaze, your voice and your hands — and the cursor at the center of it is a radial HUD. That isn't a coincidence. Same insight: put the control on a radius matched to a motion the body already makes. In 2013 the motion was a thumb pivoting while the other hand held a probe. In 2026 it's an eye settling on a target. Design for the hand you have free — or the body you actually have — and the paradigm takes care of the rest.&quot; Then the segue: accessibility always enters the picture.">
+      <section class="block container narrow" data-notes="The thesis close for this act. &quot;Thirteen years later I'm building an interface you drive with your gaze, your voice and your hands — and the cursor at the center of it is a radial HUD. That isn't a coincidence. Same insight: put the control on a radius matched to a motion the body already makes. In 2013 the motion was a thumb pivoting while the other hand held a probe. In 2026 it's an eye settling on a target. Design for the hand you have free — or the body you actually have — and the paradigm takes care of the rest.&quot; Then the segue: accessibility always enters the picture." data-stage-cs="resolution">
         <span class="ghost-word" aria-hidden="true">CURSOR</span>
         <h2 class="display-h hollow sec-h">The wheel became the cursor.</h2>
         <p class="lede" data-reveal>Thirteen years later I'm building an interface you drive with your gaze, your voice, and your hands — no mouse — and the cursor at the center of it is a <strong>radial HUD</strong>. That isn't a coincidence. It's the same insight: <em>put the control on a radius matched to a motion the body already makes.</em> In 2013 the motion was a thumb pivoting while the other hand held a probe. In 2026 it's an eye settling on a target. Design for the hand you have free — or the body you actually have — and the paradigm takes care of the rest.</p>
@@ -511,14 +512,14 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         </section>
 
         <!-- ============ DECK: THE CLIMAX ============ -->
-        <section class="block container deck-only slide-title" data-notes="The low point, one line: 'Agentic AI can ship anything. Including a mistake.' Beat. 'So I built the gate — and I'll show you it live.' Then Shipmate.">
+        <section class="block container deck-only slide-title" data-stage="climax" data-notes="The low point, one line: 'Agentic AI can ship anything. Including a mistake.' Beat. 'So I built the gate — and I'll show you it live.' Then Shipmate.">
           <p class="eyebrow">Act 2 · the climax</p>
           <h2 class="display-h cs-title"><span class="stroke">Agentic AI can ship</span><br /><span class="grad-text glint">anything.</span></h2>
           <p class="lede">Including a mistake. So the question isn't how fast an agent can ship — it's what it is <strong>refused</strong> from shipping.</p>
         </section>
 
         <!-- ============ DECK: SHIPMATE — LIVE ============ -->
-        <section class="block container deck-only" data-notes="Climax, live. 'I'll ship a real change to production right now — and I want you to watch the safety gate.' Small, visible, reversible change on a low-stakes project. plan → execute. Narrate: 'execute is refused in code unless a plan ran in the last 10 minutes — a mishearing or a prompt injection literally cannot ship prod. That's designing trust into an agentic system.' Rollback + backup clip ready. If the network is shaky: play the clip and say why.">
+        <section class="block container deck-only" data-stage="climax" data-notes="Climax, live. 'I'll ship a real change to production right now — and I want you to watch the safety gate.' Small, visible, reversible change on a low-stakes project. plan → execute. Narrate: 'execute is refused in code unless a plan ran in the last 10 minutes — a mishearing or a prompt injection literally cannot ship prod. That's designing trust into an agentic system.' Rollback + backup clip ready. If the network is shaky: play the clip and say why.">
           <p class="eyebrow">Act 2 · climax · Shipmate</p>
           <h2 class="display-h hollow sec-h">Ship to production. Live. With the gate on.</h2>
           <div class="threads">
@@ -530,7 +531,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         </section>
 
         <!-- ============ DECK: THE NEW NORMAL — CURSOR ============ -->
-        <section class="block container deck-only" data-notes="Act 3 opens. The resolution: the wheel became the cursor. Cursor lab = the radial HUD cursor on the portfolio: pointer / keyboard / gaze (head+eyes, blink-to-click) / voice / hand, all adapters over one input bus — 'adding voice or gaze changed the core by zero lines.' Spacelab Access = that same cursor as a Chrome extension on ANY website: hand shipped first, gaze + voice next — fully on-device. This deck is being driven by it right now if the demo's on.">
+        <section class="block container deck-only" data-stage="falling" data-notes="Act 3 opens. The resolution: the wheel became the cursor. Cursor lab = the radial HUD cursor on the portfolio: pointer / keyboard / gaze (head+eyes, blink-to-click) / voice / hand, all adapters over one input bus — 'adding voice or gaze changed the core by zero lines.' Spacelab Access = that same cursor as a Chrome extension on ANY website: hand shipped first, gaze + voice next — fully on-device. This deck is being driven by it right now if the demo's on.">
           <span class="ghost-word" aria-hidden="true">CURSOR</span>
           <p class="eyebrow">Act 3 · the new normal</p>
           <h2 class="display-h hollow sec-h">The wheel became the cursor. Now on any website.</h2>
@@ -545,7 +546,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         </section>
 
         <!-- ============ DECK: STUDIO — THE CLOSE ============ -->
-        <section class="block container deck-only" data-notes="Close on the thing they can touch. Open studio.spacelabforever.com live. Compose something in a few seconds — 'this is the public sibling of the Apple system; same DNA.' Panogram in one line if there's time: spatial 360° + AI annotations that render unverified until confirmed — the trust rail again. Then: 'Guest passes are coming to your inbox — $3 of credits, no keys, no card.'">
+        <section class="block container deck-only" data-stage="resolution" data-notes="Close on the thing they can touch. Open studio.spacelabforever.com live. Compose something in a few seconds — 'this is the public sibling of the Apple system; same DNA.' Panogram in one line if there's time: spatial 360° + AI annotations that render unverified until confirmed — the trust rail again. Then: 'Guest passes are coming to your inbox — $3 of credits, no keys, no card.'">
           <p class="eyebrow">Act 3 · resolution · Spacelab Studio</p>
           <h2 class="display-h hollow sec-h">Chat with Claude. Ship a campaign. Here's the thing you can touch.</h2>
           <div class="threads">
@@ -558,7 +559,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         </section>
 
         <!-- ============ DECK: CLOSE ============ -->
-        <section class="block container narrow deck-only slide-title" data-notes="Say it: 'I didn't design a portfolio. I designed an interaction framework that meets every person through whatever input they have — and I built it out of my own face, because returning is what I do. I've been building the future of how people touch computers for twelve years, to your own accessibility bar. I'd love to do it here, on Windows.' Then Q&A: Studio open in a tab, the cursor ready, the portal ready.">
+        <section class="block container narrow deck-only slide-title" data-stage="resolution" data-notes="Say it: 'I didn't design a portfolio. I designed an interaction framework that meets every person through whatever input they have — and I built it out of my own face, because returning is what I do. I've been building the future of how people touch computers for twelve years, to your own accessibility bar. I'd love to do it here, on Windows.' Then Q&A: Studio open in a tab, the cursor ready, the portal ready.">
           <p class="eyebrow">The ask</p>
           <h2 class="display-h cs-title"><span class="stroke">I'd love to do it</span><br /><span class="grad-text glint">here, on Windows.</span></h2>
           <p class="lede">I didn't design a portfolio. I designed an interaction framework that meets every person through whatever input they have. Twelve years of building the future of how people touch computers — to your accessibility bar.</p>
@@ -566,13 +567,13 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         </section>
       </>)}
 
-      <section class="block container narrow closing" data-reveal data-notes="(Case-study mode only.) &quot;Happy to go deeper on any of it — the research, the physics, or the code.&quot;">
+      <section class="block container narrow closing" data-reveal data-notes="(Case-study mode only.) &quot;Happy to go deeper on any of it — the research, the physics, or the code.&quot;" data-stage-cs="resolution" data-stage="resolution">
         <h2 class="display-h hollow sec-h">Thanks for listening.</h2>
         <p class="lede muted">Happy to go deeper on any of it — the research, the physics, or the code.</p>
       </section>
 
       <!-- radial scroll progress + back-to-top (David's component, Unakin skin) -->
-      <scroll-progress></scroll-progress>
+      <scroll-progress icon="book"></scroll-progress>
 
       <!-- presenter chrome: talking points (N) and the camera bubble (?cam=1) work in both modes;
            the top progress bar is deck-only -->
@@ -637,21 +638,51 @@ const deck = Astro.url.searchParams.get('deck') === '1';
 
     /* beat navigation (dots) */
     /* dots are pinch-sized (a hand cursor needs targets, not pixels) */
-    .beats-nav { position: fixed; right: 16px; top: 50%; translate: 0 -50%; z-index: 60; display: grid; gap: 6px; }
-    .beats-nav button { width: 26px; height: 22px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
-    .beats-nav button::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,.22); transition: transform .25s ease, background .25s ease; }
-    .beats-nav button:hover::before { background: rgba(255,255,255,.6); transform: scale(1.3); }
-    .beats-nav button.on::before { background: #fff; transform: scale(1.6); }
-    .beats-nav button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+    :global(.beats-nav) { position: fixed; right: 16px; top: 50%; translate: 0 -50%; z-index: 60; display: grid; gap: 6px; }
+    :global(.beats-nav button) { width: 26px; height: 22px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
+    :global(.beats-nav button::before) { content: ''; width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,.22); transition: transform .25s ease, background .25s ease; }
+    :global(.beats-nav button:hover::before) { background: rgba(255,255,255,.6); transform: scale(1.3); }
+    :global(.beats-nav button.on::before) { background: #fff; transform: scale(1.6); }
+    :global(.beats-nav button:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
     /* edge zones: the whole left / right 9% of the frame is a prev / next button — pinch anywhere there */
-    .beat-zone { position: fixed; top: 4.5rem; bottom: 0; width: 9vw; min-width: 64px; z-index: 55; border: 0; background: transparent; cursor: pointer; color: rgba(255,255,255,.0); font-size: 2.2rem; display: grid; place-items: center; transition: color .25s ease, background .25s ease; }
-    .beat-zone.prev { left: 0; } .beat-zone.next { right: 0; }
-    .beat-zone:hover, .beat-zone:focus-visible { color: rgba(255,255,255,.85); background: linear-gradient(90deg, rgba(255,255,255,.06), transparent); outline: none; }
-    .beat-zone.next:hover, .beat-zone.next:focus-visible { background: linear-gradient(270deg, rgba(255,255,255,.06), transparent); }
-    .beat-zone[disabled] { display: none; }
-    .beat-hint { position: fixed; left: 50%; bottom: 18px; translate: -50% 0; z-index: 60; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); opacity: .8; animation: cue 2.2s ease-in-out infinite; }
+    :global(.beat-zone) { position: fixed; top: 4.5rem; bottom: 0; width: 9vw; min-width: 64px; z-index: 55; border: 0; background: transparent; cursor: pointer; color: rgba(255,255,255,.0); font-size: 2.2rem; display: grid; place-items: center; transition: color .25s ease, background .25s ease; }
+    :global(.beat-zone.prev) { left: 0; } .beat-zone.next { right: 0; }
+    :global(.beat-zone:hover), :global(.beat-zone:focus-visible) { color: rgba(255,255,255,.85); background: linear-gradient(90deg, rgba(255,255,255,.06), transparent); outline: none; }
+    :global(.beat-zone.next:hover), :global(.beat-zone.next:focus-visible) { background: linear-gradient(270deg, rgba(255,255,255,.06), transparent); }
+    :global(.beat-zone[disabled]) { display: none; }
+    :global(.beat-hint) { position: fixed; left: 50%; bottom: 18px; translate: -50% 0; z-index: 60; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); opacity: .8; animation: cue 2.2s ease-in-out infinite; }
     @keyframes cue { 0%, 100% { transform: translateY(0); opacity: .5; } 50% { transform: translateY(5px); opacity: .95; } }
     @media (prefers-reduced-motion: reduce) { .beat-hint { animation: none; } }
+
+    /* ---------- the arc map (Freytag's triangle) — opens from the book puck / T ---------- */
+    :global(.arc-toc) { position: fixed; inset: 0; z-index: 80; display: grid; grid-template-rows: auto 1fr; padding: clamp(4.5rem, 9vh, 6rem) clamp(1.25rem, 5vw, 4rem) clamp(1.5rem, 4vh, 3rem); background: rgba(8, 10, 15, 0.9); backdrop-filter: blur(18px); opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility 0s .35s; }
+    :global(.arc-toc.open) { opacity: 1; visibility: visible; transition: opacity .35s ease; }
+    :global(.arc-toc-head) { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 0.6rem; }
+    :global(.arc-toc-head h2) { font-size: clamp(1.4rem, 3vw, 2.2rem); margin: 0; }
+    :global(.arc-toc-close) { font: inherit; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); background: transparent; border: 1px solid var(--border); border-radius: 999px; padding: 0.5rem 0.9rem; cursor: pointer; }
+    :global(.arc-toc-close:hover) { color: var(--text); border-color: var(--accent); }
+    :global(.arc-body) { display: grid; grid-template-rows: minmax(0, 46%) minmax(0, 1fr); gap: 1rem; min-height: 0; }
+    :global(.arc-svg) { width: 100%; height: 100%; display: block; overflow: visible; }
+    :global(.arc-svg .base) { stroke: rgba(188,192,255,.18); stroke-width: 1; }
+    :global(.arc-svg .pyramid) { fill: none; stroke: rgba(188,192,255,.35); stroke-width: 1.5; stroke-dasharray: 4 6; }
+    :global(.arc-svg .done) { fill: none; stroke: url(#arc-grad); stroke-width: 3; stroke-linecap: round; }
+    :global(.arc-svg .dot) { fill: rgba(13,18,32,.9); stroke: rgba(188,192,255,.55); stroke-width: 1.5; cursor: pointer; transition: r .2s ease; }
+    :global(.arc-svg .dot:hover) { r: 9; stroke: #fff; }
+    :global(.arc-svg .dot.past) { fill: var(--accent); stroke: var(--accent); }
+    :global(.arc-svg .dot.now) { fill: #fff; stroke: #fff; r: 9; filter: drop-shadow(0 0 8px rgba(255,255,255,.8)); }
+    :global(.arc-svg .stage) { font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; fill: var(--muted); }
+    :global(.arc-svg .stage.on) { fill: var(--mint); }
+    :global(.arc-svg .peak) { font-family: var(--display); font-size: 22px; letter-spacing: .06em; text-transform: uppercase; fill: transparent; stroke: rgba(188,192,255,.5); stroke-width: .8px; }
+    :global(.arc-list) { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.9rem; overflow: auto; min-height: 0; }
+    :global(.arc-col h4) { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    :global(.arc-col h4.on) { color: var(--mint); }
+    :global(.arc-col ol) { list-style: none; display: grid; gap: 0.25rem; }
+    :global(.arc-col button) { width: 100%; text-align: left; font: inherit; font-size: 0.82rem; line-height: 1.3; color: var(--muted); background: transparent; border: 0; border-left: 2px solid transparent; padding: 0.3rem 0.5rem; cursor: pointer; border-radius: 0 8px 8px 0; }
+    :global(.arc-col button:hover) { color: var(--text); background: rgba(255,255,255,.05); }
+    :global(.arc-col button.now) { color: #fff; border-left-color: var(--mint); background: rgba(139,240,207,.08); }
+    :global(.arc-col button.past) { color: var(--accent); }
+    :global(.arc-col button small) { font-family: var(--mono); font-size: 0.62rem; letter-spacing: .1em; opacity: .7; margin-right: .4rem; }
+    @media (max-width: 900px) { .arc-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
     /* ---------- hero beat: the scan is the ground ---------- */
     .cs-hero { padding: 0 !important; display: block !important; }
@@ -672,8 +703,8 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     .hollow, .hollow::before { text-wrap: initial; }
     /* pure skeleton text — stroke only, no fill (the first line of title slides; big numerals) */
     .stroke { color: transparent; -webkit-text-fill-color: transparent; -webkit-text-stroke: 1px rgba(244, 245, 251, 0.85); background: none; }
-    .beat-num { position: fixed; right: clamp(1.25rem, 5vw, 4rem); top: 5.2rem; z-index: 1; font-family: var(--display); font-size: clamp(3rem, 7vw, 6.5rem); line-height: 1; letter-spacing: 0.06em; color: transparent; -webkit-text-stroke: 1px rgba(188, 192, 255, 0.28); pointer-events: none; user-select: none; }
-    .beat-num small { font-size: 0.34em; -webkit-text-stroke: 1px rgba(188, 192, 255, 0.2); }
+    :global(.beat-num) { position: fixed; right: clamp(1.25rem, 5vw, 4rem); top: 5.2rem; z-index: 1; font-family: var(--display); font-size: clamp(3rem, 7vw, 6.5rem); line-height: 1; letter-spacing: 0.06em; color: transparent; -webkit-text-stroke: 1px rgba(188, 192, 255, 0.28); pointer-events: none; user-select: none; }
+    :global(.beat-num small) { font-size: 0.34em; -webkit-text-stroke: 1px rgba(188, 192, 255, 0.2); }
     .sec-h { font-size: clamp(2rem, 4.6vw, 3.8rem); line-height: 0.88; margin: 0 0 0.4rem; max-width: 18ch; }
     .lede { font-size: clamp(1rem, 1.35vw, 1.18rem); line-height: 1.7; color: var(--muted); margin: 0 0 0.4rem; max-width: 60ch; }
     .lede strong { color: var(--text); font-weight: 600; }
@@ -830,9 +861,9 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         const reset = () => {
           if (reduced) return;
           strokes.forEach((el, i) => { el.style.strokeDasharray = `${lengths[i]}`; el.style.strokeDashoffset = `${lengths[i]}`; });
-          gsap.set(rest, { opacity: 0 });
+          if (rest.length) gsap.set(rest, { opacity: 0 });
           if (hollow) hollow.style.setProperty('--unfill', '100%');
-          gsap.set([...lines, ...cards], { opacity: 0, y: 18 });
+          if (lines.length || cards.length) gsap.set([...lines, ...cards], { opacity: 0, y: 18 });
           const fig = s.querySelector('.sketch'); if (fig) gsap.set(fig, { opacity: 0, y: 24 });
         };
         const enter = () => {
@@ -874,6 +905,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         history.replaceState(null, '', `#b${i + 1}`);
         hint.style.opacity = i >= beats.length - 1 ? '0' : '';
         num.innerHTML = i === 0 ? '' : `${String(i + 1).padStart(2, '0')}<small> / ${beats.length}</small>`;
+        window.dispatchEvent(new Event('beatchange'));
         document.querySelectorAll<HTMLButtonElement>('.beat-zone.prev').forEach((z) => z.toggleAttribute('disabled', i <= 0));
         document.querySelectorAll<HTMLButtonElement>('.beat-zone.next').forEach((z) => z.toggleAttribute('disabled', i >= beats.length - 1));
       };
@@ -891,13 +923,21 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         }
         // Cinematic hand-off (davidpuerto.com energy): the leaving beat pans away and recedes while
         // the arriving beat is already coming in from slightly large — both on screen at once.
+        // One-off: the hero is a full-bleed photograph — shrinking it during an overlap shows its
+        // edge as a hard line. So the hero simply fades to black, completely, and only then does
+        // the next beat come in.
+        const heroOut = !!prev?.classList.contains('cs-hero');
+        const inAt = !prev ? 0 : heroOut ? 0.7 : 0.12;
         const t = gsap.timeline({ onComplete: done });
         if (prev) {
-          t.to(prev, { opacity: 0, yPercent: -7 * dir, scale: 0.93, filter: 'blur(6px)', duration: 0.75, ease: 'power2.inOut', onComplete: () => { prev.classList.remove('active'); gsap.set(prev, { clearProps: 'transform,opacity,filter' }); anims.get(prev)?.reset(); } }, 0);
+          const out = heroOut
+            ? { opacity: 0, duration: 0.65, ease: 'power2.inOut' }
+            : { opacity: 0, yPercent: -7 * dir, scale: 0.93, filter: 'blur(6px)', duration: 0.75, ease: 'power2.inOut' };
+          t.to(prev, { ...out, onComplete: () => { prev.classList.remove('active'); gsap.set(prev, { clearProps: 'transform,opacity,filter' }); anims.get(prev)?.reset(); } }, 0);
         }
-        t.add(() => { next.classList.add('active'); }, prev ? 0.12 : 0);
-        t.fromTo(next, { opacity: 0, yPercent: 9 * dir, scale: 1.07, filter: 'blur(4px)' }, { opacity: 1, yPercent: 0, scale: 1, filter: 'blur(0px)', duration: 0.95, ease: 'power3.out' }, prev ? 0.12 : 0);
-        t.add(() => { anims.get(next)?.enter(); }, prev ? 0.35 : 0.15);
+        t.add(() => { next.classList.add('active'); }, inAt);
+        t.fromTo(next, { opacity: 0, yPercent: 9 * dir, scale: 1.07, filter: 'blur(4px)' }, { opacity: 1, yPercent: 0, scale: 1, filter: 'blur(0px)', duration: 0.95, ease: 'power3.out' }, inAt);
+        t.add(() => { anims.get(next)?.enter(); }, inAt + (prev ? 0.23 : 0.15));
       };
 
       // wheel → one beat per gesture (throttled); ignore the depth wheel and inner scrollers
@@ -926,8 +966,104 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         else if (e.key.toLowerCase() === 'n' && notes) notes.hidden = !notes.hidden;
         else if (e.key.toLowerCase() === 'f') { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); }
       });
-      // back-to-top puck → first beat
-      progress?.addEventListener('totop', () => go(0));
+      // ── the arc map: Freytag's triangle with every beat plotted on it ──
+      // Stage geometry from position: the climax beat(s) sit at the apex (data-stage="climax";
+      // standalone mode uses data-stage-cs); everything before rises toward it, after falls away.
+      const STAGES = ['Exposition', 'Rising action', 'Climax', 'Falling action', 'Resolution'] as const;
+      const climaxIdx = beats.map((s, i) => ((isDeck ? s.dataset.stage : s.dataset.stageCs ?? s.dataset.stage) === 'climax' ? i : -1)).filter((i) => i >= 0);
+      const peakStart = climaxIdx.length ? climaxIdx[0] : Math.round(beats.length * 0.62);
+      const peakEnd = climaxIdx.length ? climaxIdx[climaxIdx.length - 1] : peakStart;
+      const EXPLICIT: Record<string, (typeof STAGES)[number]> = { exposition: 'Exposition', rising: 'Rising action', climax: 'Climax', falling: 'Falling action', resolution: 'Resolution' };
+      const stageOf = (i: number): (typeof STAGES)[number] => {
+        const s = beats[i]; const ex = (isDeck ? s.dataset.stage : s.dataset.stageCs ?? s.dataset.stage) ?? '';
+        if (EXPLICIT[ex]) return EXPLICIT[ex];
+        if (i >= peakStart && i <= peakEnd) return 'Climax';
+        if (i < peakStart) return i < Math.max(1, Math.round(peakStart * 0.3)) ? 'Exposition' : 'Rising action';
+        const tail = beats.length - 1 - peakEnd;
+        return i >= peakEnd + 1 + Math.max(1, Math.floor(tail * 0.6)) ? 'Resolution' : 'Falling action';
+      };
+      // Title = the heading with <br> read as a space; beats without an h1/h2 use their eyebrow or first line.
+      const titleOf = (s: HTMLElement) => {
+        const h = s.querySelector('h1, h2, .eyebrow, h3, h6');
+        const html = h ? h.innerHTML.replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, '') : '';
+        const txt = html.replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+        return txt || `Beat ${beats.indexOf(s) + 1}`;
+      };
+      // plot: x across the beats; y = pyramid with the apex over the climax span
+      const W = 1000, H = 300, PAD = 60, APEX = 40, BASE = 230;
+      const px = (i: number) => PAD + (i / Math.max(1, beats.length - 1)) * (W - PAD * 2);
+      const py = (i: number) => {
+        if (i < peakStart) return BASE - (BASE - APEX) * (i / Math.max(1, peakStart));
+        if (i <= peakEnd) return APEX;
+        return APEX + (BASE - APEX) * ((i - peakEnd) / Math.max(1, beats.length - 1 - peakEnd));
+      };
+      const toc = document.createElement('div'); toc.className = 'arc-toc'; toc.setAttribute('role', 'dialog'); toc.setAttribute('aria-label', 'Story arc — all beats');
+      const pathD = beats.map((_, i) => `${i ? 'L' : 'M'}${px(i).toFixed(1)} ${py(i).toFixed(1)}`).join(' ');
+      const stageX = (name: (typeof STAGES)[number]) => { const idx = beats.map((_, i) => i).filter((i) => stageOf(i) === name); return idx.length ? (px(idx[0]) + px(idx[idx.length - 1])) / 2 : -999; };
+      toc.innerHTML = `
+        <div class="arc-toc-head"><h2 class="display-h">The story arc</h2><button type="button" class="arc-toc-close">Close · Esc</button></div>
+        <div class="arc-body">
+          <svg class="arc-svg" viewBox="0 0 ${W} ${H}" aria-hidden="true">
+            <defs><linearGradient id="arc-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6d4aff"/><stop offset=".6" stop-color="#bcc0ff"/><stop offset="1" stop-color="#8bf0cf"/></linearGradient></defs>
+            <line class="base" x1="${PAD}" y1="${BASE + 18}" x2="${W - PAD}" y2="${BASE + 18}"/>
+            <path class="pyramid" d="${pathD}"/>
+            <path class="done" d="${pathD}"/>
+            <text class="peak" x="${(px(peakStart) + px(peakEnd)) / 2}" y="${APEX - 16}" text-anchor="middle">Climax</text>
+            ${STAGES.filter((n) => n !== 'Climax').map((n) => { const idx = beats.map((_, i) => i).filter((i) => stageOf(i) === n); if (!idx.length) return ''; const anchor = n === 'Exposition' ? 'start' : n === 'Resolution' ? 'end' : 'middle'; const x = n === 'Exposition' ? px(idx[0]) : n === 'Resolution' ? px(idx[idx.length - 1]) : stageX(n); const y = n === 'Falling action' ? BASE + 64 : BASE + 44; return `<text class="stage" data-stage="${n}" x="${x}" y="${y}" text-anchor="${anchor}">${n}</text>`; }).join('')}
+            ${beats.map((_, i) => `<circle class="dot" data-i="${i}" cx="${px(i)}" cy="${py(i)}" r="6"><title>${i + 1}. ${titleOf(beats[i]).replace(/"/g, '&quot;')}</title></circle>`).join('')}
+          </svg>
+          <div class="arc-list">
+            ${STAGES.map((n) => `<div class="arc-col" data-stage="${n}"><h4>${n}</h4><ol>${beats.map((s, i) => stageOf(i) === n ? `<li><button type="button" data-i="${i}"><small>${String(i + 1).padStart(2, '0')}</small>${titleOf(s)}</button></li>` : '').join('')}</ol></div>`).join('')}
+          </div>
+        </div>`;
+      document.body.append(toc);
+      const donePath = toc.querySelector<SVGPathElement>('.done')!; const doneLen = donePath.getTotalLength();
+      donePath.style.strokeDasharray = `${doneLen}`; donePath.style.strokeDashoffset = `${doneLen}`;
+      const paintToc = () => {
+        toc.querySelectorAll<SVGCircleElement>('.dot').forEach((d) => { const i = +d.dataset.i!; d.classList.toggle('now', i === cur); d.classList.toggle('past', i < cur); });
+        toc.querySelectorAll<HTMLButtonElement>('.arc-col button').forEach((b) => { const i = +b.dataset.i!; b.classList.toggle('now', i === cur); b.classList.toggle('past', i < cur); });
+        const st = stageOf(cur);
+        toc.querySelectorAll<HTMLElement>('.arc-col h4').forEach((h) => h.classList.toggle('on', h.parentElement!.dataset.stage === st));
+        toc.querySelectorAll<SVGTextElement>('.stage').forEach((t) => t.classList.toggle('on', t.dataset.stage === st));
+        // the gradient line grows to the current beat
+        const frac = beats.length > 1 ? cur / (beats.length - 1) : 1;
+        donePath.style.strokeDashoffset = `${doneLen * (1 - frac)}`;
+      };
+      const openToc = () => { paintToc(); toc.classList.add('open'); };
+      const closeToc = () => toc.classList.remove('open');
+      toc.addEventListener('click', (e) => {
+        const t = e.target as HTMLElement;
+        const i = t.closest<HTMLElement>('[data-i]')?.dataset.i;
+        if (i !== undefined) { closeToc(); go(+i); return; }
+        if (t.closest('.arc-toc-close') || t === toc) closeToc();
+      });
+      window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeToc(); else if (e.key.toLowerCase() === 't') { toc.classList.contains('open') ? closeToc() : openToc(); } });
+      // ── narration: S speaks the current beat. Prefers David's own clip
+      //    (/audio/sonosite/beat-NN.mp3 — HeyGen voice clone), falls back to the browser's voice
+      //    reading the on-screen copy. Stops on beat change. Also a live demo of ear-navigable beats.
+      let clip: HTMLAudioElement | null = null; let speaking = false;
+      const stopSpeech = () => { speaking = false; try { speechSynthesis.cancel(); } catch {} if (clip) { clip.pause(); clip = null; } };
+      const speak = (i: number) => {
+        stopSpeech(); speaking = true;
+        const s = beats[i];
+        const text = [s.querySelector('h1, h2')?.textContent ?? '', ...Array.from(s.querySelectorAll('.lede, .leadin h3')).map((el) => el.textContent ?? '')].join('. ').replace(/\s+/g, ' ').trim();
+        const nn = String(i + 1).padStart(2, '0');
+        const a = new Audio(`/audio/sonosite/${isDeck ? 'deck-' : 'beat-'}${nn}.mp3`);
+        a.addEventListener('canplay', () => { if (!speaking) return; clip = a; a.play().catch(() => fallback()); }, { once: true });
+        a.addEventListener('error', () => { if (speaking) fallback(); }, { once: true });
+        const fallback = () => {
+          if (!('speechSynthesis' in window) || !text) return;
+          const u = new SpeechSynthesisUtterance(text); u.rate = 0.98; u.pitch = 1;
+          const v = speechSynthesis.getVoices().find((v) => /en-US/i.test(v.lang) && /Samantha|Alex|Google US|Natural/i.test(v.name)) ?? speechSynthesis.getVoices().find((v) => /en/i.test(v.lang));
+          if (v) u.voice = v;
+          speechSynthesis.speak(u);
+        };
+      };
+      window.addEventListener('keydown', (e) => { if ((e.target as HTMLElement)?.closest('input, textarea, select')) return; if (e.key.toLowerCase() === 's') { speaking ? stopSpeech() : speak(cur); } });
+      window.addEventListener('beatchange', stopSpeech); // paint() fires this on every beat change
+
+      // the book puck opens the map (no more back-to-top)
+      progress?.addEventListener('totop', (e) => { e.preventDefault(); toc.classList.contains('open') ? closeToc() : openToc(); });
 
       // edge zones: big prev / next buttons a hand cursor (or a finger) can hit
       const mkZone = (dir: -1 | 1) => { const b = document.createElement('button'); b.type = 'button'; b.className = `beat-zone ${dir < 0 ? 'prev' : 'next'}`; b.setAttribute('aria-label', dir < 0 ? 'Previous beat' : 'Next beat'); b.textContent = dir < 0 ? '‹' : '›'; b.addEventListener('click', () => go(cur + dir)); document.body.append(b); return b; };
