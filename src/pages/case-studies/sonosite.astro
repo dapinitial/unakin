@@ -436,7 +436,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
         </div>
         <div class="yt" data-reveal>
           {['qPcUkbd7izs', 'emJUu9OrdJc', 'XHgTSYLgOVI'].map((id) => (
-            <iframe src={`https://www.youtube-nocookie.com/embed/${id}`} title="iViz in the field" loading="lazy"
+            <iframe src={`https://www.youtube-nocookie.com/embed/${id}?enablejsapi=1`} title="iViz in the field" loading="lazy"
               allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           ))}
@@ -610,7 +610,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     :global(html.beats) { height: 100%; overflow-y: scroll; overscroll-behavior: none; scrollbar-width: none; scroll-behavior: auto !important; /* proxy needs instant jumps, not smooth trickles */ }
     :global(html.beats::-webkit-scrollbar) { display: none; }
     :global(html.beats body) { height: 300vh; overflow: visible; }
-    :global(html:fullscreen .nav) { display: none; }
+    :global(html:fullscreen .nav), :global(html.sl-fullscreen .nav) { display: none; }   /* .sl-fullscreen = the extension put the WINDOW in fullscreen (voice) */
     :global(html.beats .foot) { display: none; }
     .cs { position: fixed; inset: 0; z-index: 3; overflow: hidden; }
     .cs > section {
@@ -1146,7 +1146,7 @@ const deck = Astro.url.searchParams.get('deck') === '1';
           if (/\b(notes|talking points)\b/.test(t) && notes) return claim(() => { notes.hidden = !notes.hidden; });
           if (/\b(first|start over|beginning)\b/.test(t)) return claim(() => go(0));
           if (/\b(last|the end|finish)\b/.test(t)) return claim(() => go(beats.length - 1));
-          if (/\b(full ?screen)\b/.test(t)) return claim(() => { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); });
+          if (/\b(full ?screen)\b/.test(t)) return claim(() => { const SLc = (window as any).SLCursor; SLc?.fullscreen ? SLc.fullscreen() : (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.()); });   // voice has no user gesture: the extension fullscreens the window instead
         });
         return true;
       };
