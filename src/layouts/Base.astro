@@ -129,6 +129,22 @@ const ld = {
         background: linear-gradient(162deg, #fff 0%, var(--accent) 62%, var(--violet) 100%);
         -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
       }
+      /* House display heading: Neotrax, uppercase, tight leading — the hero voice, reused at
+         every size. .glint adds a pink→white→cyan light sweeping through the letterforms
+         (a highlight layer over the base fill, clipped to the text; sweeps, then rests). */
+      .display-h { font-family: var(--display); text-transform: uppercase; font-weight: 400; line-height: 0.86; letter-spacing: 0.07em; text-wrap: balance; }
+      .glint {
+        --fill: linear-gradient(#f4f5fb, #f4f5fb);
+        background-image:
+          linear-gradient(105deg, transparent 42%, rgba(255, 79, 216, 0.85) 47%, #fff 50%, rgba(79, 227, 255, 0.85) 53%, transparent 58%),
+          var(--fill);
+        background-size: 260% 100%, 100% 100%; background-position: 130% 0, 0 0; background-repeat: no-repeat;
+        -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+        animation: glint 7s ease-in-out infinite;
+      }
+      .glint.grad-text { --fill: linear-gradient(162deg, #fff 0%, var(--accent) 62%, var(--violet) 100%); }
+      @keyframes glint { 0%, 8% { background-position: 130% 0, 0 0; } 34%, 100% { background-position: -130% 0, 0 0; } }
+      @media (prefers-reduced-motion: reduce) { .glint { animation: none; background-position: -130% 0, 0 0; } }
       .container { width: min(100% - 2.5rem, 1120px); margin-inline: auto; }
       .container.narrow { width: min(100% - 2.5rem, 720px); }
       .muted { color: var(--muted); }
