@@ -612,6 +612,8 @@ const deck = Astro.url.searchParams.get('deck') === '1';
     :global(html.beats body) { height: 300vh; overflow: visible; }
     :global(html:fullscreen .nav), :global(html.sl-fullscreen .nav) { display: none; }   /* .sl-fullscreen = the extension put the WINDOW in fullscreen (voice) */
     :global(html.beats .foot) { display: none; }
+    /* case studies: no marketing nav (Work / Studio / Start a project) — only the brand and, with the extension, Eyes/Voice */
+    :global(header.nav .navlinks > a) { display: none; }
     .cs { position: fixed; inset: 0; z-index: 3; overflow: hidden; }
     .cs > section {
       position: absolute; inset: 0; padding: clamp(5rem, 12vh, 7rem) clamp(1.25rem, 5vw, 4rem) clamp(2.5rem, 7vh, 4rem);
